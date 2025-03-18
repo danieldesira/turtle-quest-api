@@ -1,6 +1,8 @@
 import { player, PrismaClient } from "@prisma/client";
 
 interface GoogleUserPayload {
+  iss?: string;
+  aud?: string;
   sub: string;
   name?: string;
   given_name?: string;
@@ -47,13 +49,39 @@ export const checkAndRegisterPlayerGoogle = async (
 export const fetchGoogleUser = async (
   token: string
 ): Promise<GoogleUserPayload> => {
-  const response = await fetch(
-    `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
-  );
-  const payload = await response.json();
+  try {
+    const response = await fetch(
+      `https://oauth2.googleapis.com/tokeninfo?access_token=${token}`
+    );
 
+    if (!response.ok) {
+      const idTokenResponse = await fetch(
+        `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
+      );
+
+      if (!idTokenResponse.ok) {
+        throw new Error(
+          `Failed to verify token: ${idTokenResponse.statusText}`
+        );
+      }
+
+      const payload = await idTokenResponse.json();
+      return validateGooglePayload(payload);
+    }
+
+    const payload = await response.json();
+    return validateGooglePayload(payload);
+  } catch (error) {
+    console.error("Error verifying Google token:", error);
+    throw new Error("Failed to verify Google token");
+  }
+};
+
+const validateGooglePayload = (
+  payload: GoogleUserPayload
+): GoogleUserPayload => {
   if (!payload) {
-    throw Error("Invalid token payload");
+    throw new Error("Invalid token payload");
   }
 
   if (
@@ -67,5 +95,17 @@ export const fetchGoogleUser = async (
     throw new Error("Invalid audience");
   }
 
-  return payload;
+  // Ensure required fields are present
+  if (!payload.sub || !payload.email) {
+    throw new Error("Missing required fields in token payload");
+  }
+
+  return {
+    sub: payload.sub,
+    name: payload.name,
+    given_name: payload.given_name,
+    family_name: payload.family_name,
+    picture: payload.picture,
+    email: payload.email,
+  };
 };

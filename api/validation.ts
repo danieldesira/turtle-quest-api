@@ -20,7 +20,7 @@ export const settingsSchema = z.object({
   }),
 });
 
-export const playerSchema = z.object({
+export const playerUpdateSchema = z.object({
   name: z.string({
     invalid_type_error: "name should be a string",
     required_error: "name is required",
