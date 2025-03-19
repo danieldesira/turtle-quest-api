@@ -3,7 +3,6 @@ import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,
 } from "../services/authService";
-import { getPrismaInstance } from "../prismaInstance";
 import { z } from "zod";
 import { AuthSchema } from "./types";
 
@@ -27,7 +26,6 @@ export const verifyGoogleToken = async (
     const payload = await fetchGoogleUser(token);
 
     const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(
-      getPrismaInstance(),
       payload
     );
 

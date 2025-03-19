@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { getPrismaInstance } from "../prismaInstance";
 
 export interface SaveScorePayload {
   points: number;
@@ -7,10 +7,10 @@ export interface SaveScorePayload {
 }
 
 export const saveScore = async (
-  prisma: PrismaClient,
   playerId: number,
   payload: SaveScorePayload
-) =>
+) => {
+  const prisma = getPrismaInstance();
   await prisma.score.create({
     data: {
       player_id: playerId,
@@ -20,9 +20,11 @@ export const saveScore = async (
       created_at: new Date(),
     },
   });
+};
 
-export const getHighScores = async (prisma: PrismaClient) =>
-  await prisma.score.findMany({
+export const getHighScores = async () => {
+  const prisma = getPrismaInstance();
+  return await prisma.score.findMany({
     take: 10,
     orderBy: {
       points: "desc",
@@ -39,3 +41,4 @@ export const getHighScores = async (prisma: PrismaClient) =>
       },
     },
   });
+};

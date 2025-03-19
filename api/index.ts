@@ -1,4 +1,3 @@
-import { Context } from "hono";
 import { handle } from "hono/vercel";
 import { version } from "../package.json";
 import { cors } from "hono/cors";
@@ -23,7 +22,6 @@ import {
   updatePlayerRoute,
   updateSettingsRoute,
 } from "./routes";
-import { getPrismaInstance } from "../prismaInstance";
 import { Auth } from "./types";
 import { swaggerUI } from "@hono/swagger-ui";
 
@@ -40,8 +38,6 @@ app.doc("/doc", {
     title: "Turtle Quest API",
   },
 });
-
-const prisma = getPrismaInstance();
 
 app.use(cors());
 app.use(logger());
@@ -61,12 +57,12 @@ app.openapi(registerPointsRoute, async (c) => {
 
   const body = await c.req.json<SaveScorePayload>();
 
-  await saveScore(prisma, player.id, body);
+  await saveScore(player.id, body);
   return c.json({ message: "Score saved successfully" });
 });
 
 app.openapi(getPointsRoute, async (c) => {
-  const highScores = await getHighScores(prisma);
+  const highScores = await getHighScores();
   return c.json(highScores);
 });
 
@@ -78,21 +74,21 @@ app.openapi(getPlayerRoute, (c) => {
 app.openapi(updatePlayerRoute, async (c) => {
   const { player } = c.get("auth") as Auth;
   const body = await c.req.json();
-  await updatePlayer(prisma, player.id, body as Player);
+  await updatePlayer(player.id, body as Player);
   return c.json({ message: "Player updated successfully" });
 });
 
 app.openapi(updateSettingsRoute, async (c) => {
   const { player } = c.get("auth") as Auth;
   const body = await c.req.json();
-  await updateJsonField(prisma, player.id, "settings", body.settings);
+  await updateJsonField(player.id, "settings", body.settings);
   return c.json({ message: "Settings updated successfully" });
 });
 
 app.openapi(updateGameRoute, async (c) => {
   const { player } = c.get("auth") as Auth;
   const body = await c.req.json();
-  await updateJsonField(prisma, player.id, "last_game", body.game);
+  await updateJsonField(player.id, "last_game", body.game);
   return c.json({ message: "Settings updated successfully" });
 });
 

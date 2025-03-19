@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { getPrismaInstance } from "../prismaInstance";
 
 export interface Player {
   name: string;
@@ -6,22 +6,21 @@ export interface Player {
 }
 
 export const updateJsonField = async (
-  prisma: PrismaClient,
   playerId: number,
   fieldName: string,
   value: object
-) =>
+) => {
+  const prisma = getPrismaInstance();
   await prisma.player.update({
     where: { id: playerId },
     data: { [fieldName]: JSON.stringify(value) },
   });
+};
 
-export const updatePlayer = async (
-  prisma: PrismaClient,
-  playerId: number,
-  { name, dob }: Player
-) =>
+export const updatePlayer = async (playerId: number, { name, dob }: Player) => {
+  const prisma = getPrismaInstance();
   await prisma.player.update({
     where: { id: playerId },
     data: { name, date_of_birth: new Date(dob) },
   });
+};

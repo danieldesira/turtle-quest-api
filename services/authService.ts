@@ -1,4 +1,5 @@
 import { player, PrismaClient } from "@prisma/client";
+import { getPrismaInstance } from "../prismaInstance";
 
 interface GoogleUserPayload {
   iss?: string;
@@ -17,9 +18,9 @@ interface CheckAndRegisterPlayerGoogleResult {
 }
 
 export const checkAndRegisterPlayerGoogle = async (
-  prisma: PrismaClient,
   user: GoogleUserPayload
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
+  const prisma = getPrismaInstance();
   const player = await prisma.player.findFirst({
     where: { external_id: user.sub, platform: "google" },
   });
