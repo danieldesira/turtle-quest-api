@@ -32,25 +32,23 @@ export const playerUpdateSchema = z.object({
 });
 
 export const gameSchema = z.object({
-  game: z.object({
-    characters: z.array(
-      z.object({
-        x: z.number(),
-        y: z.number(),
-        direction: z.number(),
-        type: z.string(),
-      })
-    ),
-    levelNo: z.number(),
-    turtle: z.object({
+  characters: z.array(
+    z.object({
       x: z.number(),
       y: z.number(),
       direction: z.number(),
-      food: z.number(),
-      health: z.number(),
-      oxygen: z.number(),
-      stomachCapacity: z.number(),
-    }),
-    xp: z.number(),
+      type: z.string(),
+    })
+  ),
+  levelNo: z.number(),
+  turtle: z.object({
+    x: z.number(),
+    y: z.number(),
+    direction: z.number(),
+    food: z.number(),
+    health: z.number(),
+    oxygen: z.number(),
+    stomachCapacity: z.number(),
   }),
+  xp: z.number(),
 });

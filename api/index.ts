@@ -89,7 +89,7 @@ app.openapi(updateGameRoute, async (c) => {
   const { player } = c.get("auth") as Auth;
   const body = await c.req.json();
   await updateJsonField(player.id, "last_game", body.game);
-  return c.json({ message: "Settings updated successfully" });
+  return c.json({ message: "Game data updated successfully" });
 });
 
 app.get("/swagger", swaggerUI({ url: "/api/doc" }));
