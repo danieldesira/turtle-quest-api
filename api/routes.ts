@@ -183,7 +183,7 @@ export const updateGameRoute = createRoute({
   ],
   requestBody: {
     content: {
-      "application/json": { settingsSchema },
+      "application/json": { gameSchema },
     },
   },
   responses: {
@@ -192,6 +192,22 @@ export const updateGameRoute = createRoute({
       content: {
         "application/json": {
           schema: z.object({ message: z.string() }),
+        },
+      },
+    },
+  },
+});
+
+export const getGameRoute = createRoute({
+  method: "get",
+  path: "/game",
+  middleware: [verifyGoogleToken],
+  responses: {
+    200: {
+      description: "Successful response",
+      content: {
+        "application/json": {
+          schema: gameSchema,
         },
       },
     },

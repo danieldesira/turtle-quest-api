@@ -24,3 +24,11 @@ export const updatePlayer = async (playerId: number, { name, dob }: Player) => {
     data: { name, date_of_birth: new Date(dob) },
   });
 };
+
+export const getLastGame = async (playerId: number) => {
+  const prisma = getPrismaInstance();
+  return await prisma.player.findFirst({
+    where: { id: playerId },
+    select: { last_game: true },
+  });
+};

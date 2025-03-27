@@ -8,12 +8,14 @@ import {
   SaveScorePayload,
 } from "../services/scoreService";
 import {
+  getLastGame,
   Player,
   updateJsonField,
   updatePlayer,
 } from "../services/playerService";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import {
+  getGameRoute,
   getPlayerRoute,
   getPointsRoute,
   loginRoute,
@@ -90,6 +92,15 @@ app.openapi(updateGameRoute, async (c) => {
   const body = await c.req.json();
   await updateJsonField(player.id, "last_game", body.game);
   return c.json({ message: "Game data updated successfully" });
+});
+
+app.openapi(getGameRoute, async (c) => {
+  const { player } = c.get("auth") as Auth;
+  const res = await getLastGame(player.id);
+  const lastGame = res?.last_game
+    ? JSON.parse(res.last_game?.toString())
+    : null;
+  return c.json(lastGame);
 });
 
 app.get("/swagger", swaggerUI({ url: "/api/doc" }));
