@@ -90,7 +90,7 @@ app.openapi(updateSettingsRoute, async (c) => {
 app.openapi(updateGameRoute, async (c) => {
   const { player } = c.get("auth") as Auth;
   const body = await c.req.json();
-  await updateJsonField(player.id, "last_game", body.game);
+  await updateJsonField(player.id, "last_game", body);
   return c.json({ message: "Game data updated successfully" });
 });
 
