@@ -91,15 +91,22 @@ export const getPointsRoute = createRoute({
       description: "Successful response",
       content: {
         "application/json": {
-          schema: z.array(
-            z.object({
+          schema: z.object({
+            highScores: z.array(
+              z.object({
+                points: z.number(),
+                level: z.number(),
+                player_won: z.string(),
+                created_at: z.date(),
+                player: z.object({ name: z.string().nullable() }).nullable(),
+              })
+            ),
+            personalBest: z.object({
               points: z.number(),
               level: z.number(),
               player_won: z.string(),
-              created_at: z.date(),
-              player: z.object({ name: z.string().nullable() }).nullable(),
-            })
-          ),
+            }).nullable(),
+          }),
         },
       },
     },

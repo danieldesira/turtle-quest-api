@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import {
   getHighScores,
+  getPersonalBest,
   saveScore,
   SaveScorePayload,
 } from "../services/scoreService";
@@ -64,8 +65,12 @@ app.openapi(registerPointsRoute, async (c) => {
 });
 
 app.openapi(getPointsRoute, async (c) => {
+  const { player } = c.get("auth") as Auth;
+
   const highScores = await getHighScores();
-  return c.json(highScores);
+  const personalBest = await getPersonalBest(player.id);
+
+  return c.json({ highScores, personalBest });
 });
 
 app.openapi(getPlayerRoute, (c) => {

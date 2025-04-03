@@ -42,3 +42,12 @@ export const getHighScores = async () => {
     },
   });
 };
+
+export const getPersonalBest = async (playerId: number) => {
+  const prisma = getPrismaInstance();
+  return await prisma.score.findFirst({
+    where: { player_id: playerId },
+    orderBy: [{ points: "desc" }, { level: "desc" }, { player_won: "desc" }],
+    select: { points: true, level: true, player_won: true },
+  });
+};
