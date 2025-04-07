@@ -11,7 +11,7 @@ export const updateJsonField = async (
   value: object
 ) => {
   const prisma = getPrismaInstance();
-  await prisma.player.update({
+  await prisma.players.update({
     where: { id: playerId },
     data: { [fieldName]: JSON.stringify(value) },
   });
@@ -19,7 +19,7 @@ export const updateJsonField = async (
 
 export const updatePlayer = async (playerId: number, { name, dob }: Player) => {
   const prisma = getPrismaInstance();
-  await prisma.player.update({
+  await prisma.players.update({
     where: { id: playerId },
     data: { name, date_of_birth: new Date(dob) },
   });
@@ -27,7 +27,7 @@ export const updatePlayer = async (playerId: number, { name, dob }: Player) => {
 
 export const getLastGame = async (playerId: number) => {
   const prisma = getPrismaInstance();
-  return await prisma.player.findFirst({
+  return await prisma.players.findFirst({
     where: { id: playerId },
     select: { last_game: true },
   });

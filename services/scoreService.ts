@@ -11,10 +11,10 @@ export const saveScore = async (
   payload: SaveScorePayload
 ) => {
   const prisma = getPrismaInstance();
-  await prisma.score.create({
+  await prisma.scores.create({
     data: {
       player_id: playerId,
-      player_won: payload.hasWon ? "1" : "0",
+      outcome_id: payload.hasWon ? 2 : 1,
       points: payload.points,
       level: payload.level,
       created_at: new Date(),
@@ -24,7 +24,7 @@ export const saveScore = async (
 
 export const getHighScores = async () => {
   const prisma = getPrismaInstance();
-  return await prisma.score.findMany({
+  return await prisma.scores.findMany({
     take: 10,
     orderBy: {
       points: "desc",
@@ -32,11 +32,15 @@ export const getHighScores = async () => {
     select: {
       points: true,
       level: true,
-      player_won: true,
       created_at: true,
-      player: {
+      players: {
         select: {
           name: true,
+        },
+      },
+      outcomes: {
+        select: {
+          desc: true,
         },
       },
     },
@@ -45,9 +49,17 @@ export const getHighScores = async () => {
 
 export const getPersonalBest = async (playerId: number) => {
   const prisma = getPrismaInstance();
-  return await prisma.score.findFirst({
+  return await prisma.scores.findFirst({
     where: { player_id: playerId },
-    orderBy: [{ points: "desc" }, { level: "desc" }, { player_won: "desc" }],
-    select: { points: true, level: true, player_won: true },
+    orderBy: [{ points: "desc" }, { level: "desc" }, { outcome_id: "desc" }],
+    select: {
+      points: true,
+      level: true,
+      outcomes: {
+        select: {
+          desc: true,
+        },
+      },
+    },
   });
 };

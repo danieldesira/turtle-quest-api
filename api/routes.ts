@@ -96,16 +96,18 @@ export const getPointsRoute = createRoute({
               z.object({
                 points: z.number(),
                 level: z.number(),
-                player_won: z.string(),
+                outcomes: z.object({ desc: z.string() }).nullable(),
                 created_at: z.date(),
-                player: z.object({ name: z.string().nullable() }).nullable(),
+                players: z.object({ name: z.string().nullable() }).nullable(),
               })
             ),
-            personalBest: z.object({
-              points: z.number(),
-              level: z.number(),
-              player_won: z.string(),
-            }).nullable(),
+            personalBest: z
+              .object({
+                points: z.number(),
+                level: z.number(),
+                outcomes: z.object({ desc: z.string() }).nullable(),
+              })
+              .nullable(),
           }),
         },
       },
