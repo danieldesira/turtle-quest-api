@@ -9,6 +9,7 @@ import {
   SaveScorePayload,
 } from "../services/scoreService";
 import {
+  deleteLastGame,
   getLastGame,
   Player,
   updateJsonField,
@@ -16,6 +17,7 @@ import {
 } from "../services/playerService";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import {
+  deleteGameRoute,
   getGameRoute,
   getPlayerRoute,
   getPointsRoute,
@@ -106,6 +108,13 @@ app.openapi(getGameRoute, async (c) => {
     ? JSON.parse(res.last_game?.toString())
     : null;
   return c.json(lastGame);
+});
+
+app.openapi(deleteGameRoute, async (c) => {
+  const { player } = c.get("auth") as Auth;
+  await deleteLastGame(player.id);
+  c.status(204);
+  return c.json(undefined);
 });
 
 app.get("/swagger", swaggerUI({ url: "/api/doc" }));

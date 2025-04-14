@@ -32,3 +32,11 @@ export const getLastGame = async (playerId: number) => {
     select: { last_game: true },
   });
 };
+
+export const deleteLastGame = async (playerId: number) => {
+  const prisma = getPrismaInstance();
+  await prisma.players.update({
+    where: { id: playerId },
+    data: { last_game: {} },
+  });
+};

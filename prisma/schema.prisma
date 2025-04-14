@@ -20,7 +20,7 @@ model players {
   external_id   String    @db.VarChar
   platform      String    @db.VarChar
   profile_pic   String?   @db.VarChar
-  last_game     Json?     @db.Json
+  last_game     Json?
   created_at    DateTime  @db.Timestamp(6)
   last_login_at DateTime? @db.Timestamp(6)
   email         String    @unique(map: "player_unique") @db.VarChar
@@ -31,11 +31,11 @@ model players {
 
 model scores {
   points     Int
-  level      Int       @db.SmallInt
-  created_at DateTime  @db.Timestamp(6)
+  level      Int      @db.SmallInt
+  created_at DateTime @db.Timestamp(6)
   player_id  Int?
-  id         Int       @id(map: "score_pk") @default(autoincrement())
-  outcome_id Int?
-  outcomes   outcomes? @relation(fields: [outcome_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_outcomes_fk")
-  players    players?  @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
+  id         Int      @id(map: "score_pk") @default(autoincrement())
+  outcome_id Int
+  outcomes   outcomes @relation(fields: [outcome_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_outcomes_fk")
+  players    players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
 }

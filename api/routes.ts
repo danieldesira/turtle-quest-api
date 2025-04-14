@@ -222,3 +222,14 @@ export const getGameRoute = createRoute({
     },
   },
 });
+
+export const deleteGameRoute = createRoute({
+  method: "delete",
+  path: "/game",
+  middleware: [verifyGoogleToken],
+  responses: {
+    204: {
+      description: "No content",
+    },
+  },
+});
