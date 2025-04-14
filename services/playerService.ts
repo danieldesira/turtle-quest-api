@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { getPrismaInstance } from "../prismaInstance";
 
 export interface Player {
@@ -37,6 +38,6 @@ export const deleteLastGame = async (playerId: number) => {
   const prisma = getPrismaInstance();
   await prisma.players.update({
     where: { id: playerId },
-    data: { last_game: {} },
+    data: { last_game: Prisma.NullableJsonNullValueInput.DbNull },
   });
 };
