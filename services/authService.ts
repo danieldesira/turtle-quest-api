@@ -35,6 +35,7 @@ export const checkAndRegisterPlayerGoogle = async (
         profile_pic: user.picture,
         last_login_at: new Date(),
         created_at: new Date(),
+        settings: { controlPosition: "Right" },
       },
     });
     return { player: newPlayer, isNewPlayer: true };

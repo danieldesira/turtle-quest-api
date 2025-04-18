@@ -15,9 +15,7 @@ export const pointInsertSchema = z.object({
 });
 
 export const settingsSchema = z.object({
-  settings: z.object({
-    controlPosition: z.enum(["left", "right"]),
-  }),
+  controlPosition: z.enum(["Left", "Right"]),
 });
 
 export const playerUpdateSchema = z.object({
