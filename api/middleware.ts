@@ -32,7 +32,7 @@ export const verifyGoogleToken = async (
     c.set("auth", AuthSchema.parse({ player, isNewPlayer }));
 
     await next();
-  } catch (error) {
+  } catch (error) {console.log(error)
     return c.json({ error: "Invalid token" }, 401);
   }
 };

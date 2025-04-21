@@ -9,6 +9,8 @@ export const PlayerSchema = z.object({
   created_at: z.date(),
   profile_pic: z.string().nullable(),
   date_of_birth: z.date().nullable(),
+  last_login_at: z.date().nullable(),
+  settings: z.string().nullable(),
 });
 
 export const AuthSchema = z.object({

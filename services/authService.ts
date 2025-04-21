@@ -1,5 +1,6 @@
 import { players } from "@prisma/client";
 import { getPrismaInstance } from "../prismaInstance";
+import { JsonValue } from "@prisma/client/runtime/library";
 
 interface GoogleUserPayload {
   iss?: string;
@@ -13,7 +14,17 @@ interface GoogleUserPayload {
 }
 
 interface CheckAndRegisterPlayerGoogleResult {
-  player: players;
+  player: {
+    id: number;
+    external_id: string;
+    platform: string;
+    email: string;
+    name: string | null;
+    profile_pic: string | null;
+    last_login_at: Date | null;
+    created_at: Date;
+    settings: JsonValue | null;
+  };
   isNewPlayer: boolean;
 }
 
@@ -23,6 +34,18 @@ export const checkAndRegisterPlayerGoogle = async (
   const prisma = getPrismaInstance();
   const player = await prisma.players.findFirst({
     where: { external_id: user.sub, platform: "google" },
+    select: {
+      id: true,
+      external_id: true,
+      platform: true,
+      email: true,
+      name: true,
+      profile_pic: true,
+      last_login_at: true,
+      created_at: true,
+      date_of_birth: true,
+      settings: true,
+    },
   });
 
   if (!player) {
@@ -35,6 +58,7 @@ export const checkAndRegisterPlayerGoogle = async (
         profile_pic: user.picture,
         last_login_at: new Date(),
         created_at: new Date(),
+        date_of_birth: null,
         settings: { controlPosition: "Right" },
       },
     });
