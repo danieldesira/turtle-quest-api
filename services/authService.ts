@@ -34,18 +34,6 @@ export const checkAndRegisterPlayerGoogle = async (
   const prisma = getPrismaInstance();
   const player = await prisma.players.findFirst({
     where: { external_id: user.sub, platform: "google" },
-    select: {
-      id: true,
-      external_id: true,
-      platform: true,
-      email: true,
-      name: true,
-      profile_pic: true,
-      last_login_at: true,
-      created_at: true,
-      date_of_birth: true,
-      settings: true,
-    },
   });
 
   if (!player) {
@@ -68,6 +56,8 @@ export const checkAndRegisterPlayerGoogle = async (
       where: { id: player.id },
       data: { last_login_at: new Date() },
     });
+
+    player.settings = JSON.parse(player.settings?.toString()!);
     return { player, isNewPlayer: false };
   }
 };

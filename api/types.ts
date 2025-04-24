@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { settingsSchema } from "./validation";
 
 export const PlayerSchema = z.object({
   id: z.number(),
@@ -10,7 +11,7 @@ export const PlayerSchema = z.object({
   profile_pic: z.string().nullable(),
   date_of_birth: z.date().nullable(),
   last_login_at: z.date().nullable(),
-  settings: z.string().nullable(),
+  settings: settingsSchema,
 });
 
 export const AuthSchema = z.object({
