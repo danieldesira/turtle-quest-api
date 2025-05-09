@@ -1,4 +1,3 @@
-import { players } from "@prisma/client";
 import { getPrismaInstance } from "../prismaInstance";
 import { JsonValue } from "@prisma/client/runtime/library";
 

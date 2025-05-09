@@ -3,7 +3,7 @@ import { getPrismaInstance } from "../prismaInstance";
 
 export interface Player {
   name: string;
-  dob: string;
+  date_of_birth: string;
 }
 
 export const updateJsonField = async (
@@ -18,11 +18,14 @@ export const updateJsonField = async (
   });
 };
 
-export const updatePlayer = async (playerId: number, { name, dob }: Player) => {
+export const updatePlayer = async (
+  playerId: number,
+  { name, date_of_birth }: Player
+) => {
   const prisma = getPrismaInstance();
   await prisma.players.update({
     where: { id: playerId },
-    data: { name, date_of_birth: new Date(dob) },
+    data: { name, date_of_birth: new Date(date_of_birth) },
   });
 };
 

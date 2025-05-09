@@ -19,14 +19,8 @@ export const settingsSchema = z.object({
 });
 
 export const playerUpdateSchema = z.object({
-  name: z.string({
-    invalid_type_error: "name should be a string",
-    required_error: "name is required",
-  }),
-  dob: z.coerce.date({
-    invalid_type_error: "dob should be a date",
-    required_error: "dob is required",
-  }),
+  name: z.string(),
+  date_of_birth: z.string().date(),
 });
 
 export const gameSchema = z.object({
