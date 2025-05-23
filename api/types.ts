@@ -8,7 +8,7 @@ export const PlayerSchema = z.object({
   name: z.string().nullable(),
   email: z.string().nullable(),
   created_at: z.date(),
-  profile_pic: z.string().nullable(),
+  profile_pic: z.array(z.number()).nullable(),
   date_of_birth: z.date().nullable(),
   last_login_at: z.date().nullable(),
   settings: settingsSchema,

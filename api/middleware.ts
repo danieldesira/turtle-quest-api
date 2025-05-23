@@ -27,7 +27,7 @@ export const verifyGoogleToken = async (
 
     const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(
       payload
-    );
+    );console.log(player)
 
     c.set("auth", AuthSchema.parse({ player, isNewPlayer }));
 

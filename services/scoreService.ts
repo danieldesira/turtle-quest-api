@@ -1,4 +1,4 @@
-import { getPrismaInstance } from "../prismaInstance";
+import prisma from "../prismaInstance";
 
 export interface SaveScorePayload {
   points: number;
@@ -6,11 +6,7 @@ export interface SaveScorePayload {
   hasWon: boolean;
 }
 
-export const saveScore = async (
-  playerId: number,
-  payload: SaveScorePayload
-) => {
-  const prisma = getPrismaInstance();
+export const saveScore = async (playerId: number, payload: SaveScorePayload) =>
   await prisma.scores.create({
     data: {
       player_id: playerId,
@@ -20,11 +16,9 @@ export const saveScore = async (
       created_at: new Date(),
     },
   });
-};
 
-export const getHighScores = async () => {
-  const prisma = getPrismaInstance();
-  return await prisma.scores.findMany({
+export const getHighScores = async () =>
+  await prisma.scores.findMany({
     take: 10,
     orderBy: {
       points: "desc",
@@ -45,11 +39,9 @@ export const getHighScores = async () => {
       },
     },
   });
-};
 
-export const getPersonalBest = async (playerId: number) => {
-  const prisma = getPrismaInstance();
-  return await prisma.scores.findFirst({
+export const getPersonalBest = async (playerId: number) =>
+  await prisma.scores.findFirst({
     where: { player_id: playerId },
     orderBy: [{ points: "desc" }, { level: "desc" }, { outcome_id: "desc" }],
     select: {
@@ -62,4 +54,3 @@ export const getPersonalBest = async (playerId: number) => {
       },
     },
   });
-};

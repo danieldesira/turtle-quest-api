@@ -1,4 +1,4 @@
-import { getPrismaInstance } from "../prismaInstance";
+import prisma from "../prismaInstance";
 import { JsonValue } from "@prisma/client/runtime/library";
 
 interface GoogleUserPayload {
@@ -44,7 +44,6 @@ const downloadImageAsByteArray = async (
 export const checkAndRegisterPlayerGoogle = async (
   user: GoogleUserPayload
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
-  const prisma = getPrismaInstance();
   const player = await prisma.players.findFirst({
     where: { external_id: user.sub, platform: "google" },
   });
@@ -70,8 +69,6 @@ export const checkAndRegisterPlayerGoogle = async (
       where: { id: player.id },
       data: { last_login_at: new Date() },
     });
-
-    player.settings = JSON.parse(player.settings?.toString()!);
     return { player, isNewPlayer: false };
   }
 };
