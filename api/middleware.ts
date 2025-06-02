@@ -25,14 +25,23 @@ export const verifyGoogleToken = async (
   try {
     const payload = await fetchGoogleUser(token);
 
-    const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(
-      payload
-    );console.log(player)
+    const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
+    console.log(player);
 
-    c.set("auth", AuthSchema.parse({ player, isNewPlayer }));
+    c.set(
+      "auth",
+      AuthSchema.parse({
+        player: {
+          ...player,
+          profile_pic: convertBytesToBase64(player.profile_pic),
+        },
+        isNewPlayer,
+      })
+    );
 
     await next();
-  } catch (error) {console.log(error)
+  } catch (error) {
+    console.log(error);
     return c.json({ error: "Invalid token" }, 401);
   }
 };
@@ -47,4 +56,9 @@ export const parseJsonBody = (
     return c.json({ error: parsed.error }, 422);
   }
   return parsed.data;
+};
+
+const convertBytesToBase64 = (bytes: Uint8Array | null): string | null => {
+  if (!bytes) return null;
+  return btoa(String.fromCharCode(...bytes));
 };
