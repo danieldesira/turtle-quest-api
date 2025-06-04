@@ -58,7 +58,11 @@ export const parseJsonBody = (
   return parsed.data;
 };
 
-const convertBytesToBase64 = (bytes: Uint8Array | null): string | null => {
+const convertBytesToBase64 = (
+  bytes: Uint8Array | null,
+  mimeType: string = "image/png"
+): string | null => {
   if (!bytes) return null;
-  return btoa(String.fromCharCode(...bytes));
+  const base64 = btoa(String.fromCharCode(...bytes));
+  return `data:${mimeType};base64,${base64}`;
 };
