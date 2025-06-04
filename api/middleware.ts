@@ -26,7 +26,6 @@ export const verifyGoogleToken = async (
     const payload = await fetchGoogleUser(token);
 
     const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
-    console.log(player);
 
     c.set(
       "auth",
@@ -34,6 +33,7 @@ export const verifyGoogleToken = async (
         player: {
           ...player,
           profile_pic: convertBytesToBase64(player.profile_pic),
+          settings: JSON.parse(player.settings?.toString()!),
         },
         isNewPlayer,
       })
