@@ -1,9 +1,11 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance";
+import { convertBase64ToBytes } from "../utils/files";
 
 export interface Player {
   name: string;
   date_of_birth: string;
+  profile_pic: string;
 }
 
 export const updateJsonField = async (
@@ -18,11 +20,15 @@ export const updateJsonField = async (
 
 export const updatePlayer = async (
   playerId: number,
-  { name, date_of_birth }: Player
+  { name, date_of_birth, profile_pic }: Player
 ) =>
   await prisma.players.update({
     where: { id: playerId },
-    data: { name, date_of_birth: new Date(date_of_birth) },
+    data: {
+      name,
+      date_of_birth: new Date(date_of_birth),
+      profile_pic: convertBase64ToBytes(profile_pic),
+    },
   });
 
 export const getLastGame = async (playerId: number) =>

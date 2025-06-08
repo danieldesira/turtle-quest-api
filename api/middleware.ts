@@ -5,6 +5,7 @@ import {
 } from "../services/authService";
 import { z } from "zod";
 import { AuthSchema } from "./types";
+import { convertBytesToBase64 } from "../utils/files";
 
 export interface Environment extends Record<string, unknown> {
   externalId: string;
@@ -56,13 +57,4 @@ export const parseJsonBody = (
     return c.json({ error: parsed.error }, 422);
   }
   return parsed.data;
-};
-
-const convertBytesToBase64 = (
-  bytes: Uint8Array | null,
-  mimeType: string = "image/png"
-): string | null => {
-  if (!bytes) return null;
-  const base64 = btoa(String.fromCharCode(...bytes));
-  return `data:${mimeType};base64,${base64}`;
 };

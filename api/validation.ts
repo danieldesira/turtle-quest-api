@@ -21,6 +21,7 @@ export const settingsSchema = z.object({
 export const playerUpdateSchema = z.object({
   name: z.string(),
   date_of_birth: z.string().date(),
+  profile_pic: z.string(),
 });
 
 export const gameSchema = z.object({
