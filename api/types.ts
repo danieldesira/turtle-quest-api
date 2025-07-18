@@ -9,7 +9,7 @@ export const PlayerSchema = z.object({
   email: z.string().nullable(),
   created_at: z.date(),
   profile_pic: z.string().nullable(),
-  date_of_birth: z.date().nullable(),
+  date_of_birth: z.coerce.date().nullable(),
   last_login_at: z.date().nullable(),
   settings: settingsSchema,
 });

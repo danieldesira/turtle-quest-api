@@ -1,5 +1,5 @@
 import prisma from "../prismaInstance";
-import { JsonValue } from "@prisma/client/runtime/library";
+import { players } from "@prisma/client";
 
 interface GoogleUserPayload {
   iss?: string;
@@ -13,17 +13,7 @@ interface GoogleUserPayload {
 }
 
 interface CheckAndRegisterPlayerGoogleResult {
-  player: {
-    id: number;
-    external_id: string;
-    platform: string;
-    email: string;
-    name: string | null;
-    profile_pic: Uint8Array | null;
-    last_login_at: Date | null;
-    created_at: Date;
-    settings: JsonValue | null;
-  };
+  player: players;
   isNewPlayer: boolean;
 }
 

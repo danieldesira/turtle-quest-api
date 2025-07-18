@@ -27,22 +27,16 @@ export const verifyGoogleToken = async (
     const payload = await fetchGoogleUser(token);
 
     const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
-    console.log(typeof player.settings);
-
-    c.set(
-      "auth",
-      AuthSchema.parse({
-        player: {
-          ...player,
-          profile_pic: convertBytesToBase64(player.profile_pic),
-          settings:
-            typeof player.settings === "object"
-              ? player.settings
-              : JSON.parse(player.settings as string),
-        },
-        isNewPlayer,
-      })
-    );
+    
+    c.set("auth", {
+      player: {
+        ...player,
+        date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
+        profile_pic: convertBytesToBase64(player.profile_pic),
+        settings: JSON.parse(player.settings as string),
+      },
+      isNewPlayer,
+    });
 
     await next();
   } catch (error) {
