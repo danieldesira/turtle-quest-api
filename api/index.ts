@@ -18,7 +18,6 @@ import {
 import { OpenAPIHono } from "@hono/zod-openapi";
 import {
   deleteGameRoute,
-  getGameRoute,
   getPlayerRoute,
   getPointsRoute,
   loginRoute,
@@ -47,13 +46,16 @@ app.doc("/doc", {
 app.use(cors());
 app.use(logger());
 
-app.openapi(loginRoute, (c) => {
+app.openapi(loginRoute, async (c) => {
   const { player, isNewPlayer } = c.get("auth") as Auth;
+
+  const lastGame = await getLastGame(player.id);
 
   return c.json({
     message: "Login successful",
     player,
     isNewPlayer,
+    lastGame: lastGame ? JSON.parse(lastGame.last_game as string) : null,
   });
 });
 
@@ -99,15 +101,6 @@ app.openapi(updateGameRoute, async (c) => {
   const body = await c.req.json();
   await updateJsonField(player.id, "last_game", body);
   return c.json({ message: "Game data updated successfully" });
-});
-
-app.openapi(getGameRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
-  const res = await getLastGame(player.id);
-  const lastGame = res?.last_game
-    ? JSON.parse(res.last_game?.toString())
-    : null;
-  return c.json(lastGame);
 });
 
 app.openapi(deleteGameRoute, async (c) => {

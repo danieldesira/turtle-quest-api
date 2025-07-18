@@ -207,22 +207,6 @@ export const updateGameRoute = createRoute({
   },
 });
 
-export const getGameRoute = createRoute({
-  method: "get",
-  path: "/game",
-  middleware: [verifyGoogleToken],
-  responses: {
-    200: {
-      description: "Successful response",
-      content: {
-        "application/json": {
-          schema: gameSchema,
-        },
-      },
-    },
-  },
-});
-
 export const deleteGameRoute = createRoute({
   method: "delete",
   path: "/game",
