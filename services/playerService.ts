@@ -18,6 +18,19 @@ export const updateJsonField = async (
     data: { [fieldName]: JSON.stringify(value) },
   });
 
+export const updateLastGame = async (
+  playerId: number,
+  lastGame: object,
+  timestamp: number
+) =>
+  await prisma.players.update({
+    where: { id: playerId },
+    data: {
+      last_game: JSON.stringify(lastGame),
+      last_game_saved_on: new Date(timestamp),
+    },
+  });
+
 export const updatePlayer = async (
   playerId: number,
   { name, date_of_birth, profile_pic }: Player
@@ -40,5 +53,8 @@ export const getLastGame = async (playerId: number) =>
 export const deleteLastGame = async (playerId: number) =>
   await prisma.players.update({
     where: { id: playerId },
-    data: { last_game: Prisma.NullableJsonNullValueInput.DbNull },
+    data: {
+      last_game: Prisma.NullableJsonNullValueInput.DbNull,
+      last_game_saved_on: null,
+    },
   });

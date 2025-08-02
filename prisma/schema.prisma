@@ -15,18 +15,19 @@ model outcomes {
 }
 
 model players {
-  name          String?   @db.VarChar(128)
-  date_of_birth DateTime? @db.Date
-  external_id   String    @db.VarChar
-  platform      String    @db.VarChar
-  profile_pic   Bytes?
-  last_game     Json?
-  created_at    DateTime  @db.Timestamp(6)
-  last_login_at DateTime? @db.Timestamp(6)
-  email         String    @unique(map: "player_unique") @db.VarChar
-  settings      Json?     @db.Json
-  id            Int       @id(map: "player_pkey") @default(autoincrement())
-  scores        scores[]
+  name               String?   @db.VarChar(128)
+  date_of_birth      DateTime? @db.Date
+  external_id        String    @db.VarChar
+  platform           String    @db.VarChar
+  profile_pic        Bytes?
+  last_game          Json?
+  created_at         DateTime  @db.Timestamp(6)
+  last_login_at      DateTime? @db.Timestamp(6)
+  email              String    @unique(map: "player_unique") @db.VarChar
+  settings           Json?     @db.Json
+  id                 Int       @id(map: "player_pkey") @default(autoincrement())
+  last_game_saved_on DateTime? @db.Timestamp(6)
+  scores             scores[]
 }
 
 model scores {

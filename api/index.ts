@@ -13,6 +13,7 @@ import {
   getLastGame,
   Player,
   updateJsonField,
+  updateLastGame,
   updatePlayer,
 } from "../services/playerService";
 import { OpenAPIHono } from "@hono/zod-openapi";
@@ -98,8 +99,8 @@ app.openapi(updateSettingsRoute, async (c) => {
 
 app.openapi(updateGameRoute, async (c) => {
   const { player } = c.get("auth") as Auth;
-  const body = await c.req.json();
-  await updateJsonField(player.id, "last_game", body);
+  const { lastGame, timestamp } = await c.req.json();
+  await updateLastGame(player.id, lastGame, timestamp);
   return c.json({ message: "Game data updated successfully" });
 });
 
