@@ -4,7 +4,6 @@ import {
   fetchGoogleUser,
 } from "../services/authService";
 import { z } from "zod";
-import { AuthSchema } from "./types";
 import { convertBytesToBase64 } from "../utils/files";
 
 export interface Environment extends Record<string, unknown> {
@@ -27,13 +26,16 @@ export const verifyGoogleToken = async (
     const payload = await fetchGoogleUser(token);
 
     const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
-    
+
     c.set("auth", {
       player: {
         ...player,
         date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
         profile_pic: convertBytesToBase64(player.profile_pic),
         settings: JSON.parse(player.settings as string),
+        last_game_saved_on: player.last_game_saved_on
+          ? new Date(player.last_game_saved_on).getTime()
+          : null,
       },
       isNewPlayer,
     });

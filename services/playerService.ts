@@ -22,14 +22,27 @@ export const updateLastGame = async (
   playerId: number,
   lastGame: object,
   timestamp: number
-) =>
-  await prisma.players.update({
-    where: { id: playerId },
-    data: {
-      last_game: JSON.stringify(lastGame),
-      last_game_saved_on: new Date(timestamp),
-    },
-  });
+) => {
+  const actualLastGameDate = (
+    await prisma.players.findFirst({
+      where: { id: playerId },
+      select: { last_game_saved_on: true },
+    })
+  )?.last_game_saved_on;
+
+  if (actualLastGameDate) {
+    const actualLastGameTimestamp = new Date(actualLastGameDate).getTime();
+    if (actualLastGameTimestamp < timestamp) {
+      await prisma.players.update({
+        where: { id: playerId },
+        data: {
+          last_game: JSON.stringify(lastGame),
+          last_game_saved_on: new Date(timestamp),
+        },
+      });
+    }
+  }
+};
 
 export const updatePlayer = async (
   playerId: number,
