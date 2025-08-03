@@ -52,11 +52,14 @@ app.openapi(loginRoute, async (c) => {
 
   const lastGame = await getLastGame(player.id);
 
+  const personalBest = await getPersonalBest(player.id);
+
   return c.json({
     message: "Login successful",
     player,
     isNewPlayer,
     lastGame: lastGame ? JSON.parse(lastGame.last_game as string) : null,
+    personalBest,
   });
 });
 
@@ -70,12 +73,8 @@ app.openapi(registerPointsRoute, async (c) => {
 });
 
 app.openapi(getPointsRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
-
   const highScores = await getHighScores();
-  const personalBest = await getPersonalBest(player.id);
-
-  return c.json({ highScores, personalBest });
+  return c.json({ highScores });
 });
 
 app.openapi(getPlayerRoute, (c) => {

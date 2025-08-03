@@ -48,6 +48,13 @@ export const loginRoute = createRoute({
             message: z.string(),
             player: PlayerSchema,
             isNewPlayer: z.boolean(),
+            personalBest: z
+              .object({
+                points: z.number(),
+                level: z.number(),
+                outcomes: z.object({ desc: z.string() }).nullable(),
+              })
+              .nullable(),
           }),
         },
       },
@@ -85,7 +92,6 @@ export const registerPointsRoute = createRoute({
 export const getPointsRoute = createRoute({
   method: "get",
   path: "/points",
-  middleware: [verifyGoogleToken],
   responses: {
     200: {
       description: "Successful response",
@@ -101,13 +107,6 @@ export const getPointsRoute = createRoute({
                 players: z.object({ name: z.string().nullable() }).nullable(),
               })
             ),
-            personalBest: z
-              .object({
-                points: z.number(),
-                level: z.number(),
-                outcomes: z.object({ desc: z.string() }).nullable(),
-              })
-              .nullable(),
           }),
         },
       },
