@@ -126,3 +126,27 @@ const validateGooglePayload = (
     email: payload.email,
   };
 };
+
+export const saveJWT = async (
+  signature: string,
+  playerId: number,
+  expiry: Date
+) =>
+  await prisma.jwt_tokens.create({
+    data: {
+      signature,
+      player_id: playerId,
+      expiry,
+    },
+  });
+
+export const fetchJWT = async (signature: string) =>
+  await prisma.jwt_tokens.findFirst({
+    where: {
+      signature,
+      expiry: { lt: new Date(Math.floor(Date.now() / 1000) + 60 * 60) },
+    },
+    select: {
+      player_id: true,
+    },
+  });

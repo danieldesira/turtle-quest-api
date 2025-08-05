@@ -1,50 +1,10 @@
 import { Context } from "hono";
-import {
-  checkAndRegisterPlayerGoogle,
-  fetchGoogleUser,
-} from "../services/authService";
 import { z } from "zod";
-import { convertBytesToBase64 } from "../utils/files";
+import { fetchJWT } from "../services/authService";
+import { createMiddleware } from "hono/factory";
 
-export interface Environment extends Record<string, unknown> {
-  externalId: string;
-  ssoPlatform: string;
-  isNewPlayer: boolean;
-  player: string;
-}
-
-export const verifyGoogleToken = async (
-  c: Context,
-  next: () => Promise<void>
-): Promise<Response | void> => {
-  const token = c.req.header("Authorization");
-  if (!token) {
-    return c.json({ error: "Token missing" }, 401);
-  }
-
-  try {
-    const payload = await fetchGoogleUser(token);
-
-    const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
-
-    c.set("auth", {
-      player: {
-        ...player,
-        date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
-        profile_pic: convertBytesToBase64(player.profile_pic),
-        settings: JSON.parse(player.settings as string),
-        last_game_saved_on: player.last_game_saved_on
-          ? new Date(player.last_game_saved_on).getTime()
-          : null,
-      },
-      isNewPlayer,
-    });
-
-    await next();
-  } catch (error) {
-    console.log(error);
-    return c.json({ error: "Invalid token" }, 401);
-  }
+type ContextVariables = {
+  playerId: number;
 };
 
 export const parseJsonBody = (
@@ -58,3 +18,22 @@ export const parseJsonBody = (
   }
   return parsed.data;
 };
+
+export const authMiddleware = createMiddleware<{ Variables: ContextVariables }>(
+  async (c, next) => {
+    c.set("playerId", -1);
+
+    const token = c.req.header("Authorization");
+    if (!token) {
+      return c.json({ message: "Player not authorised" }, 401);
+    }
+
+    const jwt = await fetchJWT(token);
+    if (jwt) {
+      c.set("playerId", jwt.player_id);
+      await next();
+    } else {
+      return c.json({ message: "Player not authorised" }, 401);
+    }
+  }
+);

@@ -1,5 +1,4 @@
 import { handle } from "hono/vercel";
-import { version } from "../package.json";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import {
@@ -18,37 +17,35 @@ import {
 } from "../services/playerService";
 import { OpenAPIHono } from "@hono/zod-openapi";
 import {
-  deleteGameRoute,
-  getPlayerRoute,
-  getPointsRoute,
-  loginRoute,
-  registerPointsRoute,
-  updateGameRoute,
-  updatePlayerRoute,
-  updateSettingsRoute,
-} from "./routes";
-import { Auth } from "./types";
-import { swaggerUI } from "@hono/swagger-ui";
+  checkAndRegisterPlayerGoogle,
+  fetchGoogleUser,
+  saveJWT,
+} from "../services/authService";
+import { convertBytesToBase64 } from "../utils/files";
+import { sign } from "hono/jwt";
+import { authMiddleware } from "./middleware";
+import { Hono } from "hono";
 
 export const config = {
   runtime: "edge",
 };
 
-const app = new OpenAPIHono().basePath("/api");
-
-app.doc("/doc", {
-  openapi: "3.0.0",
-  info: {
-    version,
-    title: "Turtle Quest API",
-  },
-});
+const app = new Hono().basePath("/api");
 
 app.use(cors());
 app.use(logger());
 
-app.openapi(loginRoute, async (c) => {
-  const { player, isNewPlayer } = c.get("auth") as Auth;
+app.post("login", async (c) => {
+  const body = await c.req.json();
+  const payload = await fetchGoogleUser(body.token);
+  const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
+
+  const jwtExpiry = Math.floor(Date.now() / 1000) + 60 * 60;
+  const jwtToken = await sign(
+    { email: player.email, exp: jwtExpiry },
+    process.env.JWT_SECRET!
+  );
+  await saveJWT(jwtToken, player.id, new Date(jwtExpiry));
 
   const lastGame = await getLastGame(player.id);
 
@@ -56,60 +53,59 @@ app.openapi(loginRoute, async (c) => {
 
   return c.json({
     message: "Login successful",
-    player,
+    player: {
+      ...player,
+      date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
+      profile_pic: convertBytesToBase64(player.profile_pic),
+      settings: JSON.parse(player.settings as string),
+      last_game_saved_on: player.last_game_saved_on
+        ? new Date(player.last_game_saved_on).getTime()
+        : null,
+    },
     isNewPlayer,
     lastGame: lastGame ? JSON.parse(lastGame.last_game as string) : null,
     personalBest,
+    jwtToken,
   });
 });
 
-app.openapi(registerPointsRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
-
+app.post("points", authMiddleware, async (c) => {
   const body = await c.req.json<SaveScorePayload>();
+  const playerId = c.get("playerId");
 
-  await saveScore(player.id, body);
+  await saveScore(playerId, body);
   return c.json({ message: "Score saved successfully" });
 });
 
-app.openapi(getPointsRoute, async (c) => {
+app.get("points", async (c) => {
   const highScores = await getHighScores();
   return c.json({ highScores });
 });
 
-app.openapi(getPlayerRoute, (c) => {
-  const { player } = c.get("auth") as Auth;
-  return c.json(player);
-});
-
-app.openapi(updatePlayerRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
+app.put("player", authMiddleware, async (c) => {
   const body = await c.req.json();
-  await updatePlayer(player.id, body as Player);
+
+  await updatePlayer(c.get("playerId"), body as Player);
   return c.json({ message: "Player updated successfully" });
 });
 
-app.openapi(updateSettingsRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
+app.put("settings", authMiddleware, async (c) => {
   const body = await c.req.json();
-  await updateJsonField(player.id, "settings", body);
+  await updateJsonField(c.get("playerId"), "settings", body);
   return c.json({ message: "Settings updated successfully" });
 });
 
-app.openapi(updateGameRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
+app.put("game", authMiddleware, async (c) => {
   const { lastGame, timestamp } = await c.req.json();
-  await updateLastGame(player.id, lastGame, timestamp);
+
+  await updateLastGame(c.get("playerId"), lastGame, timestamp);
   return c.json({ message: "Game data updated successfully" });
 });
 
-app.openapi(deleteGameRoute, async (c) => {
-  const { player } = c.get("auth") as Auth;
-  await deleteLastGame(player.id);
+app.delete("game", authMiddleware, async (c) => {
+  await deleteLastGame(c.get("playerId"));
   c.status(204);
   return c.json(undefined);
 });
-
-app.get("/swagger", swaggerUI({ url: "/api/doc" }));
 
 export default handle(app);
