@@ -15,7 +15,6 @@ import {
   updateLastGame,
   updatePlayer,
 } from "../services/playerService";
-import { OpenAPIHono } from "@hono/zod-openapi";
 import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,

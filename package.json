@@ -10,16 +10,13 @@
     "deploy": "vercel"
   },
   "dependencies": {
-    "@hono/swagger-ui": "^0.5.1",
-    "@hono/zod-openapi": "^0.18.4",
     "@hono/zod-validator": "^0.4.3",
     "@neondatabase/serverless": "^1.0.0",
     "@prisma/adapter-neon": "^6.8.2",
     "@prisma/client": "^6.8.2",
     "@vercel/postgres": "^0.10.0",
     "hono": "^4.7.10",
-    "zod": "^3.24.2",
-    "zod-openapi": "^4.2.3"
+    "zod": "^3.24.2"
   },
   "devDependencies": {
     "prisma": "^6.8.2",
