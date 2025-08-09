@@ -18,6 +18,7 @@ import {
 import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,
+  getJWTExpectedExpiry,
   revokeJWT,
   saveJWT,
 } from "../services/authService";
@@ -40,12 +41,11 @@ app.post("login", async (c) => {
   const payload = await fetchGoogleUser(body.token);
   const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
 
-  const jwtExpiry = Date.now() + 60 * 60 * 1000;
   const jwtToken = await sign(
-    { email: player.email, exp: jwtExpiry },
+    { email: player.email, exp: getJWTExpectedExpiry() },
     process.env.JWT_SECRET!
   );
-  await saveJWT(jwtToken, player.id, new Date(jwtExpiry));
+  await saveJWT(jwtToken, player.id);
 
   const lastGame = await getLastGame(player.id);
 
@@ -62,7 +62,7 @@ app.post("login", async (c) => {
         : null,
     },
     isNewPlayer,
-    lastGame,
+    lastGame: lastGame?.last_game,
     personalBest,
     jwtToken,
   });

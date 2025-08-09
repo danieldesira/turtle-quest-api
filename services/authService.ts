@@ -127,16 +127,12 @@ const validateGooglePayload = (
   };
 };
 
-export const saveJWT = async (
-  signature: string,
-  playerId: number,
-  expiry: Date
-) =>
+export const saveJWT = async (signature: string, playerId: number) =>
   await prisma.jwt_tokens.create({
     data: {
       signature,
       player_id: playerId,
-      expiry,
+      expiry: new Date(getJWTExpectedExpiry()),
     },
   });
 
@@ -144,7 +140,7 @@ export const fetchJWT = async (signature: string) =>
   await prisma.jwt_tokens.findFirst({
     where: {
       signature,
-      expiry: { lt: new Date(Math.floor(Date.now() / 1000) + 60 * 60) },
+      expiry: { lt: new Date(getJWTExpectedExpiry()) },
     },
     select: {
       player_id: true,
@@ -153,3 +149,5 @@ export const fetchJWT = async (signature: string) =>
 
 export const revokeJWT = async (playerId: number) =>
   await prisma.jwt_tokens.deleteMany({ where: { player_id: playerId } });
+
+export const getJWTExpectedExpiry = () => Date.now() + 60 * 60 * 1000;
