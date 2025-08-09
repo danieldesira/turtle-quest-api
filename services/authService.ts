@@ -150,3 +150,6 @@ export const fetchJWT = async (signature: string) =>
       player_id: true,
     },
   });
+
+export const revokeJWT = async (playerId: number) =>
+  await prisma.jwt_tokens.deleteMany({ where: { player_id: playerId } });

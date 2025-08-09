@@ -18,6 +18,7 @@ import {
 import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,
+  revokeJWT,
   saveJWT,
 } from "../services/authService";
 import { convertBytesToBase64 } from "../utils/files";
@@ -39,7 +40,7 @@ app.post("login", async (c) => {
   const payload = await fetchGoogleUser(body.token);
   const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
 
-  const jwtExpiry = Math.floor(Date.now() / 1000) + 60 * 60;
+  const jwtExpiry = Date.now() + 60 * 60 * 1000;
   const jwtToken = await sign(
     { email: player.email, exp: jwtExpiry },
     process.env.JWT_SECRET!
@@ -56,13 +57,12 @@ app.post("login", async (c) => {
       ...player,
       date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
       profile_pic: convertBytesToBase64(player.profile_pic),
-      settings: JSON.parse(player.settings as string),
       last_game_saved_on: player.last_game_saved_on
         ? new Date(player.last_game_saved_on).getTime()
         : null,
     },
     isNewPlayer,
-    lastGame: lastGame ? JSON.parse(lastGame.last_game as string) : null,
+    lastGame,
     personalBest,
     jwtToken,
   });
@@ -103,6 +103,13 @@ app.put("game", authMiddleware, async (c) => {
 
 app.delete("game", authMiddleware, async (c) => {
   await deleteLastGame(c.get("playerId"));
+  c.status(204);
+  return c.json(undefined);
+});
+
+app.post("logout", authMiddleware, async (c) => {
+  await revokeJWT(c.get("playerId"));
+
   c.status(204);
   return c.json(undefined);
 });
