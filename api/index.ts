@@ -25,6 +25,14 @@ import { sign } from "hono/jwt";
 import { authMiddleware } from "./middleware";
 import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
+import { zValidator } from "@hono/zod-validator";
+import {
+  gameUpdateSchema,
+  loginSchema,
+  playerUpdateSchema,
+  pointInsertSchema,
+  settingsUpdateSchema,
+} from "./validation";
 
 export const config = {
   runtime: "edge",
@@ -40,7 +48,7 @@ app.use(
 );
 app.use(logger());
 
-app.post("login", async (c) => {
+app.post("login", zValidator("json", loginSchema), async (c) => {
   const body = await c.req.json();
   const payload = await fetchGoogleUser(body.token);
   const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
@@ -77,38 +85,58 @@ app.post("login", async (c) => {
   });
 });
 
-app.post("points", authMiddleware, async (c) => {
-  const body = await c.req.json<SaveScorePayload>();
-  const playerId = c.get("playerId");
+app.post(
+  "points",
+  authMiddleware,
+  zValidator("json", pointInsertSchema),
+  async (c) => {
+    const body = await c.req.json<SaveScorePayload>();
+    const playerId = c.get("playerId");
 
-  await saveScore(playerId, body);
-  return c.json({ message: "Score saved successfully" });
-});
+    await saveScore(playerId, body);
+    return c.json({ message: "Score saved successfully" });
+  }
+);
 
 app.get("points", async (c) => {
   const highScores = await getHighScores();
   return c.json({ highScores });
 });
 
-app.put("player", authMiddleware, async (c) => {
-  const body = await c.req.json();
+app.put(
+  "player",
+  authMiddleware,
+  zValidator("json", playerUpdateSchema),
+  async (c) => {
+    const body = await c.req.json();
 
-  await updatePlayer(c.get("playerId"), body as Player);
-  return c.json({ message: "Player updated successfully" });
-});
+    await updatePlayer(c.get("playerId"), body as Player);
+    return c.json({ message: "Player updated successfully" });
+  }
+);
 
-app.put("settings", authMiddleware, async (c) => {
-  const body = await c.req.json();
-  await updateJsonField(c.get("playerId"), "settings", body);
-  return c.json({ message: "Settings updated successfully" });
-});
+app.put(
+  "settings",
+  authMiddleware,
+  zValidator("json", settingsUpdateSchema),
+  async (c) => {
+    const body = await c.req.json();
+    await updateJsonField(c.get("playerId"), "settings", body);
+    return c.json({ message: "Settings updated successfully" });
+  }
+);
 
-app.put("game", authMiddleware, async (c) => {
-  const { lastGame, timestamp } = await c.req.json();
+app.put(
+  "game",
+  authMiddleware,
+  zValidator("json", gameUpdateSchema),
+  async (c) => {
+    const { lastGame, timestamp } = await c.req.json();
 
-  await updateLastGame(c.get("playerId"), lastGame, timestamp);
-  return c.json({ message: "Game data updated successfully" });
-});
+    await updateLastGame(c.get("playerId"), lastGame, timestamp);
+    return c.json({ message: "Game data updated successfully" });
+  }
+);
 
 app.delete("game", authMiddleware, async (c) => {
   await deleteLastGame(c.get("playerId"));

@@ -1,20 +1,17 @@
 import { z } from "zod";
 
-export const pointInsertSchema = z.object({
-  points: z.number({
-    invalid_type_error: "points should be a number",
-    required_error: "points is required",
-  }),
-  level: z.number({
-    invalid_type_error: "level should be a number",
-    required_error: "level is required",
-  }),
-  hasWon: z
-    .boolean({ invalid_type_error: "hasWon should be a boolean" })
-    .optional(),
+export const loginSchema = z.object({
+  token: z.string(),
+  service: z.enum(["google"]),
 });
 
-export const settingsSchema = z.object({
+export const pointInsertSchema = z.object({
+  points: z.number(),
+  level: z.number(),
+  hasWon: z.boolean().optional(),
+});
+
+export const settingsUpdateSchema = z.object({
   controlPosition: z.enum(["Left", "Right"]),
 });
 
@@ -24,7 +21,7 @@ export const playerUpdateSchema = z.object({
   profile_pic: z.string(),
 });
 
-export const gameSchema = z.object({
+export const gameUpdateSchema = z.object({
   lastGame: z.object({
     characters: z.array(
       z.object({
@@ -38,7 +35,7 @@ export const gameSchema = z.object({
     turtle: z.object({
       x: z.number(),
       y: z.number(),
-      direction: z.number(),
+      direction: z.enum(["Up", "Down", "Left", "Right"]),
       food: z.number(),
       health: z.number(),
       oxygen: z.number(),

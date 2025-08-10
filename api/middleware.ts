@@ -8,18 +8,6 @@ type ContextVariables = {
   playerId: number;
 };
 
-export const parseJsonBody = (
-  schema: z.ZodObject<any>,
-  value: object,
-  c: Context
-) => {
-  const parsed = schema.safeParse(value);
-  if (!parsed.success) {
-    return c.json({ error: parsed.error }, 422);
-  }
-  return parsed.data;
-};
-
 export const authMiddleware = createMiddleware<{ Variables: ContextVariables }>(
   async (c, next) => {
     const authorizationCookie = getCookie(c, "Authorization");
