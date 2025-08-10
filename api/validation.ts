@@ -27,7 +27,7 @@ export const gameUpdateSchema = z.object({
       z.object({
         x: z.number(),
         y: z.number(),
-        direction: z.number(),
+        direction: z.enum(["Up", "Down", "Left", "Right"]),
         type: z.string(),
       })
     ),
