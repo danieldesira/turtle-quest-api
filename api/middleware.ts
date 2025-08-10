@@ -1,7 +1,8 @@
 import { Context } from "hono";
 import { z } from "zod";
-import { fetchJWT } from "../services/authService";
 import { createMiddleware } from "hono/factory";
+import { decode, verify } from "hono/jwt";
+import { getCookie } from "hono/cookie";
 
 type ContextVariables = {
   playerId: number;
@@ -21,19 +22,22 @@ export const parseJsonBody = (
 
 export const authMiddleware = createMiddleware<{ Variables: ContextVariables }>(
   async (c, next) => {
-    c.set("playerId", -1);
-
-    const token = c.req.header("Authorization");
-    if (!token) {
+    const authorizationCookie = getCookie(c, "Authorization");
+    if (!authorizationCookie) {
       return c.json({ message: "Player not authorised" }, 401);
     }
 
-    const jwt = await fetchJWT(token);
-    if (jwt) {
-      c.set("playerId", jwt.player_id);
-      await next();
-    } else {
+    if (!verify(authorizationCookie, process.env.JWT_SECRET!)) {
       return c.json({ message: "Player not authorised" }, 401);
     }
+
+    const { payload } = decode(authorizationCookie);
+
+    if (!payload || !payload.id) {
+      return c.json({ message: "Player not authorised" }, 401);
+    }
+
+    c.set("playerId", Number(payload.id));
+    await next();
   }
 );

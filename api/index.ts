@@ -19,13 +19,12 @@ import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,
   getJWTExpectedExpiry,
-  revokeJWT,
-  saveJWT,
 } from "../services/authService";
 import { convertBytesToBase64 } from "../utils/files";
 import { sign } from "hono/jwt";
 import { authMiddleware } from "./middleware";
 import { Hono } from "hono";
+import { deleteCookie, setCookie } from "hono/cookie";
 
 export const config = {
   runtime: "edge",
@@ -33,7 +32,12 @@ export const config = {
 
 const app = new Hono().basePath("/api");
 
-app.use(cors());
+app.use(
+  cors({
+    origin: ["https://localhost:5173", "https://turtle-quest.vercel.app"],
+    credentials: true,
+  })
+);
 app.use(logger());
 
 app.post("login", async (c) => {
@@ -41,11 +45,17 @@ app.post("login", async (c) => {
   const payload = await fetchGoogleUser(body.token);
   const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
 
+  const jwtExpiry = getJWTExpectedExpiry();
   const jwtToken = await sign(
-    { email: player.email, exp: getJWTExpectedExpiry() },
+    { id: player.id, email: player.email, exp: jwtExpiry },
     process.env.JWT_SECRET!
   );
-  await saveJWT(jwtToken, player.id);
+  setCookie(c, "Authorization", jwtToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    expires: new Date(jwtExpiry),
+  });
 
   const lastGame = await getLastGame(player.id);
 
@@ -64,7 +74,6 @@ app.post("login", async (c) => {
     isNewPlayer,
     lastGame: lastGame?.last_game,
     personalBest,
-    jwtToken,
   });
 });
 
@@ -108,7 +117,7 @@ app.delete("game", authMiddleware, async (c) => {
 });
 
 app.post("logout", authMiddleware, async (c) => {
-  await revokeJWT(c.get("playerId"));
+  deleteCookie(c, "Authorization");
 
   c.status(204);
   return c.json(undefined);
