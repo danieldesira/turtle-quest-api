@@ -1,4 +1,7 @@
 # Changelog
+## 0.1.2 - 11/08/2025 19:15
+* Move to Vercel Serverless rather than Edge
+
 ## 0.1.1 - 11/08/2025 19:00
 * Add postinstall step in attempt to fix Prisma issue on Vercel
 

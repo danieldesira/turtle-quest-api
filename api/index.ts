@@ -1,4 +1,3 @@
-import { handle } from "hono/vercel";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import {
@@ -33,10 +32,6 @@ import {
   pointInsertSchema,
   settingsUpdateSchema,
 } from "./validation";
-
-export const config = {
-  runtime: "edge",
-};
 
 const app = new Hono().basePath("/api");
 
@@ -151,4 +146,4 @@ app.post("logout", authMiddleware, async (c) => {
   return c.json(undefined);
 });
 
-export default handle(app);
+export default app;
