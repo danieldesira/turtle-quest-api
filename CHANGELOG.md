@@ -1,4 +1,7 @@
 # Changelog
+## 0.1.1 - 11/08/2025 19:00
+* Add postinstall step in attempt to fix Prisma issue on Vercel
+
 ## 0.1.0 - 11/08/2025 18:20
 * Remove ``/api/about`` endpoint
 * Set up Google authentication
