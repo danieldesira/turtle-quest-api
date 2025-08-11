@@ -8,14 +8,10 @@ export interface Player {
   profile_pic: string;
 }
 
-export const updateJsonField = async (
-  playerId: number,
-  fieldName: string,
-  value: object
-) =>
-  await prisma.players.update({
+export const updateSettings = (playerId: number, value: object) =>
+  prisma.players.update({
     where: { id: playerId },
-    data: { [fieldName]: JSON.stringify(value) },
+    data: { settings: value },
   });
 
 export const updateLastGame = async (

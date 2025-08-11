@@ -11,9 +11,9 @@ import {
   deleteLastGame,
   getLastGame,
   Player,
-  updateJsonField,
   updateLastGame,
   updatePlayer,
+  updateSettings,
 } from "../services/playerService";
 import {
   checkAndRegisterPlayerGoogle,
@@ -121,7 +121,7 @@ app.put(
   zValidator("json", settingsUpdateSchema),
   async (c) => {
     const body = await c.req.json();
-    await updateJsonField(c.get("playerId"), "settings", body);
+    await updateSettings(c.get("playerId"), body);
     return c.json({ message: "Settings updated successfully" });
   }
 );
