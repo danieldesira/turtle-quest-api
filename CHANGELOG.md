@@ -4,6 +4,7 @@
 * Refactor imports to include the ``.js`` extension
 * Update the Vercel package to 44.7.3
 * Cleanup Neon-related packages and code
+* Log SQL queries
 
 ## 0.1.2 - 11/08/2025 19:15
 * Move to Vercel Serverless rather than Edge
