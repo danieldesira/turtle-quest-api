@@ -1,4 +1,4 @@
-import prisma from "../prismaInstance";
+import prisma from "../prismaInstance.js";
 
 export interface SaveScorePayload {
   points: number;

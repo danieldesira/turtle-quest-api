@@ -1,4 +1,4 @@
-import prisma from "../prismaInstance";
+import prisma from "../prismaInstance.js";
 import { players } from "@prisma/client";
 
 interface GoogleUserPayload {

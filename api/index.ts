@@ -5,7 +5,7 @@ import {
   getPersonalBest,
   saveScore,
   SaveScorePayload,
-} from "../services/scoreService";
+} from "./services/scoreService.js";
 import {
   deleteLastGame,
   getLastGame,
@@ -13,15 +13,15 @@ import {
   updateLastGame,
   updatePlayer,
   updateSettings,
-} from "../services/playerService";
+} from "./services/playerService.js";
 import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,
   getJWTExpectedExpiry,
-} from "../services/authService";
-import { convertBytesToBase64 } from "../utils/files";
+} from "./services/authService.js";
+import { convertBytesToBase64 } from "./utils/files.js";
 import { sign } from "hono/jwt";
-import { authMiddleware } from "./middleware";
+import { authMiddleware } from "./middleware.js";
 import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
@@ -31,7 +31,7 @@ import {
   playerUpdateSchema,
   pointInsertSchema,
   settingsUpdateSchema,
-} from "./validation";
+} from "./validation.js";
 
 const app = new Hono().basePath("/api");
 

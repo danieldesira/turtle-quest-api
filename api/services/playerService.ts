@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
-import prisma from "../prismaInstance";
-import { convertBase64ToBytes } from "../utils/files";
+import prisma from "../prismaInstance.js";
+import { convertBase64ToBytes } from "../utils/files.js";
 
 export interface Player {
   name: string;

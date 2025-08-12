@@ -1,4 +1,10 @@
 # Changelog
+## 0.1.3 - 12/08/2025 13:10
+* Move all source files to the ``/api`` folder
+* Refactor imports to include the ``.js`` extension
+* Update the Vercel package to 44.7.3
+* Cleanup Neon-related packages and code
+
 ## 0.1.2 - 11/08/2025 19:15
 * Move to Vercel Serverless rather than Edge
 
