@@ -4,6 +4,7 @@
 
 - Update Vercel CLI to 46.0.0
 
+
 ## 0.1.3 - 12/08/2025 13:10
 
 - Move all source files to the `/api` folder

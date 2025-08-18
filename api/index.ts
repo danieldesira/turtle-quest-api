@@ -12,6 +12,7 @@ import {
   Player,
   updateLastGame,
   updatePlayer,
+  updatePlayerProfilePic,
   updateSettings,
 } from "./services/playerService.js";
 import {
@@ -19,7 +20,6 @@ import {
   fetchGoogleUser,
   getJWTExpectedExpiry,
 } from "./services/authService.js";
-import { convertBytesToBase64 } from "./utils/files.js";
 import { sign } from "hono/jwt";
 import { authMiddleware } from "./middleware.js";
 import { Hono } from "hono";
@@ -32,6 +32,8 @@ import {
   pointInsertSchema,
   settingsUpdateSchema,
 } from "./validation.js";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { r2 } from "./services/r2.js";
 
 const app = new Hono().basePath("/api");
 
@@ -69,7 +71,6 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
     player: {
       ...player,
       date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
-      profile_pic: convertBytesToBase64(player.profile_pic),
       last_game_saved_on: player.last_game_saved_on
         ? new Date(player.last_game_saved_on).getTime()
         : null,
@@ -144,6 +145,38 @@ app.post("logout", authMiddleware, async (c) => {
 
   c.status(204);
   return c.json(undefined);
+});
+
+app.put("profile-pic", //authMiddleware, 
+async (c) => {
+  const playerId =1// c.get("playerId");
+  const formData = await c.req.formData();
+  const file = formData.get("file");
+
+  if (!file || !(file instanceof File)) {
+    return c.json({ error: "No file uploaded" }, 400);
+  }
+
+  const key = `profile-pics/${playerId}.png`;
+  const buffer = Buffer.from(await file.arrayBuffer());
+  const bucket = process.env.R2_BUCKET_NAME!;console.log(bucket)
+
+  const r2Command = new PutObjectCommand({
+    Bucket: bucket,
+    Key: key,
+    Body: buffer,
+    ContentType: file.type,
+  });
+  await r2.send(r2Command);
+
+  const profilePicUrl = `https://${bucket}.r2.cloudflarestorage.com/${key}`;
+
+  await updatePlayerProfilePic(playerId, profilePicUrl);
+
+  return c.json({
+    message: "Profile picture updated successfully",
+    profilePicUrl,
+  });
 });
 
 export default app;

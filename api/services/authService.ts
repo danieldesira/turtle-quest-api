@@ -17,20 +17,6 @@ interface CheckAndRegisterPlayerGoogleResult {
   isNewPlayer: boolean;
 }
 
-const downloadImageAsByteArray = async (
-  url: string
-): Promise<Uint8Array | null> => {
-  if (!url) {
-    return null;
-  }
-  const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to download image: ${response.statusText}`);
-  }
-  const arrayBuffer = await response.arrayBuffer();
-  return new Uint8Array(arrayBuffer);
-};
-
 export const checkAndRegisterPlayerGoogle = async (
   user: GoogleUserPayload
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
@@ -39,14 +25,13 @@ export const checkAndRegisterPlayerGoogle = async (
   });
 
   if (!player) {
-    const profilePicBytes = await downloadImageAsByteArray(user.picture || "");
     const newPlayer = await prisma.players.create({
       data: {
         external_id: user.sub,
         platform: "google",
         email: user.email,
         name: user.name,
-        profile_pic: profilePicBytes,
+        profile_pic_url: user.picture,
         last_login_at: new Date(),
         created_at: new Date(),
         date_of_birth: null,
