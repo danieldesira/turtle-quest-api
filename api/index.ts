@@ -147,25 +147,20 @@ app.post("logout", authMiddleware, async (c) => {
   return c.json(undefined);
 });
 
-app.put("profile-pic", //authMiddleware, 
-async (c) => {
-  const playerId =1// c.get("playerId");
-  const formData = await c.req.formData();
-  const file = formData.get("file");
-
-  if (!file || !(file instanceof File)) {
-    return c.json({ error: "No file uploaded" }, 400);
-  }
+app.put("profile-pic", authMiddleware, async (c) => {
+  const playerId = c.get("playerId");
+  const blob = await c.req.blob();
 
   const key = `profile-pics/${playerId}.png`;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const bucket = process.env.R2_BUCKET_NAME!;console.log(bucket)
+  const buffer = Buffer.from(await blob.arrayBuffer());
+  const bucket = process.env.R2_BUCKET_NAME!;
+  console.log(bucket);
 
   const r2Command = new PutObjectCommand({
     Bucket: bucket,
     Key: key,
     Body: buffer,
-    ContentType: file.type,
+    ContentType: blob.type,
   });
   await r2.send(r2Command);
 
