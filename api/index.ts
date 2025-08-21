@@ -94,9 +94,9 @@ app.post(
   }
 );
 
-app.get("points", async (c) => {
+app.get("high-scores", async (c) => {
   const highScores = await getHighScores();
-  return c.json({ highScores });
+  return c.json(highScores);
 });
 
 app.put(
