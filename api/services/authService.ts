@@ -1,5 +1,7 @@
 import prisma from "../prismaInstance.js";
 import { players } from "@prisma/client";
+import { uploadToR2 } from "./r2.js";
+import { updatePlayerProfilePic } from "./playerService.js";
 
 interface GoogleUserPayload {
   iss?: string;
@@ -31,13 +33,24 @@ export const checkAndRegisterPlayerGoogle = async (
         platform: "google",
         email: user.email,
         name: user.name,
-        profile_pic_url: user.picture,
         last_login_at: new Date(),
         created_at: new Date(),
         date_of_birth: null,
         settings: { controlPosition: "Right" },
       },
     });
+
+    const profilePicRequest = await fetch(user.picture!);
+    const profilePicBlob = await profilePicRequest.blob();
+
+    const r2Key = `profile-pics/${newPlayer.id}.png`;
+    const profilePicBuffer = Buffer.from(await profilePicBlob.arrayBuffer());
+    const bucket = process.env.R2_BUCKET_NAME!;
+
+    await uploadToR2(bucket, r2Key, profilePicBuffer, profilePicBlob.type);
+
+    await updatePlayerProfilePic(newPlayer.id, r2Key);
+
     return { player: newPlayer, isNewPlayer: true };
   } else {
     await prisma.players.update({

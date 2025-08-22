@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.864.0",
+    "@aws-sdk/s3-request-presigner": "^3.872.0",
     "@hono/zod-validator": "^0.4.3",
     "@prisma/client": "^6.8.2",
     "@vercel/postgres": "^0.10.0",

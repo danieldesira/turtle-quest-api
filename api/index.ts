@@ -32,8 +32,7 @@ import {
   pointInsertSchema,
   settingsUpdateSchema,
 } from "./validation.js";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { r2 } from "./services/r2.js";
+import { getProfilePicUrl, uploadToR2 } from "./services/r2.js";
 
 const app = new Hono().basePath("/api");
 
@@ -74,6 +73,9 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
       last_game_saved_on: player.last_game_saved_on
         ? new Date(player.last_game_saved_on).getTime()
         : null,
+      profile_pic_url: player.profile_pic_url
+        ? await getProfilePicUrl(`${player.id}.png`)
+        : null,
     },
     isNewPlayer,
     lastGame: lastGame?.last_game,
@@ -96,6 +98,13 @@ app.post(
 
 app.get("high-scores", async (c) => {
   const highScores = await getHighScores();
+  for (const score of highScores) {
+    if (score.players) {
+      score.players.profile_pic_url = await getProfilePicUrl(
+        score.players?.profile_pic_url!
+      );
+    }
+  }
   return c.json(highScores);
 });
 
@@ -151,26 +160,21 @@ app.put("profile-pic", authMiddleware, async (c) => {
   const playerId = c.get("playerId");
   const blob = await c.req.blob();
 
+  if (!blob.type.startsWith("image/")) {
+    return c.json({ message: "Invalid file type" }, 400);
+  }
+
   const key = `profile-pics/${playerId}.png`;
   const buffer = Buffer.from(await blob.arrayBuffer());
   const bucket = process.env.R2_BUCKET_NAME!;
-  console.log(bucket);
 
-  const r2Command = new PutObjectCommand({
-    Bucket: bucket,
-    Key: key,
-    Body: buffer,
-    ContentType: blob.type,
-  });
-  await r2.send(r2Command);
+  await uploadToR2(bucket, key, buffer, blob.type);
 
-  const profilePicUrl = `https://${bucket}.r2.cloudflarestorage.com/${key}`;
-
-  await updatePlayerProfilePic(playerId, profilePicUrl);
+  await updatePlayerProfilePic(playerId, key);
 
   return c.json({
     message: "Profile picture updated successfully",
-    profilePicUrl,
+    profilePicUrl: await getProfilePicUrl(key),
   });
 });
 
