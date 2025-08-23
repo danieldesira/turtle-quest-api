@@ -27,29 +27,28 @@ export const checkAndRegisterPlayerGoogle = async (
   });
 
   if (!player) {
-    const newPlayer = await prisma.players.create({
-      data: {
-        external_id: user.sub,
-        platform: "google",
-        email: user.email,
-        name: user.name,
-        last_login_at: new Date(),
-        created_at: new Date(),
-        date_of_birth: null,
-        settings: { controlPosition: "Right" },
-      },
+    const newPlayer = await prisma.$transaction(async (tx) => {
+      const newPlayer = await tx.players.create({
+        data: {
+          external_id: user.sub,
+          platform: "google",
+          email: user.email,
+          name: user.name,
+          last_login_at: new Date(),
+          created_at: new Date(),
+          date_of_birth: null,
+          settings: { controlPosition: "Right" },
+        },
+      });
+
+      const r2Key = await uploadSSOProfileImageToR2(
+        user.picture!,
+        newPlayer.id
+      );
+      await updatePlayerProfilePic(newPlayer.id, r2Key, tx);
+
+      return newPlayer;
     });
-
-    const profilePicRequest = await fetch(user.picture!);
-    const profilePicBlob = await profilePicRequest.blob();
-
-    const r2Key = `profile-pics/${newPlayer.id}.png`;
-    const profilePicBuffer = Buffer.from(await profilePicBlob.arrayBuffer());
-    const bucket = process.env.R2_BUCKET_NAME!;
-
-    await uploadToR2(bucket, r2Key, profilePicBuffer, profilePicBlob.type);
-
-    await updatePlayerProfilePic(newPlayer.id, r2Key);
 
     return { player: newPlayer, isNewPlayer: true };
   } else {
@@ -126,3 +125,19 @@ const validateGooglePayload = (
 };
 
 export const getJWTExpectedExpiry = () => Date.now() + 60 * 60 * 1000;
+
+const uploadSSOProfileImageToR2 = async (
+  imageUrl: string,
+  playerId: number
+) => {
+  const profilePicRequest = await fetch(imageUrl);
+  const profilePicBlob = await profilePicRequest.blob();
+
+  const r2Key = `profile-pics/${playerId}.png`;
+  const profilePicBuffer = Buffer.from(await profilePicBlob.arrayBuffer());
+  const bucket = process.env.R2_BUCKET_NAME!;
+
+  await uploadToR2(bucket, r2Key, profilePicBuffer, profilePicBlob.type);
+
+  return r2Key;
+};

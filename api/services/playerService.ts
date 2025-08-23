@@ -52,12 +52,15 @@ export const updatePlayer = async (
 
 export const updatePlayerProfilePic = async (
   playerId: number,
-  profilePicUrl: string
-) =>
-  await prisma.players.update({
+  profilePicUrl: string,
+  transaction: Prisma.TransactionClient | null = null
+) => {
+  const dbClient = transaction ? transaction : prisma;
+  await dbClient.players.update({
     where: { id: playerId },
     data: { profile_pic_url: profilePicUrl },
   });
+};
 
 export const getLastGame = async (playerId: number) =>
   await prisma.players.findFirst({
