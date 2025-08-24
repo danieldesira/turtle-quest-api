@@ -19,7 +19,7 @@ model players {
   date_of_birth      DateTime? @db.Date
   external_id        String    @db.VarChar
   platform           String    @db.VarChar
-  profile_pic_url    String?   @db.VarChar
+  profile_pic_r2_key String?   @db.VarChar
   last_game          Json?
   created_at         DateTime  @db.Timestamp(6)
   last_login_at      DateTime? @db.Timestamp(6)

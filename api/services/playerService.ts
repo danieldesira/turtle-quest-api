@@ -58,7 +58,7 @@ export const updatePlayerProfilePic = async (
   const dbClient = transaction ? transaction : prisma;
   await dbClient.players.update({
     where: { id: playerId },
-    data: { profile_pic_url: profilePicUrl },
+    data: { profile_pic_r2_key: profilePicUrl },
   });
 };
 
@@ -81,6 +81,6 @@ export const getProfilePicKey = async (playerId: number) =>
   (
     await prisma.players.findFirst({
       where: { id: playerId },
-      select: { profile_pic_url: true },
+      select: { profile_pic_r2_key: true },
     })
-  )?.profile_pic_url;
+  )?.profile_pic_r2_key;

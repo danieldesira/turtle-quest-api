@@ -30,7 +30,7 @@ export const getHighScores = async () =>
       players: {
         select: {
           name: true,
-          profile_pic_url: true,
+          profile_pic_r2_key: true,
         },
       },
       outcomes: {

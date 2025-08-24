@@ -74,8 +74,8 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
       last_game_saved_on: player.last_game_saved_on
         ? new Date(player.last_game_saved_on).getTime()
         : null,
-      profile_pic_url: player.profile_pic_url
-        ? await getProfilePicUrl(`${player.id}.png`)
+      profile_pic_url: player.profile_pic_r2_key
+        ? await getProfilePicUrl(player.profile_pic_r2_key)
         : null,
     },
     isNewPlayer,
@@ -99,14 +99,25 @@ app.post(
 
 app.get("high-scores", async (c) => {
   const highScores = await getHighScores();
+
+  const profilePicUrlMap: Record<string, string> = {};
   for (const score of highScores) {
-    if (score.players) {
-      score.players.profile_pic_url = await getProfilePicUrl(
-        score.players?.profile_pic_url!
+    if (!profilePicUrlMap[score.players?.name!]) {
+      profilePicUrlMap[score.players?.name!] = await getProfilePicUrl(
+        score.players?.profile_pic_r2_key!
       );
     }
   }
-  return c.json(highScores);
+
+  return c.json(
+    highScores.map(({ players, points, level, outcomes }) => ({
+      playerName: players?.name,
+      playerProfilePicUrl: profilePicUrlMap[players?.name!],
+      points,
+      level,
+      outcome: outcomes.desc,
+    }))
+  );
 });
 
 app.put(
