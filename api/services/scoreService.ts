@@ -1,4 +1,6 @@
+import { scores } from "@prisma/client";
 import prisma from "../prismaInstance.js";
+import { getProfilePicUrl } from "./r2.js";
 
 export interface SaveScorePayload {
   points: number;
@@ -55,3 +57,16 @@ export const getPersonalBest = async (playerId: number) =>
       },
     },
   });
+
+export const createProfilePicUrlMapFromHighScores = async (
+  highScores: Awaited<ReturnType<typeof getHighScores>>
+) => {
+  const profilePicUrlMap: Record<string, string> = {};
+  for (const score of highScores) {
+    if (!profilePicUrlMap[score.players?.profile_pic_r2_key!]) {
+      profilePicUrlMap[score.players?.profile_pic_r2_key!] =
+        await getProfilePicUrl(score.players?.profile_pic_r2_key!);
+    }
+  }
+  return profilePicUrlMap;
+};

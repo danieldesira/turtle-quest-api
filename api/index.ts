@@ -1,6 +1,7 @@
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import {
+  createProfilePicUrlMapFromHighScores,
   getHighScores,
   getPersonalBest,
   saveScore,
@@ -99,20 +100,14 @@ app.post(
 
 app.get("high-scores", async (c) => {
   const highScores = await getHighScores();
-
-  const profilePicUrlMap: Record<string, string> = {};
-  for (const score of highScores) {
-    if (!profilePicUrlMap[score.players?.name!]) {
-      profilePicUrlMap[score.players?.name!] = await getProfilePicUrl(
-        score.players?.profile_pic_r2_key!
-      );
-    }
-  }
+  const profilePicUrlMap = await createProfilePicUrlMapFromHighScores(
+    highScores
+  );
 
   return c.json(
     highScores.map(({ players, points, level, outcomes }) => ({
       playerName: players?.name,
-      playerProfilePicUrl: profilePicUrlMap[players?.name!],
+      playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key!],
       points,
       level,
       outcome: outcomes.desc,
@@ -188,16 +183,6 @@ app.put("profile-pic", authMiddleware, async (c) => {
   return c.json({
     message: "Profile picture updated successfully",
     profilePicUrl: await getProfilePicUrl(key),
-  });
-});
-
-app.get("profile-pic", authMiddleware, async (c) => {
-  const playerId = c.get("playerId");
-  const profilePicKey = await getProfilePicKey(playerId);
-  const profilePicUrl = await getProfilePicUrl(profilePicKey!);
-
-  return c.json({
-    profilePicUrl,
   });
 });
 
