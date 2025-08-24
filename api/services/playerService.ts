@@ -76,3 +76,11 @@ export const deleteLastGame = async (playerId: number) =>
       last_game_saved_on: null,
     },
   });
+
+export const getProfilePicKey = async (playerId: number) =>
+  (
+    await prisma.players.findFirst({
+      where: { id: playerId },
+      select: { profile_pic_url: true },
+    })
+  )?.profile_pic_url;

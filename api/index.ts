@@ -9,6 +9,7 @@ import {
 import {
   deleteLastGame,
   getLastGame,
+  getProfilePicKey,
   Player,
   updateLastGame,
   updatePlayer,
@@ -164,7 +165,8 @@ app.put("profile-pic", authMiddleware, async (c) => {
     return c.json({ message: "Invalid file type" }, 400);
   }
 
-  const key = `profile-pics/${playerId}.png`;
+  const fileExtension = blob.type.split("/")[1];
+  const key = `/profile-pics/${playerId}.${fileExtension}`;
   const buffer = Buffer.from(await blob.arrayBuffer());
   const bucket = process.env.R2_BUCKET_NAME!;
 
@@ -175,6 +177,16 @@ app.put("profile-pic", authMiddleware, async (c) => {
   return c.json({
     message: "Profile picture updated successfully",
     profilePicUrl: await getProfilePicUrl(key),
+  });
+});
+
+app.get("profile-pic", authMiddleware, async (c) => {
+  const playerId = c.get("playerId");
+  const profilePicKey = await getProfilePicKey(playerId);
+  const profilePicUrl = await getProfilePicUrl(profilePicKey!);
+
+  return c.json({
+    profilePicUrl,
   });
 });
 
