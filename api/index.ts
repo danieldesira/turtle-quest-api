@@ -34,7 +34,7 @@ import {
   pointInsertSchema,
   settingsUpdateSchema,
 } from "./validation.js";
-import { getProfilePicUrl, uploadToR2 } from "./services/r2.js";
+import { deleteR2Object, getR2Url, uploadToR2 } from "./services/r2.js";
 
 const app = new Hono().basePath("/api");
 
@@ -76,7 +76,7 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
         ? new Date(player.last_game_saved_on).getTime()
         : null,
       profile_pic_url: player.profile_pic_r2_key
-        ? await getProfilePicUrl(player.profile_pic_r2_key)
+        ? await getR2Url(player.profile_pic_r2_key)
         : null,
     },
     isNewPlayer,
@@ -171,18 +171,21 @@ app.put("profile-pic", authMiddleware, async (c) => {
     return c.json({ message: "Invalid file type" }, 400);
   }
 
+  const oldKey = await getProfilePicKey(playerId);
+
   const fileExtension = blob.type.split("/")[1];
-  const key = `/profile-pics/${playerId}.${fileExtension}`;
+  const newKey = `/profile-pics/${playerId}.${fileExtension}`;
   const buffer = Buffer.from(await blob.arrayBuffer());
   const bucket = process.env.R2_BUCKET_NAME!;
 
-  await uploadToR2(bucket, key, buffer, blob.type);
+  await uploadToR2(bucket, newKey, buffer, blob.type);
+  await updatePlayerProfilePic(playerId, newKey);
 
-  await updatePlayerProfilePic(playerId, key);
+  await deleteR2Object(bucket, oldKey!);
 
   return c.json({
     message: "Profile picture updated successfully",
-    profilePicUrl: await getProfilePicUrl(key),
+    profilePicUrl: await getR2Url(newKey),
   });
 });
 

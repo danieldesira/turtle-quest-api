@@ -1,4 +1,5 @@
 import {
+  DeleteObjectCommand,
   GetObjectCommand,
   PutObjectCommand,
   S3Client,
@@ -29,7 +30,7 @@ export const uploadToR2 = async (
   await r2.send(r2Command);
 };
 
-export const getProfilePicUrl = async (key: string) => {
+export const getR2Url = async (key: string) => {
   const r2Command = new GetObjectCommand({
     Bucket: process.env.R2_BUCKET_NAME!,
     Key: key,
@@ -37,4 +38,12 @@ export const getProfilePicUrl = async (key: string) => {
 
   const profilePicUrl = await getSignedUrl(r2, r2Command, { expiresIn: 3600 });
   return profilePicUrl;
+};
+
+export const deleteR2Object = async (bucket: string, key: string) => {
+  const r2Command = new DeleteObjectCommand({
+    Bucket: bucket,
+    Key: key,
+  });
+  await r2.send(r2Command);
 };
