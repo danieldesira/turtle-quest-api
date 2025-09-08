@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.5 -
+
+- Update Vercel CLI to 47.0.5
+
 ## 0.1.4 - 25/08/2025 13:20 UTC+1
 
 - Update Vercel CLI to 46.0.0
