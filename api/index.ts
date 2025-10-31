@@ -5,7 +5,6 @@ import {
   getHighScores,
   getPersonalBest,
   saveScore,
-  SaveScorePayload,
 } from "./services/scoreService.js";
 import {
   deleteLastGame,
@@ -35,6 +34,7 @@ import {
   settingsUpdateSchema,
 } from "./validation.js";
 import { deleteR2Object, getR2Url, uploadToR2 } from "./services/r2.js";
+import { SaveScorePayload } from "./types.js";
 
 const app = new Hono().basePath("/api");
 

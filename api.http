@@ -1,0 +1,27 @@
+@baseUrl = http://localhost:3000
+
+# @name googleLogin
+POST {{baseUrl}}/api/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg4NDg5MjEyMmUyOTM5ZmQxZjMxMzc1YjJiMzYzZWM4MTU3MjNiYmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMzM1NTc3MDczMzctbjUzbTJub2RlZ2R1bWpjc2pjY29kYjZmcHBhZjZtY3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxMzM1NTc3MDczMzctbjUzbTJub2RlZ2R1bWpjc2pjY29kYjZmcHBhZjZtY3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDAwOTE1NTUxODUwMjUyMzY0MDQiLCJlbWFpbCI6ImRlc2lyYWRhbmllbDIwMDdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5iZiI6MTc2MTkyMDM4NywibmFtZSI6IkRhbmllbCBEZXNpcmEiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSnJmamdnWkJPM2h6QnZJMFRUT1Nla3Ziam05OXFvZm1pMzNjX0JZeVFuc3dtaHBfcUE9czk2LWMiLCJnaXZlbl9uYW1lIjoiRGFuaWVsIiwiZmFtaWx5X25hbWUiOiJEZXNpcmEiLCJpYXQiOjE3NjE5MjA2ODcsImV4cCI6MTc2MTkyNDI4NywianRpIjoiZjAwZmQ3ZDQzODJjNWIyZmFjMjhhYzljY2RiMDc1ZGRhOWNlYzYzYiJ9.wbbCbGvdeF_O2Yj8PbWIU4TLTRil6-yW13d2dV7bskp48asHTcui8I4__YRXBQ96VetJtndjf2mrmo5kpGP2SVXMk0xUNr5HupFeM5NY27evSO0Ew0lRkE0WgDdgPAenXaZQrpHdYgJZ9GqJW7cqgMTNO95Mc-O62MQF1mDSP_Q-ctIxOuI3YVpoM0H2rzXaaPLz66qljsABXx0A9ETgDEpyRvbSCMOGQrrWJOA7O6DNpGAJSUkngiNWM6lDYu2o_AKe96ojJnUBsWzHBF3TmnrjXBDaKarpCbwDkB1rNgZTd8l6bYAfLZfU7EKiW9Dm0n08982I8EqOs49wS2hudw",
+    "service": "google"
+}
+
+###
+
+@authToken = {{googleLogin.response.headers.set-cookie}}
+
+# @name insertPoints
+POST {{baseUrl}}/api/points
+Accept: application/json
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+    "points": 30000,
+    "level": 2
+}
+###
