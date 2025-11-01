@@ -10,7 +10,6 @@ import {
   deleteLastGame,
   getLastGame,
   getProfilePicKey,
-  Player,
   updateLastGame,
   updatePlayer,
   updatePlayerProfilePic,
@@ -34,7 +33,13 @@ import {
   settingsUpdateSchema,
 } from "./validation.js";
 import { deleteR2Object, getR2Url, uploadToR2 } from "./services/r2.js";
-import { SaveScorePayload } from "./types.js";
+import {
+  LoginPayload,
+  SaveScorePayload,
+  UpdateLastGamePayload,
+  UpdatePlayerPayload,
+  UpdateSettingsPayload,
+} from "./types.js";
 
 const app = new Hono().basePath("/api");
 
@@ -47,7 +52,7 @@ app.use(
 app.use(logger());
 
 app.post("login", zValidator("json", loginSchema), async (c) => {
-  const body = await c.req.json();
+  const body = await c.req.json<LoginPayload>();
   const payload = await fetchGoogleUser(body.token);
   const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
 
@@ -120,9 +125,9 @@ app.put(
   authMiddleware,
   zValidator("json", playerUpdateSchema),
   async (c) => {
-    const body = await c.req.json();
+    const body = await c.req.json<UpdatePlayerPayload>();
 
-    await updatePlayer(c.get("playerId"), body as Player);
+    await updatePlayer(c.get("playerId"), body);
     return c.json({ message: "Player updated successfully" });
   }
 );
@@ -132,7 +137,7 @@ app.put(
   authMiddleware,
   zValidator("json", settingsUpdateSchema),
   async (c) => {
-    const body = await c.req.json();
+    const body = await c.req.json<UpdateSettingsPayload>();
     await updateSettings(c.get("playerId"), body);
     return c.json({ message: "Settings updated successfully" });
   }
@@ -143,9 +148,8 @@ app.put(
   authMiddleware,
   zValidator("json", gameUpdateSchema),
   async (c) => {
-    const { lastGame, timestamp } = await c.req.json();
-
-    await updateLastGame(c.get("playerId"), lastGame, timestamp);
+    const body = await c.req.json<UpdateLastGamePayload>();
+    await updateLastGame(c.get("playerId"), body);
     return c.json({ message: "Game data updated successfully" });
   }
 );

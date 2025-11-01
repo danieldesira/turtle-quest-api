@@ -1,10 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
-
-export interface Player {
-  name: string;
-  date_of_birth: string;
-}
+import { UpdateLastGamePayload, UpdatePlayerPayload } from "../types.js";
 
 export const updateSettings = (playerId: number, value: object) =>
   prisma.players.update({
@@ -14,8 +10,7 @@ export const updateSettings = (playerId: number, value: object) =>
 
 export const updateLastGame = async (
   playerId: number,
-  lastGame: object,
-  timestamp: number
+  { timestamp, lastGame }: UpdateLastGamePayload
 ) => {
   const actualLastGameDate = (
     await prisma.players.findFirst({
@@ -40,7 +35,7 @@ export const updateLastGame = async (
 
 export const updatePlayer = async (
   playerId: number,
-  { name, date_of_birth }: Player
+  { name, date_of_birth }: UpdatePlayerPayload
 ) =>
   await prisma.players.update({
     where: { id: playerId },

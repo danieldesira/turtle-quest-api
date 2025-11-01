@@ -3,13 +3,15 @@
 ## 0.1.5 -
 
 - Update Vercel CLI to 48.7.1
+- Refactor payload types for improved maintainability and type-safety
+- Add http file for endpoint testing from within the IDE
 
 ## 0.1.4 - 25/08/2025 13:20 UTC+1
 
 - Update Vercel CLI to 46.0.0
 - Move profile pictures to Cloudflare R2 Object Storage
-- Rename ``/points`` endpoint to ``/high-scores`` and include profile picture URL
-- Cleanup ``/high-scores`` response
+- Rename `/points` endpoint to `/high-scores` and include profile picture URL
+- Cleanup `/high-scores` response
 - Delete old profile picture on upload if necessary
 
 ## 0.1.3 - 12/08/2025 13:10

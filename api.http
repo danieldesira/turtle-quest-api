@@ -6,22 +6,305 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg4NDg5MjEyMmUyOTM5ZmQxZjMxMzc1YjJiMzYzZWM4MTU3MjNiYmIiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMzM1NTc3MDczMzctbjUzbTJub2RlZ2R1bWpjc2pjY29kYjZmcHBhZjZtY3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxMzM1NTc3MDczMzctbjUzbTJub2RlZ2R1bWpjc2pjY29kYjZmcHBhZjZtY3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDAwOTE1NTUxODUwMjUyMzY0MDQiLCJlbWFpbCI6ImRlc2lyYWRhbmllbDIwMDdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5iZiI6MTc2MTkyMDM4NywibmFtZSI6IkRhbmllbCBEZXNpcmEiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSnJmamdnWkJPM2h6QnZJMFRUT1Nla3Ziam05OXFvZm1pMzNjX0JZeVFuc3dtaHBfcUE9czk2LWMiLCJnaXZlbl9uYW1lIjoiRGFuaWVsIiwiZmFtaWx5X25hbWUiOiJEZXNpcmEiLCJpYXQiOjE3NjE5MjA2ODcsImV4cCI6MTc2MTkyNDI4NywianRpIjoiZjAwZmQ3ZDQzODJjNWIyZmFjMjhhYzljY2RiMDc1ZGRhOWNlYzYzYiJ9.wbbCbGvdeF_O2Yj8PbWIU4TLTRil6-yW13d2dV7bskp48asHTcui8I4__YRXBQ96VetJtndjf2mrmo5kpGP2SVXMk0xUNr5HupFeM5NY27evSO0Ew0lRkE0WgDdgPAenXaZQrpHdYgJZ9GqJW7cqgMTNO95Mc-O62MQF1mDSP_Q-ctIxOuI3YVpoM0H2rzXaaPLz66qljsABXx0A9ETgDEpyRvbSCMOGQrrWJOA7O6DNpGAJSUkngiNWM6lDYu2o_AKe96ojJnUBsWzHBF3TmnrjXBDaKarpCbwDkB1rNgZTd8l6bYAfLZfU7EKiW9Dm0n08982I8EqOs49wS2hudw",
-    "service": "google"
+  "token": "eyJhbGciOiJSUzI1NiIsImtpZCI6ImI1ZTQ0MGFlOTQxZTk5ODFlZTJmYTEzNzZkNDJjNDZkNzMxZGVlM2YiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMzM1NTc3MDczMzctbjUzbTJub2RlZ2R1bWpjc2pjY29kYjZmcHBhZjZtY3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJhdWQiOiIxMzM1NTc3MDczMzctbjUzbTJub2RlZ2R1bWpjc2pjY29kYjZmcHBhZjZtY3YuYXBwcy5nb29nbGV1c2VyY29udGVudC5jb20iLCJzdWIiOiIxMDAwOTE1NTUxODUwMjUyMzY0MDQiLCJlbWFpbCI6ImRlc2lyYWRhbmllbDIwMDdAZ21haWwuY29tIiwiZW1haWxfdmVyaWZpZWQiOnRydWUsIm5iZiI6MTc2MjAxOTU1OCwibmFtZSI6IkRhbmllbCBEZXNpcmEiLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUNnOG9jSnJmamdnWkJPM2h6QnZJMFRUT1Nla3Ziam05OXFvZm1pMzNjX0JZeVFuc3dtaHBfcUE9czk2LWMiLCJnaXZlbl9uYW1lIjoiRGFuaWVsIiwiZmFtaWx5X25hbWUiOiJEZXNpcmEiLCJpYXQiOjE3NjIwMTk4NTgsImV4cCI6MTc2MjAyMzQ1OCwianRpIjoiMmQyZGRlYzJjYWVlNDg4NTQ1Mjk5ZTQ0MDY2N2U5NTY4Yjg2NTlhNiJ9.c-YdzpgH8Ynjur8mGcFRaKe7oHPbYcqGwi8m36Y8DWcLQjblXbGhur2KVZuKyT38D0xmIDfn5rCOOxdHaCRlZ-wmyrmrBZx5FwRsBpft56DpLz23Hhz-gN2OmE94p92kbdBZ3M8XFTpw-BvVUpH2dSQ_tAmh57lC0WEpw4KNFp18YViwklZt_SKzUOFXt4BYl7QN8rmVZhPXUJvfnXJ4OtnG62ILxI0TiW5dO_1JTxvqyNYLZArFBv1P3DMZ8v-BjGKCyTk4uCKq7mb8-VWutbAGlTUpIV2zz5bcbimDWJQIXwgHLiuQ-yRHIjGR7ZzAh0Do8z31W0F9_8hMXRSsHw",
+  "service": "google"
 }
 
-###
 
+###
 @authToken = {{googleLogin.response.headers.set-cookie}}
 
-# @name insertPoints
+# @name savePoints
 POST {{baseUrl}}/api/points
 Accept: application/json
 Content-Type: application/json
 Cookie: {{authToken}}
 
 {
-    "points": 30000,
-    "level": 2
+  "points": 30000,
+  "level": 2
 }
+
+
+###
+# @name fetchHighScores
+GET {{baseUrl}}/api/high-scores
+Accept: application/json
+Content-Type: application/json
+
+
+###
+# @name updatePlayer
+PUT {{baseUrl}}/api/player
+Accept: application/json
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+  "name": "Daniel Desira",
+  "date_of_birth": "1993-05-26"
+}
+
+
+###
+# @name updateSettings
+PUT {{baseUrl}}/api/settings
+Accept: application/json
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+  "controlPosition": "Right"
+}
+
+
+###
+# @name saveLastGame
+PUT {{baseUrl}}/api/game
+Accept: application/json
+Content-Type: application/json
+Cookie: {{authToken}}
+
+{
+  "lastGame": {
+    "turtle": {
+      "x": 329,
+      "y": 10,
+      "direction": "Right",
+      "food": 97.9350000000019,
+      "oxygen": 99.58299999999801,
+      "health": 100,
+      "stomachCapacity": 99.91260000000042
+    },
+    "characters": [
+      {
+        "x": 625.2075021098885,
+        "y": 230.9732689474662,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1214.4214054657837,
+        "y": 358.18459565956533,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 734.2500382531186,
+        "y": 12.331962767511774,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 758.0272014750418,
+        "y": 599.7709473150489,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 400.4699879740056,
+        "y": 203.72053069370347,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 255.79769322482034,
+        "y": 308.0898978425599,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1316.7200852503568,
+        "y": 44.550652501075106,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1223.4292306524617,
+        "y": 334.4831291806605,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 574.8572672898798,
+        "y": 108.63936884808058,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1545.3349409830455,
+        "y": 454.72227057478824,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 227.92496557619916,
+        "y": 559.5220875721673,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 47.46160318716069,
+        "y": 600.0578074300702,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1417.208426490434,
+        "y": 545.0758934919947,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 706.1861197959374,
+        "y": 259.3423878631264,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 687.5466974238859,
+        "y": 107.4085189132378,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 810.1514459150479,
+        "y": 225.41420514745985,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1181.1396434082071,
+        "y": 132.9606982304694,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 246.3970402229029,
+        "y": 277.1536179567609,
+        "direction": "Right",
+        "type": "Shrimp"
+      },
+      {
+        "x": 1050.820484877885,
+        "y": 406.4385669710823,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1033.4089295026868,
+        "y": 419.9865564621413,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1033.9408569478087,
+        "y": 411.9495906087939,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1033.4889474005668,
+        "y": 403.24444894824046,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1025.9127034266699,
+        "y": 422.9010450207827,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1034.2029133319684,
+        "y": 432.589245799325,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1023.9601183841042,
+        "y": 414.17872305475504,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1027.5252373406468,
+        "y": 429.2345010189107,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1023.6586986706287,
+        "y": 428.90417821473585,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1006.3618030267415,
+        "y": 427.64274893587714,
+        "direction": "Right",
+        "type": "Sardine"
+      },
+      {
+        "x": 1355.5304296821887,
+        "y": 345.3132341951558,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 1021.8506281973162,
+        "y": 635.2366851834904,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 1217.1551491576981,
+        "y": 367.3286030511963,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 438.56736885195767,
+        "y": 641.9038035240198,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 706.2535993053502,
+        "y": 451.6889916264147,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 309.7834398683108,
+        "y": 118.36505464873525,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 301.54534148470634,
+        "y": 312.75024476033167,
+        "direction": "Right",
+        "type": "PlasticBag"
+      },
+      {
+        "x": 693.4910402255596,
+        "y": 650.2099915240414,
+        "direction": "Right",
+        "type": "PlasticBag"
+      }
+    ],
+    "levelNo": 1,
+    "xp": 8
+  },
+  "timestamp": 1762020924290
+}
+
+
+###
+# @name logout
+POST {{baseUrl}}/api/logout
+Accept: application/json
+Content-Type: application/json
+Cookie: {{authToken}}
 ###

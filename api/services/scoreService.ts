@@ -1,5 +1,5 @@
 import prisma from "../prismaInstance.js";
-import { HighScores, SaveScorePayload } from "../types.js";
+import { HighScoresResult, SaveScorePayload } from "../types.js";
 import { getR2Url } from "./r2.js";
 
 export const saveScore = async (playerId: number, payload: SaveScorePayload) =>
@@ -53,7 +53,7 @@ export const getPersonalBest = async (playerId: number) =>
   });
 
 export const createProfilePicUrlMapFromHighScores = async (
-  highScores: HighScores
+  highScores: HighScoresResult
 ) => {
   const profilePicUrlMap: Record<string, string> = {};
   for (const score of highScores) {
