@@ -1,8 +1,8 @@
 # Changelog
 
-## 0.1.5 -
+## 0.1.5 - 03/11/2025 15:10 UTC+1
 
-- Update Vercel CLI to 48.7.1
+- Update Vercel CLI to 48.8.0
 - Refactor payload types for improved maintainability and type-safety
 - Add http file for endpoint testing from within the IDE
 - Fixed incorrect behaviour: last game not saving if last timestamp is null
