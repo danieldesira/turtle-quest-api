@@ -298,4 +298,21 @@ POST {{baseUrl}}/api/logout
 Accept: application/json
 Content-Type: application/json
 Cookie: {{authToken}}
+
+
+###
+# @name uploadProfilePicture
+PUT {{baseUrl}}/api/profile-pic
+Accept: multipart/form-data
+Content-Type: image/png; boundary=boundary
+Cookie: {{authToken}}
+
+--boundary
+Content-Disposition: form-data; name="picture"; filename="profile-pic.png"
+Content-Type: image/png
+
+< C:/Users/danie/OneDrive/Pictures/679e6d62-2824-424a-c61a-62e23de86f7a.png
+--boundary--
+
+
 ###
