@@ -2,12 +2,6 @@ import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
 import { UpdateLastGamePayload, UpdatePlayerPayload } from "../types.js";
 
-export const updateSettings = (playerId: number, value: object) =>
-  prisma.players.update({
-    where: { id: playerId },
-    data: { settings: value },
-  });
-
 export const updateLastGame = async (
   playerId: number,
   { timestamp, lastGame }: UpdateLastGamePayload
@@ -19,29 +13,30 @@ export const updateLastGame = async (
     })
   )?.last_game_saved_on;
 
-  if (actualLastGameDate) {
-    const actualLastGameTimestamp = new Date(actualLastGameDate).getTime();
-    if (actualLastGameTimestamp < timestamp) {
-      await prisma.players.update({
-        where: { id: playerId },
-        data: {
-          last_game: JSON.stringify(lastGame),
-          last_game_saved_on: new Date(timestamp),
-        },
-      });
-    }
+  if (
+    !actualLastGameDate ||
+    new Date(actualLastGameDate).getTime() < timestamp
+  ) {
+    await prisma.players.update({
+      where: { id: playerId },
+      data: {
+        last_game: JSON.stringify(lastGame),
+        last_game_saved_on: new Date(timestamp),
+      },
+    });
   }
 };
 
 export const updatePlayer = async (
   playerId: number,
-  { name, date_of_birth }: UpdatePlayerPayload
+  { name, date_of_birth, settings }: UpdatePlayerPayload
 ) =>
   await prisma.players.update({
     where: { id: playerId },
     data: {
       name,
       date_of_birth: new Date(date_of_birth),
+      settings,
     },
   });
 
@@ -63,14 +58,19 @@ export const getLastGame = async (playerId: number) =>
     select: { last_game: true },
   });
 
-export const deleteLastGame = async (playerId: number) =>
-  await prisma.players.update({
+export const deleteLastGame = async (
+  playerId: number,
+  transaction: Prisma.TransactionClient | null = null
+) => {
+  const dbClient = transaction ? transaction : prisma;
+  await dbClient.players.update({
     where: { id: playerId },
     data: {
       last_game: Prisma.NullableJsonNullValueInput.DbNull,
       last_game_saved_on: null,
     },
   });
+};
 
 export const getProfilePicKey = async (playerId: number) =>
   (

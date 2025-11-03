@@ -11,13 +11,12 @@ export const pointInsertSchema = z.object({
   hasWon: z.boolean().optional(),
 });
 
-export const settingsUpdateSchema = z.object({
-  controlPosition: z.enum(["Left", "Right"]),
-});
-
 export const playerUpdateSchema = z.object({
   name: z.string(),
   date_of_birth: z.string().date(),
+  settings: z.object({
+    controlPosition: z.enum(["Left", "Right"]),
+  }),
 });
 
 export const gameUpdateSchema = z.object({

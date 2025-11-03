@@ -13,7 +13,6 @@ import {
   updateLastGame,
   updatePlayer,
   updatePlayerProfilePic,
-  updateSettings,
 } from "./services/playerService.js";
 import {
   checkAndRegisterPlayerGoogle,
@@ -30,16 +29,15 @@ import {
   loginSchema,
   playerUpdateSchema,
   pointInsertSchema,
-  settingsUpdateSchema,
 } from "./validation.js";
 import { deleteR2Object, getR2Url, uploadToR2 } from "./services/r2.js";
 import {
-  LoginPayload,
-  SaveScorePayload,
-  UpdateLastGamePayload,
-  UpdatePlayerPayload,
-  UpdateSettingsPayload,
+  type LoginPayload,
+  type SaveScorePayload,
+  type UpdateLastGamePayload,
+  type UpdatePlayerPayload,
 } from "./types.js";
+import prisma from "./prismaInstance.js";
 
 const app = new Hono().basePath("/api");
 
@@ -98,7 +96,11 @@ app.post(
     const body = await c.req.json<SaveScorePayload>();
     const playerId = c.get("playerId");
 
-    await saveScore(playerId, body);
+    await prisma.$transaction(async (tx) => {
+      await saveScore(playerId, body, tx);
+      await deleteLastGame(c.get("playerId"), tx);
+    });
+
     return c.json({ message: "Score saved successfully" });
   }
 );
@@ -133,17 +135,6 @@ app.put(
 );
 
 app.put(
-  "settings",
-  authMiddleware,
-  zValidator("json", settingsUpdateSchema),
-  async (c) => {
-    const body = await c.req.json<UpdateSettingsPayload>();
-    await updateSettings(c.get("playerId"), body);
-    return c.json({ message: "Settings updated successfully" });
-  }
-);
-
-app.put(
   "game",
   authMiddleware,
   zValidator("json", gameUpdateSchema),
@@ -153,12 +144,6 @@ app.put(
     return c.json({ message: "Game data updated successfully" });
   }
 );
-
-app.delete("game", authMiddleware, async (c) => {
-  await deleteLastGame(c.get("playerId"));
-  c.status(204);
-  return c.json(undefined);
-});
 
 app.post("logout", authMiddleware, async (c) => {
   deleteCookie(c, "Authorization");

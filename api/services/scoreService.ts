@@ -1,9 +1,15 @@
+import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
 import { HighScoresResult, SaveScorePayload } from "../types.js";
 import { getR2Url } from "./r2.js";
 
-export const saveScore = async (playerId: number, payload: SaveScorePayload) =>
-  await prisma.scores.create({
+export const saveScore = async (
+  playerId: number,
+  payload: SaveScorePayload,
+  transaction: Prisma.TransactionClient | null = null
+) => {
+  const dbClient = transaction ? transaction : prisma;
+  await dbClient.scores.create({
     data: {
       player_id: playerId,
       outcome_id: payload.hasWon ? 2 : 1,
@@ -12,6 +18,7 @@ export const saveScore = async (playerId: number, payload: SaveScorePayload) =>
       created_at: new Date(),
     },
   });
+};
 
 export const getHighScores = async () =>
   await prisma.scores.findMany({
