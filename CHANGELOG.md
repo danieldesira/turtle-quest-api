@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.6 -
+
+- Save last game as object allowing Postgres to apply formatting on it's own
+- Update Vercel CLI to 48.9.0
+- Create repository layer for improved maintanability
+
 ## 0.1.5 - 03/11/2025 15:10 UTC+1
 
 - Update Vercel CLI to 48.8.0

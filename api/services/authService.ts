@@ -2,6 +2,7 @@ import prisma from "../prismaInstance.js";
 import { players } from "@prisma/client";
 import { uploadToR2 } from "./r2.js";
 import { updatePlayerProfilePic } from "./playerService.js";
+import { fetchPlayer } from "../repositories/playerRepository.js";
 
 interface GoogleUserPayload {
   iss?: string;
@@ -22,9 +23,7 @@ interface CheckAndRegisterPlayerGoogleResult {
 export const checkAndRegisterPlayerGoogle = async (
   user: GoogleUserPayload
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
-  const player = await prisma.players.findFirst({
-    where: { external_id: user.sub, platform: "google" },
-  });
+  const player = await fetchPlayer(prisma, user.sub, "google");
 
   if (!player) {
     const newPlayer = await prisma.$transaction(async (tx) => {

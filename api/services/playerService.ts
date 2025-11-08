@@ -1,44 +1,35 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
 import { UpdateLastGamePayload, UpdatePlayerPayload } from "../types.js";
+import {
+  fetchLastGame,
+  fetchLastGameTimestamp,
+  fetchProfilePicKey,
+  nullifyLastGame,
+  updateLastGameEntry,
+  updatePlayerEntry,
+  updateProfilePicKey,
+} from "../repositories/playerRepository.js";
 
 export const updateLastGame = async (
   playerId: number,
   { timestamp, lastGame }: UpdateLastGamePayload
 ) => {
-  const actualLastGameDate = (
-    await prisma.players.findFirst({
-      where: { id: playerId },
-      select: { last_game_saved_on: true },
-    })
-  )?.last_game_saved_on;
+  const actualLastGameDate = (await fetchLastGameTimestamp(prisma, playerId))
+    ?.last_game_saved_on;
 
   if (
     !actualLastGameDate ||
     new Date(actualLastGameDate).getTime() < timestamp
   ) {
-    await prisma.players.update({
-      where: { id: playerId },
-      data: {
-        last_game: JSON.stringify(lastGame),
-        last_game_saved_on: new Date(timestamp),
-      },
-    });
+    await updateLastGameEntry(prisma, playerId, { timestamp, lastGame });
   }
 };
 
 export const updatePlayer = async (
   playerId: number,
-  { name, date_of_birth, settings }: UpdatePlayerPayload
-) =>
-  await prisma.players.update({
-    where: { id: playerId },
-    data: {
-      name,
-      date_of_birth: new Date(date_of_birth),
-      settings,
-    },
-  });
+  playerDetails: UpdatePlayerPayload
+) => await updatePlayerEntry(prisma, playerId, playerDetails);
 
 export const updatePlayerProfilePic = async (
   playerId: number,
@@ -46,36 +37,19 @@ export const updatePlayerProfilePic = async (
   transaction: Prisma.TransactionClient | null = null
 ) => {
   const dbClient = transaction ? transaction : prisma;
-  await dbClient.players.update({
-    where: { id: playerId },
-    data: { profile_pic_r2_key: profilePicUrl },
-  });
+  await updateProfilePicKey(dbClient, playerId, profilePicUrl);
 };
 
 export const getLastGame = async (playerId: number) =>
-  await prisma.players.findFirst({
-    where: { id: playerId },
-    select: { last_game: true },
-  });
+  await fetchLastGame(prisma, playerId);
 
 export const deleteLastGame = async (
   playerId: number,
   transaction: Prisma.TransactionClient | null = null
 ) => {
   const dbClient = transaction ? transaction : prisma;
-  await dbClient.players.update({
-    where: { id: playerId },
-    data: {
-      last_game: Prisma.NullableJsonNullValueInput.DbNull,
-      last_game_saved_on: null,
-    },
-  });
+  await nullifyLastGame(dbClient, playerId);
 };
 
 export const getProfilePicKey = async (playerId: number) =>
-  (
-    await prisma.players.findFirst({
-      where: { id: playerId },
-      select: { profile_pic_r2_key: true },
-    })
-  )?.profile_pic_r2_key;
+  (await fetchProfilePicKey(prisma, playerId))?.profile_pic_r2_key;
