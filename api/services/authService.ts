@@ -2,9 +2,13 @@ import prisma from "../prismaInstance.js";
 import { players } from "@prisma/client";
 import { uploadToR2 } from "./r2.js";
 import { updatePlayerProfilePic } from "./playerService.js";
-import { fetchPlayer } from "../repositories/playerRepository.js";
+import {
+  createNewPlayer,
+  fetchPlayer,
+  updateLastLogin,
+} from "../repositories/playerRepository.js";
 
-interface GoogleUserPayload {
+export interface GoogleUserPayload {
   iss?: string;
   aud?: string;
   sub: string;
@@ -27,18 +31,7 @@ export const checkAndRegisterPlayerGoogle = async (
 
   if (!player) {
     const newPlayer = await prisma.$transaction(async (tx) => {
-      const newPlayer = await tx.players.create({
-        data: {
-          external_id: user.sub,
-          platform: "google",
-          email: user.email,
-          name: user.name,
-          last_login_at: new Date(),
-          created_at: new Date(),
-          date_of_birth: null,
-          settings: { controlPosition: "Right" },
-        },
-      });
+      const newPlayer = await createNewPlayer(tx, user);
 
       const r2Key = await uploadSSOProfileImageToR2(
         user.picture!,
@@ -51,10 +44,7 @@ export const checkAndRegisterPlayerGoogle = async (
 
     return { player: newPlayer, isNewPlayer: true };
   } else {
-    await prisma.players.update({
-      where: { id: player.id },
-      data: { last_login_at: new Date() },
-    });
+    await updateLastLogin(prisma, player.id);
     return { player, isNewPlayer: false };
   }
 };

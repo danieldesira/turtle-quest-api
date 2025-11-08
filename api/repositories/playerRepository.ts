@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { DbClient, UpdateLastGamePayload, UpdatePlayerPayload } from "../types";
+import { GoogleUserPayload } from "../services/authService";
 
 export const updatePlayerEntry = async (
   dbClient: DbClient,
@@ -78,4 +79,27 @@ export const fetchPlayer = async (
 ) =>
   await dbClient.players.findFirst({
     where: { external_id: externalId, platform: ssoService },
+  });
+
+export const createNewPlayer = async (
+  dbClient: DbClient,
+  { sub, email, name }: GoogleUserPayload
+) =>
+  await dbClient.players.create({
+    data: {
+      external_id: sub,
+      platform: "google",
+      email: email,
+      name: name,
+      last_login_at: new Date(),
+      created_at: new Date(),
+      date_of_birth: null,
+      settings: { controlPosition: "Right" },
+    },
+  });
+
+export const updateLastLogin = async (dbClient: DbClient, playerId: number) =>
+  await dbClient.players.update({
+    where: { id: playerId },
+    data: { last_login_at: new Date() },
   });

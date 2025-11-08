@@ -2,6 +2,11 @@ import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
 import { HighScoresResult, SaveScorePayload } from "../types.js";
 import { getR2Url } from "./r2.js";
+import {
+  fetchBestScoreByPlayerId,
+  fetchTop10Scores,
+  insertScore,
+} from "../repositories/scoreRepository.js";
 
 export const saveScore = async (
   playerId: number,
@@ -9,55 +14,13 @@ export const saveScore = async (
   transaction: Prisma.TransactionClient | null = null
 ) => {
   const dbClient = transaction ? transaction : prisma;
-  await dbClient.scores.create({
-    data: {
-      player_id: playerId,
-      outcome_id: payload.hasWon ? 2 : 1,
-      points: payload.points,
-      level: payload.level,
-      created_at: new Date(),
-    },
-  });
+  await insertScore(dbClient, playerId, payload);
 };
 
-export const getHighScores = async () =>
-  await prisma.scores.findMany({
-    take: 10,
-    orderBy: {
-      points: "desc",
-    },
-    select: {
-      points: true,
-      level: true,
-      created_at: true,
-      players: {
-        select: {
-          name: true,
-          profile_pic_r2_key: true,
-        },
-      },
-      outcomes: {
-        select: {
-          desc: true,
-        },
-      },
-    },
-  });
+export const getHighScores = async () => await fetchTop10Scores(prisma);
 
 export const getPersonalBest = async (playerId: number) =>
-  await prisma.scores.findFirst({
-    where: { player_id: playerId },
-    orderBy: [{ points: "desc" }, { level: "desc" }, { outcome_id: "desc" }],
-    select: {
-      points: true,
-      level: true,
-      outcomes: {
-        select: {
-          desc: true,
-        },
-      },
-    },
-  });
+  await fetchBestScoreByPlayerId(prisma, playerId);
 
 export const createProfilePicUrlMapFromHighScores = async (
   highScores: HighScoresResult
