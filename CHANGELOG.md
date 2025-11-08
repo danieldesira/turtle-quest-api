@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.6 -
+## 0.1.6 - 08/11/2025 18:35 UTC+1
 
 - Save last game as object allowing Postgres to apply formatting on it's own
 - Update Vercel CLI to 48.9.0
