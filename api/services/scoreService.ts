@@ -27,10 +27,9 @@ export const createProfilePicUrlMapFromHighScores = async (
 ) => {
   const profilePicUrlMap: Record<string, string> = {};
   for (const score of highScores) {
-    if (!profilePicUrlMap[score.players?.profile_pic_r2_key!]) {
-      profilePicUrlMap[score.players?.profile_pic_r2_key!] = await getR2Url(
-        score.players?.profile_pic_r2_key!
-      );
+    if (!profilePicUrlMap[score.players?.profile_pic_r2_key ?? ""]) {
+      profilePicUrlMap[score.players?.profile_pic_r2_key ?? ""] =
+        await getR2Url(score.players?.profile_pic_r2_key ?? "");
     }
   }
   return profilePicUrlMap;

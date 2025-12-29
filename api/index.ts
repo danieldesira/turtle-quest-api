@@ -114,7 +114,7 @@ app.get("high-scores", async (c) => {
   return c.json(
     highScores.map(({ players, points, level, outcomes }) => ({
       playerName: players?.name,
-      playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key!],
+      playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
       points,
       level,
       outcome: outcomes.desc,
