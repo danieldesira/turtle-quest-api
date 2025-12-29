@@ -3,7 +3,7 @@ import { DbClient, SaveScorePayload } from "../types";
 export const insertScore = async (
   dbClient: DbClient,
   playerId: number,
-  { hasWon, level, points }: SaveScorePayload
+  { hasWon, level, points }: SaveScorePayload,
 ) =>
   await dbClient.scores.create({
     data: {
@@ -41,7 +41,7 @@ export const fetchTop10Scores = async (dbClient: DbClient) =>
 
 export const fetchBestScoreByPlayerId = async (
   dbClient: DbClient,
-  playerId: number
+  playerId: number,
 ) =>
   await dbClient.scores.findFirst({
     where: { player_id: playerId },

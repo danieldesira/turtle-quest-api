@@ -13,7 +13,7 @@ import {
 
 export const updateLastGame = async (
   playerId: number,
-  { timestamp, lastGame }: UpdateLastGamePayload
+  { timestamp, lastGame }: UpdateLastGamePayload,
 ) => {
   const actualLastGameDate = (await fetchLastGameTimestamp(prisma, playerId))
     ?.last_game_saved_on;
@@ -28,13 +28,13 @@ export const updateLastGame = async (
 
 export const updatePlayer = async (
   playerId: number,
-  playerDetails: UpdatePlayerPayload
+  playerDetails: UpdatePlayerPayload,
 ) => await updatePlayerEntry(prisma, playerId, playerDetails);
 
 export const updatePlayerProfilePic = async (
   playerId: number,
   profilePicUrl: string,
-  transaction: Prisma.TransactionClient | null = null
+  transaction: Prisma.TransactionClient | null = null,
 ) => {
   const dbClient = transaction ? transaction : prisma;
   await updateProfilePicKey(dbClient, playerId, profilePicUrl);
@@ -45,7 +45,7 @@ export const getLastGame = async (playerId: number) =>
 
 export const deleteLastGame = async (
   playerId: number,
-  transaction: Prisma.TransactionClient | null = null
+  transaction: Prisma.TransactionClient | null = null,
 ) => {
   const dbClient = transaction ? transaction : prisma;
   await nullifyLastGame(dbClient, playerId);

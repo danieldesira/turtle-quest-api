@@ -25,5 +25,5 @@ export const authMiddleware = createMiddleware<{ Variables: ContextVariables }>(
 
     c.set("playerId", Number(payload.id));
     await next();
-  }
+  },
 );

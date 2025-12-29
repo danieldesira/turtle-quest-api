@@ -27,7 +27,7 @@ export const gameUpdateSchema = z.object({
         y: z.number(),
         direction: z.enum(["Up", "Down", "Left", "Right"]),
         type: z.string(),
-      })
+      }),
     ),
     levelNo: z.number(),
     turtle: z.object({

@@ -5,7 +5,7 @@ import { GoogleUserPayload } from "../services/authService";
 export const updatePlayerEntry = async (
   dbClient: DbClient,
   playerId: number,
-  { name, date_of_birth, settings }: UpdatePlayerPayload
+  { name, date_of_birth, settings }: UpdatePlayerPayload,
 ) =>
   await dbClient.players.update({
     where: { id: playerId },
@@ -18,7 +18,7 @@ export const updatePlayerEntry = async (
 
 export const fetchProfilePicKey = async (
   dbClient: DbClient,
-  playerId: number
+  playerId: number,
 ) =>
   await dbClient.players.findFirst({
     where: { id: playerId },
@@ -42,7 +42,7 @@ export const nullifyLastGame = async (dbClient: DbClient, playerId: number) =>
 
 export const fetchLastGameTimestamp = async (
   dbClient: DbClient,
-  playerId: number
+  playerId: number,
 ) =>
   await dbClient.players.findFirst({
     where: { id: playerId },
@@ -52,7 +52,7 @@ export const fetchLastGameTimestamp = async (
 export const updateLastGameEntry = async (
   dbClient: DbClient,
   playerId: number,
-  { timestamp, lastGame }: UpdateLastGamePayload
+  { timestamp, lastGame }: UpdateLastGamePayload,
 ) =>
   await dbClient.players.update({
     where: { id: playerId },
@@ -65,7 +65,7 @@ export const updateLastGameEntry = async (
 export const updateProfilePicKey = async (
   dbClient: DbClient,
   playerId: number,
-  profilePicKey: string
+  profilePicKey: string,
 ) =>
   await dbClient.players.update({
     where: { id: playerId },
@@ -75,7 +75,7 @@ export const updateProfilePicKey = async (
 export const fetchPlayer = async (
   dbClient: DbClient,
   externalId: string,
-  ssoService: string
+  ssoService: string,
 ) =>
   await dbClient.players.findFirst({
     where: { external_id: externalId, platform: ssoService },
@@ -83,7 +83,7 @@ export const fetchPlayer = async (
 
 export const createNewPlayer = async (
   dbClient: DbClient,
-  { sub, email, name }: GoogleUserPayload
+  { sub, email, name }: GoogleUserPayload,
 ) =>
   await dbClient.players.create({
     data: {

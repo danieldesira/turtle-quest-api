@@ -11,7 +11,7 @@ import {
 export const saveScore = async (
   playerId: number,
   payload: SaveScorePayload,
-  transaction: Prisma.TransactionClient | null = null
+  transaction: Prisma.TransactionClient | null = null,
 ) => {
   const dbClient = transaction ? transaction : prisma;
   await insertScore(dbClient, playerId, payload);
@@ -23,7 +23,7 @@ export const getPersonalBest = async (playerId: number) =>
   await fetchBestScoreByPlayerId(prisma, playerId);
 
 export const createProfilePicUrlMapFromHighScores = async (
-  highScores: HighScoresResult
+  highScores: HighScoresResult,
 ) => {
   const profilePicUrlMap: Record<string, string> = {};
   for (const score of highScores) {

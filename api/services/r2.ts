@@ -19,7 +19,7 @@ export const uploadToR2 = async (
   bucket: string,
   key: string,
   buffer: Buffer,
-  contentType: string
+  contentType: string,
 ) => {
   const r2Command = new PutObjectCommand({
     Bucket: bucket,

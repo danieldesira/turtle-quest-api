@@ -45,7 +45,7 @@ app.use(
   cors({
     origin: ["https://localhost:5173", "https://turtle-quest.vercel.app"],
     credentials: true,
-  })
+  }),
 );
 app.use(logger());
 
@@ -57,7 +57,7 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
   const jwtExpiry = getJWTExpectedExpiry();
   const jwtToken = await sign(
     { id: player.id, email: player.email, exp: jwtExpiry },
-    process.env.JWT_SECRET!
+    process.env.JWT_SECRET!,
   );
   setCookie(c, "Authorization", jwtToken, {
     httpOnly: true,
@@ -102,14 +102,13 @@ app.post(
     });
 
     return c.json({ message: "Score saved successfully" });
-  }
+  },
 );
 
 app.get("high-scores", async (c) => {
   const highScores = await getHighScores();
-  const profilePicUrlMap = await createProfilePicUrlMapFromHighScores(
-    highScores
-  );
+  const profilePicUrlMap =
+    await createProfilePicUrlMapFromHighScores(highScores);
 
   return c.json(
     highScores.map(({ players, points, level, outcomes }) => ({
@@ -118,7 +117,7 @@ app.get("high-scores", async (c) => {
       points,
       level,
       outcome: outcomes.desc,
-    }))
+    })),
   );
 });
 
@@ -131,7 +130,7 @@ app.put(
 
     await updatePlayer(c.get("playerId"), body);
     return c.json({ message: "Player updated successfully" });
-  }
+  },
 );
 
 app.put(
@@ -142,7 +141,7 @@ app.put(
     const body = await c.req.json<UpdateLastGamePayload>();
     await updateLastGame(c.get("playerId"), body);
     return c.json({ message: "Game data updated successfully" });
-  }
+  },
 );
 
 app.post("logout", authMiddleware, async (c) => {

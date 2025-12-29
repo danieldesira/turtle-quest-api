@@ -25,7 +25,7 @@ interface CheckAndRegisterPlayerGoogleResult {
 }
 
 export const checkAndRegisterPlayerGoogle = async (
-  user: GoogleUserPayload
+  user: GoogleUserPayload,
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
   const player = await fetchPlayer(prisma, user.sub, "google");
 
@@ -35,7 +35,7 @@ export const checkAndRegisterPlayerGoogle = async (
 
       const r2Key = await uploadSSOProfileImageToR2(
         user.picture!,
-        newPlayer.id
+        newPlayer.id,
       );
       await updatePlayerProfilePic(newPlayer.id, r2Key, tx);
 
@@ -50,21 +50,21 @@ export const checkAndRegisterPlayerGoogle = async (
 };
 
 export const fetchGoogleUser = async (
-  token: string
+  token: string,
 ): Promise<GoogleUserPayload> => {
   try {
     const response = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?access_token=${token}`
+      `https://oauth2.googleapis.com/tokeninfo?access_token=${token}`,
     );
 
     if (!response.ok) {
       const idTokenResponse = await fetch(
-        `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`
+        `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
       );
 
       if (!idTokenResponse.ok) {
         throw new Error(
-          `Failed to verify token: ${idTokenResponse.statusText}`
+          `Failed to verify token: ${idTokenResponse.statusText}`,
         );
       }
 
@@ -81,7 +81,7 @@ export const fetchGoogleUser = async (
 };
 
 const validateGooglePayload = (
-  payload: GoogleUserPayload
+  payload: GoogleUserPayload,
 ): GoogleUserPayload => {
   if (!payload) {
     throw new Error("Invalid token payload");
@@ -117,7 +117,7 @@ export const getJWTExpectedExpiry = () => Date.now() + 60 * 60 * 1000;
 
 const uploadSSOProfileImageToR2 = async (
   imageUrl: string,
-  playerId: number
+  playerId: number,
 ) => {
   const profilePicRequest = await fetch(imageUrl);
   const profilePicBlob = await profilePicRequest.blob();
