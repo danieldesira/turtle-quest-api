@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.1.7 -
+## 0.2.0 -
 
 - Update Vercel CLI to 50.1.3
+- Upgrade Prisma ORM to 7.x
 
 ## 0.1.6 - 08/11/2025 18:35 UTC+1
 
