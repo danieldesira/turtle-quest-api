@@ -2,7 +2,7 @@
 
 ## 0.2.0 -
 
-- Update Vercel CLI to 50.1.3
+- Update Vercel CLI to 50.1.6
 - Upgrade Prisma ORM to 7.x
 - Install and setup `eslint`
 - Install and setup `prettier`
