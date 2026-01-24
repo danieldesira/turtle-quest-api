@@ -6,6 +6,8 @@
 - Upgrade Prisma ORM to 7.x
 - Install and setup `eslint`
 - Install and setup `prettier`
+- Setup integration tests
+- Fix: Level should be positive
 
 ## 0.1.6 - 08/11/2025 18:35 UTC+1
 

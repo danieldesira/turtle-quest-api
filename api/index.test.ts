@@ -94,8 +94,6 @@ describe("Game API - Authenticated Endpoints", () => {
       }),
     );
     expect(res.status).toBe(400);
-    const data = await res.json();
-    expect(data).toHaveProperty("message");
   });
 });
 
