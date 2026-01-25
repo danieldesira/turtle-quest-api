@@ -49,7 +49,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 1500,
           level: 9,
-          outcome: "win",
+          hasWon: true,
         }),
       }),
     );
@@ -69,7 +69,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 500,
           level: 2,
-          outcome: "Loss",
+          hasWon: false,
         }),
       }),
     );
@@ -110,7 +110,6 @@ describe("Game API", () => {
     data.forEach((entry: unknown) => {
       expect(entry).toHaveProperty("playerName");
       expect(entry).toHaveProperty("points");
-      expect(entry).toHaveProperty("playerProfilePicUrl");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
     });

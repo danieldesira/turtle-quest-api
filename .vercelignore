@@ -1,0 +1,7 @@
+**/*.test.ts
+**/*.test.js
+**/*.spec.ts
+**/*.spec.js
+vitest.config.ts
+vitest.config.js
+api/vitest.setup.ts
