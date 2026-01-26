@@ -23,6 +23,8 @@ export const updateLastGame = async (
     new Date(actualLastGameDate).getTime() < timestamp
   ) {
     await updateLastGameEntry(prisma, playerId, { timestamp, lastGame });
+  } else {
+    throw new Error("Provided timestamp is older than the current last game.");
   }
 };
 

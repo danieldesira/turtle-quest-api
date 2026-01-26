@@ -139,8 +139,12 @@ app.put(
   zValidator("json", gameUpdateSchema),
   async (c) => {
     const body = await c.req.json<UpdateLastGamePayload>();
-    await updateLastGame(c.get("playerId"), body);
-    return c.json({ message: "Game data updated successfully" });
+    try {
+      await updateLastGame(c.get("playerId"), body);
+      return c.json({ message: "Game data updated successfully" });
+    } catch (error) {
+      return c.json({ message: error }, 400);
+    }
   },
 );
 

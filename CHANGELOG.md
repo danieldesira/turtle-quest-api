@@ -8,6 +8,7 @@
 - Install and setup `prettier`
 - Setup local-only integration tests
 - Fix: Level should be positive
+- `PUT /game`: Return `400` if timestamp is older than the last game saved
 
 ## 0.1.6 - 08/11/2025 18:35 UTC+1
 
