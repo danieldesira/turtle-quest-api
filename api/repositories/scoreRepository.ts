@@ -29,6 +29,8 @@ export const fetchTop10Scores = async (dbClient: DbClient) =>
         select: {
           name: true,
           profile_pic_r2_key: true,
+          external_id: true,
+          sso_platform: true,
         },
       },
       outcomes: {

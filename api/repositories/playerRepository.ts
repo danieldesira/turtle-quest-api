@@ -78,7 +78,7 @@ export const fetchPlayer = async (
   ssoService: string,
 ) =>
   await dbClient.players.findFirst({
-    where: { external_id: externalId, platform: ssoService },
+    where: { external_id: externalId, sso_platform: ssoService },
   });
 
 export const createNewPlayer = async (
@@ -88,7 +88,7 @@ export const createNewPlayer = async (
   await dbClient.players.create({
     data: {
       external_id: sub,
-      platform: "google",
+      sso_platform: "google",
       email: email,
       name: name,
       last_login_at: new Date(),

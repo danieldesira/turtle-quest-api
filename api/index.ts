@@ -1,7 +1,6 @@
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import {
-  createProfilePicUrlMapFromHighScores,
   getHighScores,
   getPersonalBest,
   saveScore,
@@ -107,18 +106,7 @@ app.post(
 
 app.get("high-scores", async (c) => {
   const highScores = await getHighScores();
-  const profilePicUrlMap =
-    await createProfilePicUrlMapFromHighScores(highScores);
-
-  return c.json(
-    highScores.map(({ players, points, level, outcomes }) => ({
-      playerName: players?.name,
-      playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
-      points,
-      level,
-      outcome: outcomes.desc,
-    })),
-  );
+  return c.json(highScores);
 });
 
 app.put(

@@ -5,12 +5,12 @@ import {
   playerUpdateSchema,
   pointInsertSchema,
 } from "./validation";
-import { getHighScores } from "./services/scoreService";
 import { Prisma, PrismaClient } from "@prisma/client";
+import { fetchTop10Scores } from "./repositories/scoreRepository";
 
 export type SaveScorePayload = z.infer<typeof pointInsertSchema>;
 
-export type HighScoresResult = Awaited<ReturnType<typeof getHighScores>>;
+export type HighScoresResult = Awaited<ReturnType<typeof fetchTop10Scores>>;
 
 export type LoginPayload = z.infer<typeof loginSchema>;
 

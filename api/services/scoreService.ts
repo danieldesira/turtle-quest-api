@@ -17,7 +17,18 @@ export const saveScore = async (
   await insertScore(dbClient, playerId, payload);
 };
 
-export const getHighScores = async () => await fetchTop10Scores(prisma);
+export const getHighScores = async () => {
+  const res = await fetchTop10Scores(prisma);
+  const profilePicUrlMap = await createProfilePicUrlMapFromHighScores(res);
+  return res.map(({ players, points, level, outcomes }) => ({
+    playerIdentifier: `${players?.external_id}-${players?.sso_platform}`,
+    playerName: players?.name,
+    playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
+    points,
+    level,
+    outcome: outcomes.desc,
+  }));
+};
 
 export const getPersonalBest = async (playerId: number) =>
   await fetchBestScoreByPlayerId(prisma, playerId);
