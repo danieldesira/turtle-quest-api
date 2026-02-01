@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.2.0 -
+## 0.2.0 - 01/02/2026 23:30 UTC+1
 
 - Update Vercel CLI to 50.5.0
 - Upgrade Prisma ORM to 7.x
@@ -12,6 +12,7 @@
 - Expose `playerIdentifier` in `/high-scores` composed of `external_id` and `sso_platform`
 - Refactor `scoreService.ts`
 - In `players` table, rename `platform` field to `sso_platform`
+- Middleware to enforce camel case for responses
 
 ## 0.1.6 - 08/11/2025 18:35 UTC+1
 

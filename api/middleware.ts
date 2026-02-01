@@ -27,3 +27,37 @@ export const authMiddleware = createMiddleware<{ Variables: ContextVariables }>(
     await next();
   },
 );
+
+export const camelCaseMiddleware = createMiddleware(async (c, next) => {
+  await next();
+
+  const response = await c.res.json();
+  const transformedResponseData: Record<string, unknown> =
+    convertObjectKeysToCamelCase(response);
+
+  c.res = new Response(JSON.stringify(transformedResponseData), {
+    headers: c.res.headers,
+    status: c.res.status,
+  });
+});
+
+const convertKeyToCamelCase = (key: string) =>
+  key
+    .split("_")
+    .map((part, index) =>
+      index
+        ? `${part[0].toUpperCase()}${part.substring(1)}`
+        : part.toLowerCase(),
+    )
+    .join("");
+
+const convertObjectKeysToCamelCase = (data: Record<string, unknown>) => {
+  const transformedData: Record<string, unknown> = {};
+  for (const key in data) {
+    transformedData[convertKeyToCamelCase(key)] =
+      typeof data[key] === "object"
+        ? convertObjectKeysToCamelCase(data[key] as Record<string, unknown>)
+        : data[key];
+  }
+  return transformedData;
+};

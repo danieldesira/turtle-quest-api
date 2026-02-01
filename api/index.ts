@@ -19,7 +19,7 @@ import {
   getJWTExpectedExpiry,
 } from "./services/authService.js";
 import { sign } from "hono/jwt";
-import { authMiddleware } from "./middleware.js";
+import { authMiddleware, camelCaseMiddleware } from "./middleware.js";
 import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
@@ -47,6 +47,8 @@ app.use(
   }),
 );
 app.use(logger());
+
+app.use(camelCaseMiddleware);
 
 app.post("login", zValidator("json", loginSchema), async (c) => {
   const body = await c.req.json<LoginPayload>();
