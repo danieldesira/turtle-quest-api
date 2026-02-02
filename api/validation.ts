@@ -13,7 +13,7 @@ export const pointInsertSchema = z.object({
 
 export const playerUpdateSchema = z.object({
   name: z.string(),
-  date_of_birth: z.string().date(),
+  dateOfBirth: z.string().date(),
   settings: z.object({
     controlPosition: z.enum(["Left", "Right"]),
   }),

@@ -1,12 +1,13 @@
 # Changelog
 
-## 0.2.1 -
+## 0.2.1 - 02/02/2026 13:30
 
 - Update Vercel CLI to 50.9.6
 - Update Prisma to 7.3.0
 - Fix issues with new camelCase middleware:
   - Bug when no camel cases found
   - Array keys where being converted to strings
+- Update payload for `PUT /player` to expect `dateOfBirth` in camelCase
 
 ## 0.2.0 - 01/02/2026 23:30 UTC+1
 

@@ -5,13 +5,13 @@ import { GoogleUserPayload } from "../services/authService";
 export const updatePlayerEntry = async (
   dbClient: DbClient,
   playerId: number,
-  { name, date_of_birth, settings }: UpdatePlayerPayload,
+  { name, dateOfBirth, settings }: UpdatePlayerPayload,
 ) =>
   await dbClient.players.update({
     where: { id: playerId },
     data: {
       name,
-      date_of_birth: new Date(date_of_birth),
+      date_of_birth: new Date(dateOfBirth),
       settings,
     },
   });
