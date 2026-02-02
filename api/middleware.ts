@@ -54,20 +54,21 @@ const convertKeyToCamelCase = (key: string) =>
 const convertObjectKeysToCamelCase = (data: Record<string, unknown>) => {
   if (Array.isArray(data)) {
     for (let count = 0; count < data.length; count++) {
-      data[count] =
-        typeof data[count] === "object"
-          ? convertObjectKeysToCamelCase(data[count] as Record<string, unknown>)
-          : data[count];
+      data[count] = convertCurrentValue(data[count]);
     }
     return data;
   } else {
     const transformedData: Record<string, unknown> = {};
     for (const key in data) {
-      transformedData[convertKeyToCamelCase(key)] =
-        typeof data[key] === "object"
-          ? convertObjectKeysToCamelCase(data[key] as Record<string, unknown>)
-          : data[key];
+      transformedData[convertKeyToCamelCase(key)] = convertCurrentValue(
+        data[key],
+      );
     }
     return transformedData;
   }
 };
+
+const convertCurrentValue = (value: unknown) =>
+  typeof value === "object" && value !== null
+    ? convertObjectKeysToCamelCase(value as Record<string, unknown>)
+    : value;
