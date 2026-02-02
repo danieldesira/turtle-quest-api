@@ -7,7 +7,7 @@
 - Update AWS SDK and various other packages
 - Uninstall `@vercel/postgres`
 - `camelCase` middleware: Fix: `null` was being converted to `{}`
-
+- Add `duration` to scores
 
 ## 0.2.1 - 02/02/2026 13:30 UTC+1
 

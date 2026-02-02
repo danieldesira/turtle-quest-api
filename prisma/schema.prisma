@@ -13,6 +13,7 @@ model outcomes {
 }
 
 model players {
+  id                 Int       @id(map: "player_pkey") @default(autoincrement())
   name               String?   @db.VarChar(128)
   date_of_birth      DateTime? @db.Date
   external_id        String    @db.VarChar
@@ -23,18 +24,18 @@ model players {
   last_login_at      DateTime? @db.Timestamp(6)
   email              String    @unique(map: "player_unique") @db.VarChar
   settings           Json?     @db.Json
-  id                 Int       @id(map: "player_pkey") @default(autoincrement())
   last_game_saved_on DateTime? @db.Timestamp(6)
   scores             scores[]
 }
 
 model scores {
+  id         Int      @id(map: "score_pk") @default(autoincrement())
   points     Int
   level      Int      @db.SmallInt
   created_at DateTime @db.Timestamp(6)
   player_id  Int?
-  id         Int      @id(map: "score_pk") @default(autoincrement())
   outcome_id Int
+  duration   Int?
   outcomes   outcomes @relation(fields: [outcome_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_outcomes_fk")
   players    players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
 }

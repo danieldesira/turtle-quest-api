@@ -9,6 +9,7 @@ export const pointInsertSchema = z.object({
   points: z.number(),
   level: z.number().positive(),
   hasWon: z.boolean().optional(),
+  duration: z.number().optional(),
 });
 
 export const playerUpdateSchema = z.object({

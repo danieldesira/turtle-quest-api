@@ -3,14 +3,15 @@ import { DbClient, SaveScorePayload } from "../types";
 export const insertScore = async (
   dbClient: DbClient,
   playerId: number,
-  { hasWon, level, points }: SaveScorePayload,
+  { hasWon, level, points, duration }: SaveScorePayload,
 ) =>
   await dbClient.scores.create({
     data: {
       player_id: playerId,
       outcome_id: hasWon ? 2 : 1,
-      points: points,
-      level: level,
+      points,
+      level,
+      duration,
       created_at: new Date(),
     },
   });
@@ -24,6 +25,7 @@ export const fetchTop10Scores = async (dbClient: DbClient) =>
     select: {
       points: true,
       level: true,
+      duration: true,
       created_at: true,
       players: {
         select: {
@@ -47,10 +49,16 @@ export const fetchBestScoreByPlayerId = async (
 ) =>
   await dbClient.scores.findFirst({
     where: { player_id: playerId },
-    orderBy: [{ points: "desc" }, { level: "desc" }, { outcome_id: "desc" }],
+    orderBy: [
+      { points: "desc" },
+      { level: "desc" },
+      { outcome_id: "desc" },
+      { duration: "desc" },
+    ],
     select: {
       points: true,
       level: true,
+      duration: true,
       outcomes: {
         select: {
           desc: true,
