@@ -13,7 +13,7 @@ export const authMiddleware = createMiddleware<{ Variables: ContextVariables }>(
       return c.json({ message: "Player not authorised" }, 401);
     }
 
-    if (!verify(authorizationCookie, process.env.JWT_SECRET!)) {
+    if (!verify(authorizationCookie, process.env.JWT_SECRET!, "HS256")) {
       return c.json({ message: "Player not authorised" }, 401);
     }
 
@@ -47,17 +47,27 @@ const convertKeyToCamelCase = (key: string) =>
     .map((part, index) =>
       index
         ? `${part[0].toUpperCase()}${part.substring(1)}`
-        : part.toLowerCase(),
+        : `${part[0].toLowerCase()}${part.substring(1)}`,
     )
     .join("");
 
 const convertObjectKeysToCamelCase = (data: Record<string, unknown>) => {
-  const transformedData: Record<string, unknown> = {};
-  for (const key in data) {
-    transformedData[convertKeyToCamelCase(key)] =
-      typeof data[key] === "object"
-        ? convertObjectKeysToCamelCase(data[key] as Record<string, unknown>)
-        : data[key];
+  if (Array.isArray(data)) {
+    for (let count = 0; count < data.length; count++) {
+      data[count] =
+        typeof data[count] === "object"
+          ? convertObjectKeysToCamelCase(data[count] as Record<string, unknown>)
+          : data[count];
+    }
+    return data;
+  } else {
+    const transformedData: Record<string, unknown> = {};
+    for (const key in data) {
+      transformedData[convertKeyToCamelCase(key)] =
+        typeof data[key] === "object"
+          ? convertObjectKeysToCamelCase(data[key] as Record<string, unknown>)
+          : data[key];
+    }
+    return transformedData;
   }
-  return transformedData;
 };

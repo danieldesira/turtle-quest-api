@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.1 -
+
+- Update Vercel CLI to 50.9.6
+- Update Prisma to 7.3.0
+- Fix issues with new camelCase middleware:
+  - Bug when no camel cases found
+  - Array keys where being converted to strings
+
 ## 0.2.0 - 01/02/2026 23:30 UTC+1
 
 - Update Vercel CLI to 50.5.0
