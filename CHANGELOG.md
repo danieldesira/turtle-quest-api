@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.2.1 - 02/02/2026 13:30
+## 0.3.0 -
+
+- Create initial DB migration
+- Add more documentation including GPL license and code of conduct
+
+## 0.2.1 - 02/02/2026 13:30 UTC+1
 
 - Update Vercel CLI to 50.9.6
 - Update Prisma to 7.3.0
