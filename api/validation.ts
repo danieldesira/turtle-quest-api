@@ -41,6 +41,7 @@ export const gameUpdateSchema = z.object({
       stomachCapacity: z.number(),
     }),
     xp: z.number(),
+    duration: z.number(),
   }),
   timestamp: z.number(),
 });
