@@ -109,6 +109,27 @@ describe("Game API - Authenticated Endpoints", () => {
     expect(data).toHaveProperty("message");
   });
 
+  test("POST /points Win with duration", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          points: 1500,
+          level: 9,
+          hasWon: true,
+          duration: 400,
+        }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data).toHaveProperty("message");
+  });
+
   test("POST /points Loss", async () => {
     const res = await app.request(
       new Request("http://localhost:3000/api/points", {
