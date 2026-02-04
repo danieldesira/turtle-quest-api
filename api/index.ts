@@ -19,7 +19,7 @@ import {
   getJWTExpectedExpiry,
 } from "./services/authService.js";
 import { sign } from "hono/jwt";
-import { authMiddleware, camelCaseMiddleware } from "./middleware.js";
+import { authMiddleware } from "./middleware.js";
 import { Hono } from "hono";
 import { deleteCookie, setCookie } from "hono/cookie";
 import { zValidator } from "@hono/zod-validator";
@@ -37,6 +37,7 @@ import {
   type UpdatePlayerPayload,
 } from "./types.js";
 import prisma from "./prismaInstance.js";
+import { enforceCamelCase } from "hono-camelcase";
 
 const app = new Hono().basePath("/api");
 
@@ -48,7 +49,7 @@ app.use(
 );
 app.use(logger());
 
-app.use(camelCaseMiddleware);
+app.use(enforceCamelCase);
 
 app.post("login", zValidator("json", loginSchema), async (c) => {
   const body = await c.req.json<LoginPayload>();

@@ -6,7 +6,7 @@
 - Add more documentation including GPL license and code of conduct
 - Update AWS SDK and various other packages
 - Uninstall `@vercel/postgres`
-- `camelCase` middleware: Fix: `null` was being converted to `{}`
+- `camelCase` middleware: Fix: `null` was being converted to `{}` and transform into NPM package
 - Add `duration` to scores
 - Restructure `personalBest` property to expose `outcome` directly in the `POST /login` response
 - Update integration tests
