@@ -17,6 +17,7 @@ export const playerUpdateSchema = z.object({
   dateOfBirth: z.string().date().optional(),
   settings: z.object({
     controlPosition: z.enum(["Left", "Right"]),
+    audioVolume: z.number().min(0).max(1),
   }),
 });
 

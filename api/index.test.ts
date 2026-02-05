@@ -29,7 +29,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           name: "Updated Test Player",
           dateOfBirth: "1990-01-01",
-          settings: { controlPosition: "Right" },
+          settings: { controlPosition: "Right", audioVolume: 0.8 },
         }),
       }),
     );
@@ -65,7 +65,7 @@ describe("Game API - Authenticated Endpoints", () => {
         },
         body: JSON.stringify({
           name: "Updated Test Player",
-          settings: { controlPosition: "Right" },
+          settings: { controlPosition: "Right", audioVolume: 0.8 },
         }),
       }),
     );
@@ -85,6 +85,103 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           name: "Updated Test Player",
           date_of_birth: "1990-01-01",
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /player Missing Settings control position", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/player", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          name: "Updated Test Player",
+          date_of_birth: "1990-01-01",
+          settings: {
+            audioVolume: 0.9,
+          },
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /player Missing Settings audio volume", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/player", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          name: "Updated Test Player",
+          date_of_birth: "1990-01-01",
+          settings: {
+            controlPosition: "Left",
+          },
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /player Settings audio volume under 0", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/player", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          name: "Updated Test Player",
+          dateOfBirth: "1990-01-01",
+          settings: { controlPosition: "Right", audioVolume: -0.1 },
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /player Settings audio volume over 1", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/player", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          name: "Updated Test Player",
+          dateOfBirth: "1990-01-01",
+          settings: { controlPosition: "Right", audioVolume: 1.1 },
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /player Settings control position other", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/player", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          name: "Updated Test Player",
+          date_of_birth: "1990-01-01",
+          settings: {
+            controlPosition: "Other",
+            audioVolume: 0.8,
+          },
         }),
       }),
     );
