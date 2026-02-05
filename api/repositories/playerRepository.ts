@@ -11,7 +11,7 @@ export const updatePlayerEntry = async (
     where: { id: playerId },
     data: {
       name,
-      date_of_birth: new Date(dateOfBirth),
+      date_of_birth: dateOfBirth ? new Date(dateOfBirth) : null,
       settings,
     },
   });

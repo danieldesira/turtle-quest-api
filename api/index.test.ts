@@ -69,7 +69,9 @@ describe("Game API - Authenticated Endpoints", () => {
         }),
       }),
     );
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data).toHaveProperty("message");
   });
 
   test("PUT /player Missing Settings", async () => {
