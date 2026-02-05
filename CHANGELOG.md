@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1 -
+
+- Update `hono-camelcase` to 0.2.2
+
 ## 0.3.0 - 05/02/2026 19:00 UTC+1
 
 - Create initial DB migration
