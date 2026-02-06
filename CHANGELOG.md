@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.3.1 -
+## 0.3.1 - 06/02/2026 15:40 UTC+1
 
-- Update `hono-camelcase` to 0.2.2
+- Update `hono-camelcase` to 0.2.3 fixing error in `/logout`
+- Update Vercel CLI to 50.12.3
 
 ## 0.3.0 - 05/02/2026 19:00 UTC+1
 
