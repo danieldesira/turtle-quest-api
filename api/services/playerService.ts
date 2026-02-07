@@ -2,7 +2,6 @@ import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
 import { UpdateLastGamePayload, UpdatePlayerPayload } from "../types.js";
 import {
-  fetchLastGame,
   fetchLastGameTimestamp,
   fetchProfilePicKey,
   nullifyLastGame,
@@ -41,9 +40,6 @@ export const updatePlayerProfilePic = async (
   const dbClient = transaction ? transaction : prisma;
   await updateProfilePicKey(dbClient, playerId, profilePicUrl);
 };
-
-export const getLastGame = async (playerId: number) =>
-  await fetchLastGame(prisma, playerId);
 
 export const deleteLastGame = async (
   playerId: number,

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.2 -
+
+- Remove redundant `lastGame` property from `/login` response
+
 ## 0.3.1 - 06/02/2026 15:40 UTC+1
 
 - Update `hono-camelcase` to 0.2.3 fixing error in `/logout`

@@ -7,7 +7,6 @@ import {
 } from "./services/scoreService.js";
 import {
   deleteLastGame,
-  getLastGame,
   getProfilePicKey,
   updateLastGame,
   updatePlayer,
@@ -68,8 +67,6 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
     expires: new Date(jwtExpiry),
   });
 
-  const lastGame = await getLastGame(player.id);
-
   const personalBest = await getPersonalBest(player.id);
 
   return c.json({
@@ -85,7 +82,6 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
         : null,
     },
     isNewPlayer,
-    lastGame: lastGame?.last_game,
     personalBest,
   });
 });

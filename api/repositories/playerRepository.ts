@@ -25,12 +25,6 @@ export const fetchProfilePicKey = async (
     select: { profile_pic_r2_key: true },
   });
 
-export const fetchLastGame = async (dbClient: DbClient, playerId: number) =>
-  await dbClient.players.findFirst({
-    where: { id: playerId },
-    select: { last_game: true },
-  });
-
 export const nullifyLastGame = async (dbClient: DbClient, playerId: number) =>
   await dbClient.players.update({
     where: { id: playerId },
