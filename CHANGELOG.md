@@ -3,6 +3,7 @@
 ## 0.3.2 -
 
 - Remove redundant `lastGame` property from `/login` response
+- Create new players with `audioVolume` value defined as `0.5`
 
 ## 0.3.1 - 06/02/2026 15:40 UTC+1
 

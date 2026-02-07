@@ -88,7 +88,7 @@ export const createNewPlayer = async (
       last_login_at: new Date(),
       created_at: new Date(),
       date_of_birth: null,
-      settings: { controlPosition: "Right" },
+      settings: { controlPosition: "Right", audioVolume: 0.5 },
     },
   });
 
