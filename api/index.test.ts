@@ -977,6 +977,19 @@ describe("Game API - Authenticated Endpoints", () => {
     );
     expect(res.status).toBe(400);
   });
+
+  test("POST /logout", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+      }),
+    );
+    expect(res.status).toBe(204);
+  });
 });
 
 describe("Game API - Public Endpoints", () => {

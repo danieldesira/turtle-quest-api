@@ -1,9 +1,11 @@
 # Changelog
 
-## 0.3.2 -
+## 0.3.2 - 08/02/2026 19:35 UTC+1
 
 - Remove redundant `lastGame` property from `/login` response
 - Create new players with `audioVolume` value defined as `0.5`
+- Update `hono-camelcase` to 0.2.5 properly fixing error in `/logout`
+- Add test for `/logout`
 
 ## 0.3.1 - 06/02/2026 15:40 UTC+1
 
