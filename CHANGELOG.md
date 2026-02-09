@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.3 -
+
+- 
+
 ## 0.3.2 - 08/02/2026 19:35 UTC+1
 
 - Remove redundant `lastGame` property from `/login` response

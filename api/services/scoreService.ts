@@ -1,12 +1,17 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
-import { HighScoresResult, SaveScorePayload } from "../types.js";
+import {
+  HighScoresResult,
+  InsertScoreRow,
+  SaveScorePayload,
+} from "../types.js";
 import { getR2Url } from "./r2.js";
 import {
   fetchBestScoreByPlayerId,
   fetchTop10Scores,
   insertScore,
 } from "../repositories/scoreRepository.js";
+import redis from "../redisClient.js";
 
 export const saveScore = async (
   playerId: number,
@@ -14,7 +19,13 @@ export const saveScore = async (
   transaction: Prisma.TransactionClient | null = null,
 ) => {
   const dbClient = transaction ? transaction : prisma;
-  await insertScore(dbClient, playerId, payload);
+  const row = await insertScore(dbClient, playerId, payload);
+
+  const currentScoreListAwaitingReview = JSON.parse(
+    (await redis.get("scores")) || "[]",
+  ) as InsertScoreRow[];
+  currentScoreListAwaitingReview.push(row);
+  await redis.set("scores", JSON.stringify(currentScoreListAwaitingReview));
 };
 
 export const getHighScores = async () => {

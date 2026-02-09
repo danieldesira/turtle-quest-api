@@ -1,6 +1,6 @@
 {
   "name": "turtle-quest-api",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "type": "module",
   "author": {
     "name": "Daniel Desira",
@@ -20,8 +20,9 @@
     "@hono/zod-validator": "^0.4.3",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
-    "hono": "^4.7.10",
+    "hono": "^4.11.9",
     "hono-camelcase": "^0.2.5",
+    "redis": "^5.10.0",
     "vitest": "^4.0.16",
     "zod": "^3.24.2"
   },
