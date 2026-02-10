@@ -1,25 +1,25 @@
 # Changelog
 
-## 0.3.3 -
+## 0.3.3b - 10/02/2026 19:10 UTC+1
 
 - Save inserted scores into Redis store for cheat detection
 - Update Hono to 4.11.9, Zod to 4.3.6 and Zod-Hono middleware to 0.7.6
 - Add script to delete scores for test player
 - Remove `hasWon` payload property support in `POST /points` (Deduced from `level`)
 
-## 0.3.2 - 08/02/2026 19:35 UTC+1
+## 0.3.2b - 08/02/2026 19:35 UTC+1
 
 - Remove redundant `lastGame` property from `/login` response
 - Create new players with `audioVolume` value defined as `0.5`
 - Update `hono-camelcase` to 0.2.5 properly fixing error in `/logout`
 - Add test for `/logout`
 
-## 0.3.1 - 06/02/2026 15:40 UTC+1
+## 0.3.1b - 06/02/2026 15:40 UTC+1
 
 - Update `hono-camelcase` to 0.2.3 fixing error in `/logout`
 - Update Vercel CLI to 50.12.3
 
-## 0.3.0 - 05/02/2026 19:00 UTC+1
+## 0.3.0b - 05/02/2026 19:00 UTC+1
 
 - Create initial DB migration
 - Add more documentation including GPL license and code of conduct
@@ -31,7 +31,7 @@
 - Update integration tests
 - `PUT /player`: Change `dateOfBirth` to optional and add `audioVolume` 
 
-## 0.2.1 - 02/02/2026 13:30 UTC+1
+## 0.2.1b - 02/02/2026 13:30 UTC+1
 
 - Update Vercel CLI to 50.9.6
 - Update Prisma to 7.3.0
@@ -40,7 +40,7 @@
   - Array keys where being converted to strings
 - Update payload for `PUT /player` to expect `dateOfBirth` in camelCase
 
-## 0.2.0 - 01/02/2026 23:30 UTC+1
+## 0.2.0b - 01/02/2026 23:30 UTC+1
 
 - Update Vercel CLI to 50.5.0
 - Upgrade Prisma ORM to 7.x
@@ -54,20 +54,20 @@
 - In `players` table, rename `platform` field to `sso_platform`
 - Middleware to enforce camel case for responses
 
-## 0.1.6 - 08/11/2025 18:35 UTC+1
+## 0.1.6a - 08/11/2025 18:35 UTC+1
 
 - Save last game as object allowing Postgres to apply formatting on it's own
 - Update Vercel CLI to 48.9.0
 - Create repository layer for improved maintanability
 
-## 0.1.5 - 03/11/2025 15:10 UTC+1
+## 0.1.5a - 03/11/2025 15:10 UTC+1
 
 - Update Vercel CLI to 48.8.0
 - Refactor payload types for improved maintainability and type-safety
 - Add http file for endpoint testing from within the IDE
 - Fixed incorrect behaviour: last game not saving if last timestamp is null
 
-## 0.1.4 - 25/08/2025 13:20 UTC+1
+## 0.1.4a - 25/08/2025 13:20 UTC+1
 
 - Update Vercel CLI to 46.0.0
 - Move profile pictures to Cloudflare R2 Object Storage
@@ -75,7 +75,7 @@
 - Cleanup `/high-scores` response
 - Delete old profile picture on upload if necessary
 
-## 0.1.3 - 12/08/2025 13:10
+## 0.1.3a - 12/08/2025 13:10
 
 - Move all source files to the `/api` folder
 - Refactor imports to include the `.js` extension
@@ -83,21 +83,21 @@
 - Cleanup Neon-related packages and code
 - Log SQL queries
 
-## 0.1.2 - 11/08/2025 19:15
+## 0.1.2a - 11/08/2025 19:15
 
 - Move to Vercel Serverless rather than Edge
 
-## 0.1.1 - 11/08/2025 19:00
+## 0.1.1a - 11/08/2025 19:00
 
 - Add postinstall step in attempt to fix Prisma issue on Vercel
 
-## 0.1.0 - 11/08/2025 18:20
+## 0.1.0a - 11/08/2025 18:20
 
 - Remove `/api/about` endpoint
 - Set up Google authentication
 - Create endpoints for account management, points and game progress
 
-## 0.0.0 - 25/08/2024
+## 0.0.0a - 25/08/2024
 
 - Initial release with just an `/api/about` endpoint
 - Initial Hono/Vercel setup
