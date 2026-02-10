@@ -13,13 +13,23 @@ import {
 } from "../repositories/scoreRepository.js";
 import redis from "../redisClient.js";
 
+const Outcomes = {
+  Loss: 1,
+  Win: 2,
+} as const;
+
 export const saveScore = async (
   playerId: number,
   payload: SaveScorePayload,
   transaction: Prisma.TransactionClient | null = null,
 ) => {
   const dbClient = transaction ? transaction : prisma;
-  const row = await insertScore(dbClient, playerId, payload);
+  const row = await insertScore(
+    dbClient,
+    playerId,
+    payload,
+    payload.level === 9 ? Outcomes.Win : Outcomes.Loss,
+  );
 
   const currentScoreListAwaitingReview = JSON.parse(
     (await redis.get("scores")) || "[]",

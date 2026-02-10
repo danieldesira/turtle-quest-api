@@ -3,12 +3,13 @@ import { DbClient, SaveScorePayload } from "../types";
 export const insertScore = async (
   dbClient: DbClient,
   playerId: number,
-  { hasWon, level, points, duration }: SaveScorePayload,
+  { level, points, duration }: SaveScorePayload,
+  outcomeId: number,
 ) =>
   await dbClient.scores.create({
     data: {
       player_id: playerId,
-      outcome_id: hasWon ? 2 : 1,
+      outcome_id: outcomeId,
       points,
       level,
       duration,

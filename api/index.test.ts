@@ -199,7 +199,6 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 1500,
           level: 9,
-          hasWon: true,
         }),
       }),
     );
@@ -219,7 +218,6 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 1500,
           level: 9,
-          hasWon: true,
           duration: 400,
         }),
       }),
@@ -240,7 +238,6 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 500,
           level: 2,
-          hasWon: false,
         }),
       }),
     );
@@ -260,7 +257,6 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 500,
           level: -2,
-          hasWon: false,
         }),
       }),
     );
