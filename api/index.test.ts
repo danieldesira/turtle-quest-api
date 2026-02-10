@@ -260,7 +260,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 500,
           level: -2,
-          outcome: "Loss",
+          hasWon: false,
         }),
       }),
     );

@@ -17,14 +17,14 @@
   "dependencies": {
     "@aws-sdk/client-s3": "^3.864.0",
     "@aws-sdk/s3-request-presigner": "^3.872.0",
-    "@hono/zod-validator": "^0.4.3",
+    "@hono/zod-validator": "^0.7.6",
     "@prisma/adapter-pg": "^7.3.0",
     "@prisma/client": "^7.3.0",
     "hono": "^4.11.9",
     "hono-camelcase": "^0.2.5",
     "redis": "^5.10.0",
     "vitest": "^4.0.16",
-    "zod": "^3.24.2"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "eslint": "^9.39.2",

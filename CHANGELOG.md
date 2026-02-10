@@ -2,7 +2,8 @@
 
 ## 0.3.3 -
 
-- 
+- Save inserted scores into Redis store for cheat detection
+- Update Hono to 4.11.9, Zod to 4.3.6 and Zod-Hono middleware to 0.7.6
 
 ## 0.3.2 - 08/02/2026 19:35 UTC+1
 
