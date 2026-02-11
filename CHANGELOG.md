@@ -1,10 +1,11 @@
 # Changelog
 
-## 0.3.4b -
+## 0.3.4b - 12/02/2026 01:00 UTC+1
 
 - Update Vercel CLI to 50.15.1 and AWS-SDK
 - Update DB schema: `duration` and `player_id` converted to `NOT NULL`
 - `POST /points`: Update `duration` to required and positive number
+- Refactor Redis scores data structure to a queue
 
 ## 0.3.3b - 10/02/2026 19:10 UTC+1
 

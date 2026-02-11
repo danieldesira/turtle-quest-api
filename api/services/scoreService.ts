@@ -2,7 +2,6 @@ import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
 import {
   HighScoresResult,
-  InsertScoreRow,
   SaveScorePayload,
 } from "../types.js";
 import { getR2Url } from "./r2.js";
@@ -31,11 +30,7 @@ export const saveScore = async (
     payload.level === 9 ? Outcomes.Win : Outcomes.Loss,
   );
 
-  const currentScoreListAwaitingReview = JSON.parse(
-    (await redis.get("scores")) || "[]",
-  ) as InsertScoreRow[];
-  currentScoreListAwaitingReview.push(row);
-  await redis.set("scores", JSON.stringify(currentScoreListAwaitingReview));
+  await redis.rPush('scoreQueue', JSON.stringify(row))
 };
 
 export const getHighScores = async () => {
