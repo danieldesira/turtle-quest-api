@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.4b -
+
+- Update Vercel CLI to 50.15.1
+
 ## 0.3.3b - 10/02/2026 19:10 UTC+1
 
 - Save inserted scores into Redis store for cheat detection

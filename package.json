@@ -1,6 +1,6 @@
 {
   "name": "turtle-quest-api",
-  "version": "0.3.3",
+  "version": "0.3.4",
   "type": "module",
   "author": {
     "name": "Daniel Desira",
@@ -31,6 +31,6 @@
     "prettier": "^3.7.4",
     "prisma": "^7.3.0",
     "typescript-eslint": "^8.50.1",
-    "vercel": "^50.12.3"
+    "vercel": "^50.15.1"
   }
 }
