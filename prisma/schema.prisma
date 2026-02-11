@@ -33,9 +33,9 @@ model scores {
   points     Int
   level      Int      @db.SmallInt
   created_at DateTime @db.Timestamp(6)
-  player_id  Int?
+  player_id  Int
   outcome_id Int
-  duration   Int?
+  duration   Int
   outcomes   outcomes @relation(fields: [outcome_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_outcomes_fk")
   players    players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
 }

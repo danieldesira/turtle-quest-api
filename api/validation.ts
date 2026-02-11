@@ -8,7 +8,7 @@ export const loginSchema = z.object({
 export const pointInsertSchema = z.object({
   points: z.number(),
   level: z.number().positive().max(9),
-  duration: z.number().optional(),
+  duration: z.number().positive(),
 });
 
 export const playerUpdateSchema = z.object({

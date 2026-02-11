@@ -199,6 +199,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 1500,
           level: 9,
+          duration: 400,
         }),
       }),
     );
@@ -207,7 +208,7 @@ describe("Game API - Authenticated Endpoints", () => {
     expect(data).toHaveProperty("message");
   });
 
-  test("POST /points Win with duration", async () => {
+  test("POST /points Win missing duration", async () => {
     const res = await app.request(
       new Request("http://localhost:3000/api/points", {
         method: "POST",
@@ -218,13 +219,28 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 1500,
           level: 9,
-          duration: 400,
         }),
       }),
     );
-    expect(res.status).toBe(200);
-    const data = await res.json();
-    expect(data).toHaveProperty("message");
+    expect(res.status).toBe(400);
+  });
+
+  test("POST /points Win negative duration", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          points: 1500,
+          level: 9,
+          duration: -200,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
   });
 
   test("POST /points Loss", async () => {
@@ -238,6 +254,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 500,
           level: 2,
+          duration: 400,
         }),
       }),
     );
@@ -257,6 +274,7 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           points: 500,
           level: -2,
+          duration: 400,
         }),
       }),
     );
