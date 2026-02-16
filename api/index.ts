@@ -16,6 +16,7 @@ import {
   checkAndRegisterPlayerGoogle,
   fetchGoogleUser,
   getJWTExpectedExpiry,
+  handleMicrosoftEntraSSOLogin,
 } from "./services/authService.js";
 import { sign } from "hono/jwt";
 import { authMiddleware } from "./middleware.js";
@@ -37,6 +38,7 @@ import {
 } from "./types.js";
 import prisma from "./prismaInstance.js";
 import { enforceCamelCase } from "hono-camelcase";
+import { players } from "@prisma/client";
 
 const app = new Hono().basePath("/api");
 
@@ -52,12 +54,28 @@ app.use(enforceCamelCase);
 
 app.post("login", zValidator("json", loginSchema), async (c) => {
   const body = await c.req.json<LoginPayload>();
-  const payload = await fetchGoogleUser(body.token);
-  const { player, isNewPlayer } = await checkAndRegisterPlayerGoogle(payload);
+
+  let player: players | null = null;
+  let isNewPlayer: boolean = false;
+
+  switch (body.service) {
+    case "google": {
+      const payload = await fetchGoogleUser(body.credential);
+      const result = await checkAndRegisterPlayerGoogle(payload);
+      player = result.player;
+      isNewPlayer = result.isNewPlayer;
+      break;
+    }
+    case "microsoft": {
+      const res = await handleMicrosoftEntraSSOLogin(body.credential);
+      console.log(res);
+      break;
+    }
+  }
 
   const jwtExpiry = getJWTExpectedExpiry();
   const jwtToken = await sign(
-    { id: player.id, email: player.email, exp: jwtExpiry },
+    { id: player, email: player?.email, exp: jwtExpiry },
     process.env.JWT_SECRET!,
   );
   setCookie(c, "Authorization", jwtToken, {
@@ -67,17 +85,17 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
     expires: new Date(jwtExpiry),
   });
 
-  const personalBest = await getPersonalBest(player.id);
+  const personalBest = await getPersonalBest(player?.id ?? 0);
 
   return c.json({
     message: "Login successful",
     player: {
       ...player,
-      date_of_birth: player.date_of_birth?.toISOString().split("T")[0],
-      last_game_saved_on: player.last_game_saved_on
+      date_of_birth: player?.date_of_birth?.toISOString().split("T")[0],
+      last_game_saved_on: player?.last_game_saved_on
         ? new Date(player.last_game_saved_on).getTime()
         : null,
-      profile_pic_url: player.profile_pic_r2_key
+      profile_pic_url: player?.profile_pic_r2_key
         ? await getR2Url(player.profile_pic_r2_key)
         : null,
     },

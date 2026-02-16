@@ -7,6 +7,9 @@ import {
   fetchPlayer,
   updateLastLogin,
 } from "../repositories/playerRepository.js";
+import jwksClient from "jwks-rsa";
+import jwtLib from "jsonwebtoken";
+import { jwt } from "hono/jwt";
 
 export interface GoogleUserPayload {
   iss?: string;
@@ -54,24 +57,8 @@ export const fetchGoogleUser = async (
 ): Promise<GoogleUserPayload> => {
   try {
     const response = await fetch(
-      `https://oauth2.googleapis.com/tokeninfo?access_token=${token}`,
+      `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
     );
-
-    if (!response.ok) {
-      const idTokenResponse = await fetch(
-        `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
-      );
-
-      if (!idTokenResponse.ok) {
-        throw new Error(
-          `Failed to verify token: ${idTokenResponse.statusText}`,
-        );
-      }
-
-      const payload = await idTokenResponse.json();
-      return validateGooglePayload(payload);
-    }
-
     const payload = await response.json();
     return validateGooglePayload(payload);
   } catch (error) {
@@ -111,6 +98,38 @@ const validateGooglePayload = (
     picture: payload.picture,
     email: payload.email,
   };
+};
+
+const validateMicrosoftEntraSSOToken = async (token: string) => {
+  const tenantId = process.env.MICROSOFT_ENTRA_SSO_TENANT_ID;
+  //const audience = process.env.MICROSOFT_ENTRA_SSO_CLIENT_ID!;
+  const issuer = `https://login.microsoftonline.com/${tenantId}/v2.0`;
+
+  const client = jwksClient({
+    jwksUri: `${issuer}/discovery/v2.0/keys`,
+    cache: true,
+    rateLimit: true,
+  });
+
+  const decodedHeader = jwtLib.decode(token, { complete: true })?.header;
+  if (!decodedHeader?.kid) {
+    throw new Error("Invalid token: missing kid");
+  }
+  const key = await client.getSigningKey(decodedHeader.kid);
+  const publicKey = key.getPublicKey();
+
+  return jwt({
+    secret: publicKey,
+    alg: "RS256",
+    //audience,
+    //issuer,
+    //algorithms: ["RS256"],
+    //secret: publicKey,
+  });
+};
+
+export const handleMicrosoftEntraSSOLogin = async (token: string) => {
+  return await validateMicrosoftEntraSSOToken(token);
 };
 
 export const getJWTExpectedExpiry = () => Date.now() + 60 * 60 * 1000;
