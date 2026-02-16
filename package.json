@@ -1,6 +1,6 @@
 {
   "name": "turtle-quest-api",
-  "version": "0.3.4",
+  "version": "0.4.0",
   "type": "module",
   "author": {
     "name": "Daniel Desira",
@@ -15,11 +15,11 @@
     "test": "vitest run api/index.test.ts"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.987.0",
-    "@aws-sdk/s3-request-presigner": "^3.987.0",
+    "@aws-sdk/client-s3": "^3.990.0",
+    "@aws-sdk/s3-request-presigner": "^3.990.0",
     "@hono/zod-validator": "^0.7.6",
-    "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.3.0",
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
     "hono": "^4.11.9",
     "hono-camelcase": "^0.2.5",
     "redis": "^5.10.0",
@@ -29,7 +29,7 @@
   "devDependencies": {
     "eslint": "^9.39.2",
     "prettier": "^3.7.4",
-    "prisma": "^7.3.0",
+    "prisma": "^7.4.0",
     "typescript-eslint": "^8.50.1",
     "vercel": "^50.15.1"
   }
