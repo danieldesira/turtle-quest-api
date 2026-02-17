@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   credential: z.string(),
-  service: z.enum(["google", "microsoft"]),
+  provider: z.enum(["google", "microsoft"]),
 });
 
 export const pointInsertSchema = z.object({

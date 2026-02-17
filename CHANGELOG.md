@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.1b - 18/02/2026 0:50 UTC+1
+
+- Update packages:
+  - AWS-SDK to 3.992.0
+  - Redis to 5.11.0
+  - Vitest to 4.0.18
+  - Vercel to 50.18.1
+  - Prettier to 3.8.1
+- `POST /login`: Rename `service` to `provider` in payload
+
 ## 0.4.0b - 17/02/2026 21:30 UTC+1
 
 - Update to Prisma 7.4.0 and AWS SDK 3.990.0

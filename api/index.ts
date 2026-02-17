@@ -55,7 +55,7 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
   const body = await c.req.json<LoginPayload>();
 
   let res: { player: players; isNewPlayer: boolean } | null = null;
-  switch (body.service) {
+  switch (body.provider) {
     case "google":
       res = await handleGoogleSSOLogin(body.credential);
       break;
