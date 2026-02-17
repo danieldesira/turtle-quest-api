@@ -68,7 +68,7 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
 
   const jwtExpiry = getJWTExpectedExpiry();
   const jwtToken = await sign(
-    { id: player, email: player?.email, exp: jwtExpiry },
+    { id: player.id, email: player.email, exp: jwtExpiry },
     process.env.JWT_SECRET!,
   );
   setCookie(c, "Authorization", jwtToken, {

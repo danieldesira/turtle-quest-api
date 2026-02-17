@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.0b -
+## 0.4.0b - 17/02/2026 21:30 UTC+1
 
 - Update to Prisma 7.4.0 and AWS SDK 3.990.0
 - Cleanup and speedup Google authentication
