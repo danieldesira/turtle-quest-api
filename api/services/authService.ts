@@ -4,7 +4,6 @@ import { uploadToR2 } from "./r2.js";
 import { updatePlayerProfilePic } from "./playerService.js";
 import {
   createNewPlayer,
-  createNewPlayerMicrosoft,
   fetchPlayer,
   updateLastLogin,
 } from "../repositories/playerRepository.js";
@@ -45,7 +44,7 @@ export const checkAndRegisterPlayerGoogle = async (
 
   if (!player) {
     const newPlayer = await prisma.$transaction(async (tx) => {
-      const newPlayer = await createNewPlayer(tx, user);
+      const newPlayer = await createNewPlayer(tx, user, "google");
 
       const r2Key = await uploadSSOProfileImageToR2(
         user.picture!,
@@ -244,7 +243,7 @@ export const checkAndRegisterPlayerMicrosoft = async (
 
   if (!player) {
     const newPlayer = await prisma.$transaction(async (tx) => {
-      const newPlayer = await createNewPlayerMicrosoft(tx, user);
+      const newPlayer = await createNewPlayer(tx, user, "microsoft");
       return newPlayer;
     });
 
