@@ -67,8 +67,9 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
       break;
     }
     case "microsoft": {
-      const res = await handleMicrosoftEntraSSOLogin(body.credential);
-      console.log(res);
+      const result = await handleMicrosoftEntraSSOLogin(body.credential);
+      player = result.player;
+      isNewPlayer = result.isNewPlayer;
       break;
     }
   }

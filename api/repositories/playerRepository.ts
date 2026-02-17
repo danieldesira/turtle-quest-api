@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { DbClient, UpdateLastGamePayload, UpdatePlayerPayload } from "../types";
-import { GoogleUserPayload } from "../services/authService";
+import { GoogleUserPayload, MicrosoftUserPayload } from "../services/authService";
 
 export const updatePlayerEntry = async (
   dbClient: DbClient,
@@ -85,6 +85,23 @@ export const createNewPlayer = async (
       sso_platform: "google",
       email: email,
       name: name,
+      last_login_at: new Date(),
+      created_at: new Date(),
+      date_of_birth: null,
+      settings: { controlPosition: "Right", audioVolume: 0.5 },
+    },
+  });
+
+export const createNewPlayerMicrosoft = async (
+  dbClient: DbClient,
+  { sub, email, name }: MicrosoftUserPayload,
+) =>
+  await dbClient.players.create({
+    data: {
+      external_id: sub,
+      sso_platform: "microsoft",
+      email: email || "",
+      name: name || "",
       last_login_at: new Date(),
       created_at: new Date(),
       date_of_birth: null,

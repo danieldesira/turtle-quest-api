@@ -3,7 +3,9 @@
 ## 0.4.0b -
 
 - Update to Prisma 7.4.0 and AWS SDK 3.990.0
-- Cleanup Google authentication
+- Cleanup and speedup Google authentication
+- Introduce support for Microsoft Entra ID
+- Delete redundant `.config.js` files
 
 ## 0.3.4b - 12/02/2026 01:00 UTC+1
 
