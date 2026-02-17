@@ -37,7 +37,7 @@ interface CheckAndRegisterPlayerGoogleResult {
   isNewPlayer: boolean;
 }
 
-export const checkAndRegisterPlayerGoogle = async (
+const checkAndRegisterPlayerGoogle = async (
   user: GoogleUserPayload,
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
   const player = await fetchPlayer(prisma, user.sub, "google");
@@ -62,9 +62,7 @@ export const checkAndRegisterPlayerGoogle = async (
   }
 };
 
-export const fetchGoogleUser = async (
-  token: string,
-): Promise<GoogleUserPayload> => {
+const fetchGoogleUser = async (token: string): Promise<GoogleUserPayload> => {
   try {
     const response = await fetch(
       `https://oauth2.googleapis.com/tokeninfo?id_token=${token}`,
@@ -236,7 +234,7 @@ const validateMicrosoftPayload = (
   };
 };
 
-export const checkAndRegisterPlayerMicrosoft = async (
+const checkAndRegisterPlayerMicrosoft = async (
   user: MicrosoftUserPayload,
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
   const player = await fetchPlayer(prisma, user.sub, "microsoft");
@@ -254,7 +252,7 @@ export const checkAndRegisterPlayerMicrosoft = async (
   }
 };
 
-export const fetchMicrosoftUser = async (
+const fetchMicrosoftUser = async (
   token: string,
 ): Promise<MicrosoftUserPayload> => {
   return await validateMicrosoftEntraSSOToken(token);
@@ -265,6 +263,11 @@ export const handleMicrosoftEntraSSOLogin = async (
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
   const user = await fetchMicrosoftUser(token);
   return await checkAndRegisterPlayerMicrosoft(user);
+};
+
+export const handleGoogleSSOLogin = async (token: string) => {
+  const user = await fetchGoogleUser(token);
+  return await checkAndRegisterPlayerGoogle(user);
 };
 
 export const getJWTExpectedExpiry = () => Date.now() + 60 * 60 * 1000;

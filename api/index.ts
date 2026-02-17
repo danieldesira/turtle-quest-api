@@ -13,9 +13,8 @@ import {
   updatePlayerProfilePic,
 } from "./services/playerService.js";
 import {
-  checkAndRegisterPlayerGoogle,
-  fetchGoogleUser,
   getJWTExpectedExpiry,
+  handleGoogleSSOLogin,
   handleMicrosoftEntraSSOLogin,
 } from "./services/authService.js";
 import { sign } from "hono/jwt";
@@ -55,24 +54,17 @@ app.use(enforceCamelCase);
 app.post("login", zValidator("json", loginSchema), async (c) => {
   const body = await c.req.json<LoginPayload>();
 
-  let player: players | null = null;
-  let isNewPlayer: boolean = false;
-
+  let res: { player: players; isNewPlayer: boolean } | null = null;
   switch (body.service) {
-    case "google": {
-      const payload = await fetchGoogleUser(body.credential);
-      const result = await checkAndRegisterPlayerGoogle(payload);
-      player = result.player;
-      isNewPlayer = result.isNewPlayer;
+    case "google":
+      res = await handleGoogleSSOLogin(body.credential);
       break;
-    }
-    case "microsoft": {
-      const result = await handleMicrosoftEntraSSOLogin(body.credential);
-      player = result.player;
-      isNewPlayer = result.isNewPlayer;
+    case "microsoft":
+      res = await handleMicrosoftEntraSSOLogin(body.credential);
       break;
-    }
   }
+
+  const { player, isNewPlayer } = res;
 
   const jwtExpiry = getJWTExpectedExpiry();
   const jwtToken = await sign(

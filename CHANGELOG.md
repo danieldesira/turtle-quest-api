@@ -6,6 +6,7 @@
 - Cleanup and speedup Google authentication
 - Introduce support for Microsoft Entra ID
 - Delete redundant `.config.js` files
+- DB schema: rename `sso_platform` to `sso_provider`
 
 ## 0.3.4b - 12/02/2026 01:00 UTC+1
 
