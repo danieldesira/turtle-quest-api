@@ -1,43 +1,32 @@
-import { Prisma } from "@prisma/client";
 import prisma from "../prismaInstance.js";
-import {
-  HighScoresResult,
-  SaveScorePayload,
-} from "../types.js";
+import { HighScoresResult, SaveScorePayload } from "../types.js";
 import { getR2Url } from "./r2.js";
 import {
   fetchBestScoreByPlayerId,
   fetchTop10Scores,
-  insertScore,
 } from "../repositories/scoreRepository.js";
 import redis from "../redisClient.js";
 
-const Outcomes = {
-  Loss: 1,
-  Win: 2,
-} as const;
-
 export const saveScore = async (
   playerId: number,
-  payload: SaveScorePayload,
-  transaction: Prisma.TransactionClient | null = null,
-) => {
-  const dbClient = transaction ? transaction : prisma;
-  const row = await insertScore(
-    dbClient,
-    playerId,
-    payload,
-    payload.level === 9 ? Outcomes.Win : Outcomes.Loss,
+  { interactions, level, duration }: SaveScorePayload,
+) =>
+  await redis.rPush(
+    "scoreQueue",
+    JSON.stringify({
+      playerId,
+      interactions,
+      level,
+      duration,
+      timestamp: new Date().getTime(),
+    }),
   );
-
-  await redis.rPush('scoreQueue', JSON.stringify(row))
-};
 
 export const getHighScores = async () => {
   const res = await fetchTop10Scores(prisma);
   const profilePicUrlMap = await createProfilePicUrlMapFromHighScores(res);
   return res.map(({ players, points, level, outcomes, duration }) => ({
-    playerIdentifier: `${players?.external_id}-${players?.sso_platform}`,
+    playerIdentifier: `${players?.external_id}-${players?.sso_provider}`,
     playerName: players?.name,
     playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
     points,

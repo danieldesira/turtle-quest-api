@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.4.2b -
+
+- Fix outdated `sso_platform` references
+- `POST /points`:
+  - Drop `points` in payload
+  - Require `interactions` string in payload expected to match the following regex: `/[a-zA-Z]+,[0-9]+(|[a-zA-Z]+,[0-9]+)*/`
+  - Save payload directly to Redis (no saving to Postgres from REST API)
+
+
 ## 0.4.1b - 18/02/2026 0:50 UTC+1
 
 - Update packages:

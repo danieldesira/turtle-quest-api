@@ -35,7 +35,6 @@ import {
   type UpdateLastGamePayload,
   type UpdatePlayerPayload,
 } from "./types.js";
-import prisma from "./prismaInstance.js";
 import { enforceCamelCase } from "hono-camelcase";
 import { players } from "@prisma/client";
 
@@ -105,10 +104,8 @@ app.post(
     const body = await c.req.json<SaveScorePayload>();
     const playerId = c.get("playerId");
 
-    await prisma.$transaction(async (tx) => {
-      await saveScore(playerId, body, tx);
-      await deleteLastGame(c.get("playerId"), tx);
-    });
+    await saveScore(playerId, body);
+    await deleteLastGame(playerId);
 
     return c.json({ message: "Score saved successfully" });
   },

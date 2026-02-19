@@ -5,8 +5,12 @@ export const loginSchema = z.object({
   provider: z.enum(["google", "microsoft"]),
 });
 
+const interactionsSchema = z
+  .string()
+  .regex(/[a-zA-Z]+,[0-9]+(|[a-zA-Z]+,[0-9]+)*/);
+
 export const pointInsertSchema = z.object({
-  points: z.number(),
+  interactions: interactionsSchema,
   level: z.number().positive().max(9),
   duration: z.number().positive(),
 });
@@ -42,6 +46,7 @@ export const gameUpdateSchema = z.object({
     }),
     xp: z.number(),
     duration: z.number(),
+    interactions: interactionsSchema,
   }),
   timestamp: z.number(),
 });

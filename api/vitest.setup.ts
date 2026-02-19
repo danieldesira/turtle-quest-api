@@ -12,7 +12,7 @@ if (!testPlayer) {
     data: {
       id: playerId,
       external_id: "test-user-abc",
-      sso_platform: "google",
+      sso_provider: "google",
       email: "test@example.com",
       name: "Test Player",
       created_at: new Date(),

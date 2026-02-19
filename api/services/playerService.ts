@@ -41,13 +41,8 @@ export const updatePlayerProfilePic = async (
   await updateProfilePicKey(dbClient, playerId, profilePicUrl);
 };
 
-export const deleteLastGame = async (
-  playerId: number,
-  transaction: Prisma.TransactionClient | null = null,
-) => {
-  const dbClient = transaction ? transaction : prisma;
-  await nullifyLastGame(dbClient, playerId);
-};
+export const deleteLastGame = async (playerId: number) =>
+  await nullifyLastGame(prisma, playerId);
 
 export const getProfilePicKey = async (playerId: number) =>
   (await fetchProfilePicKey(prisma, playerId))?.profile_pic_r2_key;

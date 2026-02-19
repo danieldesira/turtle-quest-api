@@ -1,21 +1,4 @@
-import { DbClient, SaveScorePayload } from "../types";
-
-export const insertScore = async (
-  dbClient: DbClient,
-  playerId: number,
-  { level, points, duration }: SaveScorePayload,
-  outcomeId: number,
-) =>
-  await dbClient.scores.create({
-    data: {
-      player_id: playerId,
-      outcome_id: outcomeId,
-      points,
-      level,
-      duration,
-      created_at: new Date(),
-    },
-  });
+import { DbClient } from "../types";
 
 export const fetchTop10Scores = async (dbClient: DbClient) =>
   await dbClient.scores.findMany({
@@ -33,7 +16,7 @@ export const fetchTop10Scores = async (dbClient: DbClient) =>
           name: true,
           profile_pic_r2_key: true,
           external_id: true,
-          sso_platform: true,
+          sso_provider: true,
         },
       },
       outcomes: {

@@ -197,7 +197,28 @@ describe("Game API - Authenticated Endpoints", () => {
           Cookie: `Authorization=${authToken}`,
         },
         body: JSON.stringify({
-          points: 1500,
+          interactions:
+            "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
+          level: 9,
+          duration: 400,
+        }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data).toHaveProperty("message");
+  });
+
+  test("POST /points Win Single interaction", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          interactions: "Shrimp,265",
           level: 9,
           duration: 400,
         }),
@@ -217,7 +238,8 @@ describe("Game API - Authenticated Endpoints", () => {
           Cookie: `Authorization=${authToken}`,
         },
         body: JSON.stringify({
-          points: 1500,
+          interactions:
+            "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: 9,
         }),
       }),
@@ -234,9 +256,28 @@ describe("Game API - Authenticated Endpoints", () => {
           Cookie: `Authorization=${authToken}`,
         },
         body: JSON.stringify({
-          points: 1500,
+          interactions:
+            "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: 9,
           duration: -200,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("POST /points Invalid interactions", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          interactions: "Sabfsdfg",
+          level: 9,
+          duration: 200,
         }),
       }),
     );
@@ -252,7 +293,7 @@ describe("Game API - Authenticated Endpoints", () => {
           Cookie: `Authorization=${authToken}`,
         },
         body: JSON.stringify({
-          points: 500,
+          interactions: "Shrimp,15|Crab,2|NeptuneGrass,2",
           level: 2,
           duration: 400,
         }),
@@ -272,9 +313,27 @@ describe("Game API - Authenticated Endpoints", () => {
           Cookie: `Authorization=${authToken}`,
         },
         body: JSON.stringify({
-          points: 500,
+          interactions:
+            "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: -2,
           duration: 400,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("POST /points Win missing interactions", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          level: 9,
+          duration: 300,
         }),
       }),
     );
@@ -303,6 +362,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -328,6 +389,94 @@ describe("Game API - Authenticated Endpoints", () => {
     expect(data).toHaveProperty("message");
   });
 
+  test("PUT /game single interaction", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/game", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          lastGame: {
+            turtle: {
+              x: 400,
+              y: 300,
+              direction: "Left",
+              oxygen: 73,
+              food: 30,
+              health: 90,
+              stomachCapacity: 55,
+              isMama: false,
+            },
+            levelNo: 5,
+            xp: 1050,
+            interactions: "Shrimp,200",
+            characters: [
+              {
+                type: "Shrimp",
+                x: 150,
+                y: 200,
+                direction: "Right",
+              },
+              {
+                type: "PlasticBag",
+                x: 600,
+                y: 400,
+                direction: "Left",
+              },
+            ],
+            duration: 200,
+          },
+          timestamp: new Date().getTime(),
+        }),
+      }),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(data).toHaveProperty("message");
+  });
+
+  test("PUT /game Invalid interaction", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/game", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          lastGame: {
+            turtle: {
+              x: 400,
+              y: 300,
+              direction: "Left",
+              oxygen: 73,
+              food: 30,
+              health: 90,
+              stomachCapacity: 55,
+              isMama: false,
+            },
+            levelNo: 5,
+            xp: 1050,
+            interactions: "qwetrsdr",
+            characters: [
+              {
+                type: "Shrimp",
+                x: 150,
+                y: 200,
+                direction: "Right",
+              },
+            ],
+            duration: 200,
+          },
+          timestamp: new Date().getTime(),
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
   test("PUT /game Past timestamp", async () => {
     const res = await app.request(
       new Request("http://localhost:3000/api/game", {
@@ -350,6 +499,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1",
             characters: [
               {
                 type: "Shrimp",
@@ -375,7 +526,7 @@ describe("Game API - Authenticated Endpoints", () => {
     expect(data).toHaveProperty("message");
   });
 
-  test("PUT /game Missing XP", async () => {
+  test("PUT /game Missing interactions", async () => {
     const res = await app.request(
       new Request("http://localhost:3000/api/game", {
         method: "PUT",
@@ -396,6 +547,7 @@ describe("Game API - Authenticated Endpoints", () => {
               isMama: false,
             },
             levelNo: 5,
+            xp: 1050,
             characters: [
               {
                 type: "Shrimp",
@@ -440,6 +592,54 @@ describe("Game API - Authenticated Endpoints", () => {
               isMama: false,
             },
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
+            characters: [
+              {
+                type: "Shrimp",
+                x: 150,
+                y: 200,
+                direction: "Right",
+              },
+              {
+                type: "PlasticBag",
+                x: 600,
+                y: 400,
+                direction: "Left",
+              },
+            ],
+            duration: 200,
+          },
+          timestamp: new Date().getTime(),
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /game Missing xp", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/game", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          lastGame: {
+            turtle: {
+              x: 400,
+              y: 300,
+              direction: "Left",
+              oxygen: 73,
+              food: 30,
+              health: 90,
+              stomachCapacity: 55,
+              isMama: false,
+            },
+            levelNo: 5,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -475,6 +675,8 @@ describe("Game API - Authenticated Endpoints", () => {
           lastGame: {
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -519,6 +721,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -563,6 +767,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -607,6 +813,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -651,6 +859,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -695,6 +905,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -739,6 +951,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -783,6 +997,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -827,6 +1043,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 x: 150,
@@ -864,6 +1082,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -901,6 +1121,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -938,6 +1160,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "Shrimp",
@@ -976,6 +1200,8 @@ describe("Game API - Authenticated Endpoints", () => {
             },
             levelNo: 5,
             xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
             characters: [
               {
                 type: "PlasticBag",
