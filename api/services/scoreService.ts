@@ -18,7 +18,7 @@ export const saveScore = async (
       interactions,
       level,
       duration,
-      timestamp: new Date().getTime(),
+      timestamp: new Date().toISOString(),
     }),
   );
 
