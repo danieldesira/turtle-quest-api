@@ -8,6 +8,7 @@
   - Require `interactions` string in payload expected to match the following regex: `/[a-zA-Z]+,[0-9]+(|[a-zA-Z]+,[0-9]+)*/`
   - Save payload directly to Redis (no saving to Postgres from REST API)
 - New `GET /scores` endpoint accepting query string with `page`, `items` and `outcome` params
+- Internal: Refactor profile pic mapping
 
 ## 0.4.1b - 18/02/2026 0:50 UTC+1
 

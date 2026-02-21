@@ -6,11 +6,8 @@ import {
   pointInsertSchema,
 } from "./validation";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { fetchTop10Scores } from "./repositories/scoreRepository";
 
 export type SaveScorePayload = z.infer<typeof pointInsertSchema>;
-
-export type HighScoresResult = Awaited<ReturnType<typeof fetchTop10Scores>>;
 
 export type LoginPayload = z.infer<typeof loginSchema>;
 

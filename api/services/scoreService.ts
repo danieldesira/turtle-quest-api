@@ -1,6 +1,5 @@
 import prisma from "../prismaInstance.js";
 import {
-  HighScoresResult,
   SaveScorePayload,
   ScoresQueryOptions,
 } from "../types.js";
@@ -29,7 +28,10 @@ export const saveScore = async (
 
 export const getHighScores = async () => {
   const res = await fetchTop10Scores(prisma);
-  const profilePicUrlMap = await createProfilePicUrlMapFromHighScores(res);
+  const r2Keys = res
+    .map((s) => s.players?.profile_pic_r2_key)
+    .filter((key) => typeof key === "string");
+  const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
   return res.map(({ players, points, level, outcomes, duration }) => ({
     playerIdentifier: `${players?.external_id}-${players?.sso_provider}`,
     playerName: players?.name,
@@ -51,22 +53,28 @@ export const getPersonalBest = async (playerId: number) => {
   }
 };
 
-export const createProfilePicUrlMapFromHighScores = async (
-  highScores: HighScoresResult,
-) => {
+const createProfilePicUrlMap = async (r2Keys: string[]) => {
   const profilePicUrlMap: Record<string, string> = {};
-  for (const score of highScores) {
-    if (
-      score.players?.profile_pic_r2_key &&
-      !profilePicUrlMap[score.players?.profile_pic_r2_key]
-    ) {
-      profilePicUrlMap[score.players?.profile_pic_r2_key] = await getR2Url(
-        score.players?.profile_pic_r2_key,
-      );
+  for (const key of r2Keys) {
+    if (!profilePicUrlMap[key]) {
+      profilePicUrlMap[key] = await getR2Url(key);
     }
   }
   return profilePicUrlMap;
 };
 
-export const getScores = async (options: ScoresQueryOptions) =>
-  await fetchScores(prisma, options);
+export const getScores = async (options: ScoresQueryOptions) => {
+  const res = await fetchScores(prisma, options);
+  const r2Keys = res
+    .map((s) => s.players?.profile_pic_r2_key)
+    .filter((key) => typeof key === "string");
+  const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
+  return res.map(({ players, points, level, outcomes, duration }) => ({
+    playerName: players?.name,
+    playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
+    points,
+    level,
+    outcome: outcomes.desc,
+    duration,
+  }));
+};
