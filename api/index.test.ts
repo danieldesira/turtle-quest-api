@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, test } from "vitest";
 import { sign } from "hono/jwt";
 import app from ".";
+import { getScores } from "./services/scoreService";
 
 describe("Game API - Authenticated Endpoints", () => {
   let authToken: string;
@@ -1252,41 +1253,82 @@ describe("Game API - Public Endpoints", () => {
 
   test("GET /scores no filters", async () => {
     const res = await app.request(
-      new Request("http://localhost:3000/api/high-scores"),
+      new Request("http://localhost:3000/api/scores"),
     );
     expect(res.status).toBe(200);
     const data = await res.json();
     expect(Array.isArray(data)).toBe(true);
     expect(data.length).toBeGreaterThan(0);
     expect(data.length).toBeLessThanOrEqual(20);
+    data.forEach((entry: unknown) => {
+      expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("points");
+      expect(entry).toHaveProperty("level");
+      expect(entry).toHaveProperty("outcome");
+    });
   });
 
   test("GET /scores with page filter", async () => {
     const res = await app.request(
-      new Request("http://localhost:3000/api/high-scores?page=2"),
+      new Request("http://localhost:3000/api/scores?page=2"),
     );
     expect(res.status).toBe(200);
     const data = await res.json();
     expect(Array.isArray(data)).toBe(true);
     expect(data.length).toBeLessThanOrEqual(20);
+    data.forEach((entry: unknown) => {
+      expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("points");
+      expect(entry).toHaveProperty("level");
+      expect(entry).toHaveProperty("outcome");
+    });
   });
 
   test("GET /scores with items filter", async () => {
     const res = await app.request(
-      new Request("http://localhost:3000/api/high-scores?items=10"),
+      new Request("http://localhost:3000/api/scores?items=10"),
     );
     expect(res.status).toBe(200);
     const data = await res.json();
     expect(Array.isArray(data)).toBe(true);
     expect(data.length).toBeLessThanOrEqual(10);
+    data.forEach((entry: unknown) => {
+      expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("points");
+      expect(entry).toHaveProperty("level");
+      expect(entry).toHaveProperty("outcome");
+    });
   });
 
-  test("GET /scores with outcome filter", async () => {
+  test("GET /scores with win outcome filter", async () => {
     const res = await app.request(
-      new Request("http://localhost:3000/api/high-scores?outcome=win"),
+      new Request("http://localhost:3000/api/scores?outcome=win"),
     );
     expect(res.status).toBe(200);
-    const data = await res.json();
+    const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
     expect(Array.isArray(data)).toBe(true);
+    data.forEach((entry) => {
+      expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("points");
+      expect(entry).toHaveProperty("level");
+      expect(entry).toHaveProperty("outcome");
+      expect(entry.outcome.toLowerCase()).toBe("win");
+    });
+  });
+
+  test("GET /scores with loss outcome filter", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/scores?outcome=loss"),
+    );
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
+    expect(Array.isArray(data)).toBe(true);
+    data.forEach((entry) => {
+      expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("points");
+      expect(entry).toHaveProperty("level");
+      expect(entry).toHaveProperty("outcome");
+      expect(entry.outcome.toLowerCase()).toBe("loss");
+    });
   });
 });
