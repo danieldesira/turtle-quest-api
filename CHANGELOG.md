@@ -7,7 +7,7 @@
   - Drop `points` in payload
   - Require `interactions` string in payload expected to match the following regex: `/[a-zA-Z]+,[0-9]+(|[a-zA-Z]+,[0-9]+)*/`
   - Save payload directly to Redis (no saving to Postgres from REST API)
-
+- New `GET /scores` endpoint accepting query string with `page`, `items` and `outcome` params
 
 ## 0.4.1b - 18/02/2026 0:50 UTC+1
 
@@ -63,7 +63,7 @@
 - Add `duration` to scores
 - Restructure `personalBest` property to expose `outcome` directly in the `POST /login` response
 - Update integration tests
-- `PUT /player`: Change `dateOfBirth` to optional and add `audioVolume` 
+- `PUT /player`: Change `dateOfBirth` to optional and add `audioVolume`
 
 ## 0.2.1b - 02/02/2026 13:30 UTC+1
 

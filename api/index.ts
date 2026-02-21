@@ -3,6 +3,7 @@ import { logger } from "hono/logger";
 import {
   getHighScores,
   getPersonalBest,
+  getScores,
   saveScore,
 } from "./services/scoreService.js";
 import {
@@ -30,6 +31,7 @@ import {
 } from "./validation.js";
 import { deleteR2Object, getR2Url, uploadToR2 } from "./services/r2.js";
 import {
+  ScoresQueryOptions,
   type LoginPayload,
   type SaveScorePayload,
   type UpdateLastGamePayload,
@@ -174,6 +176,19 @@ app.put("profile-pic", authMiddleware, async (c) => {
     message: "Profile picture updated successfully",
     profilePicUrl: await getR2Url(newKey),
   });
+});
+
+app.get("scores", async (c) => {
+  const options = {
+    page: parseInt(c.req.query("page") ?? "1"),
+    items: parseInt(c.req.query("items") ?? "20"),
+    outcome: c.req.query("outcome")?.toLowerCase() as
+      | "win"
+      | "loss"
+      | undefined,
+  } satisfies ScoresQueryOptions;
+  const scores = await getScores(options);
+  return c.json(scores);
 });
 
 export default app;

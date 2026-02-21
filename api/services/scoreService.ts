@@ -1,8 +1,13 @@
 import prisma from "../prismaInstance.js";
-import { HighScoresResult, SaveScorePayload } from "../types.js";
+import {
+  HighScoresResult,
+  SaveScorePayload,
+  ScoresQueryOptions,
+} from "../types.js";
 import { getR2Url } from "./r2.js";
 import {
   fetchBestScoreByPlayerId,
+  fetchScores,
   fetchTop10Scores,
 } from "../repositories/scoreRepository.js";
 import redis from "../redisClient.js";
@@ -62,3 +67,6 @@ export const createProfilePicUrlMapFromHighScores = async (
   }
   return profilePicUrlMap;
 };
+
+export const getScores = async (options: ScoresQueryOptions) =>
+  await fetchScores(prisma, options);

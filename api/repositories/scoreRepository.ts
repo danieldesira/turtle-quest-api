@@ -1,4 +1,4 @@
-import { DbClient } from "../types";
+import { DbClient, Outcomes, ScoresQueryOptions } from "../types";
 
 export const fetchTop10Scores = async (dbClient: DbClient) =>
   await dbClient.scores.findMany({
@@ -47,6 +47,40 @@ export const fetchBestScoreByPlayerId = async (
         select: {
           desc: true,
         },
+      },
+    },
+  });
+
+export const fetchScores = async (
+  dbClient: DbClient,
+  { page, items, outcome }: ScoresQueryOptions,
+) =>
+  await dbClient.scores.findMany({
+    take: items,
+    skip: (page - 1) * items,
+    orderBy: {
+      points: "desc",
+    },
+    select: {
+      points: true,
+      level: true,
+      duration: true,
+      created_at: true,
+      players: {
+        select: {
+          name: true,
+          profile_pic_r2_key: true,
+        },
+      },
+      outcomes: {
+        select: {
+          desc: true,
+        },
+      },
+    },
+    where: {
+      outcomes: {
+        id: outcome ? Outcomes[outcome] : undefined,
       },
     },
   });

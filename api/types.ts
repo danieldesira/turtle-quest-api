@@ -19,3 +19,14 @@ export type UpdatePlayerPayload = z.infer<typeof playerUpdateSchema>;
 export type UpdateLastGamePayload = z.infer<typeof gameUpdateSchema>;
 
 export type DbClient = PrismaClient | Prisma.TransactionClient;
+
+export type ScoresQueryOptions = {
+  page: number;
+  items: number;
+  outcome?: "win" | "loss";
+};
+
+export const Outcomes = {
+  loss: 1,
+  win: 2,
+};

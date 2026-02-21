@@ -1249,4 +1249,44 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("outcome");
     });
   });
+
+  test("GET /scores no filters", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/high-scores"),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeGreaterThan(0);
+    expect(data.length).toBeLessThanOrEqual(20);
+  });
+
+  test("GET /scores with page filter", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/high-scores?page=2"),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeLessThanOrEqual(20);
+  });
+
+  test("GET /scores with items filter", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/high-scores?items=10"),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(Array.isArray(data)).toBe(true);
+    expect(data.length).toBeLessThanOrEqual(10);
+  });
+
+  test("GET /scores with outcome filter", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/high-scores?outcome=win"),
+    );
+    expect(res.status).toBe(200);
+    const data = await res.json();
+    expect(Array.isArray(data)).toBe(true);
+  });
 });
