@@ -6,10 +6,10 @@ datasource db {
   provider = "postgresql"
 }
 
-model outcomes {
-  id     Int      @id(map: "outcomes_pk") @default(autoincrement())
-  desc   String   @db.VarChar
-  scores scores[]
+
+enum OutcomeType {
+  WIN
+  LOSS
 }
 
 model players {
@@ -34,8 +34,7 @@ model scores {
   level      Int      @db.SmallInt
   created_at DateTime @db.Timestamp(6)
   player_id  Int
-  outcome_id Int
+  outcome    OutcomeType
   duration   Int
-  outcomes   outcomes @relation(fields: [outcome_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_outcomes_fk")
   players    players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
 }

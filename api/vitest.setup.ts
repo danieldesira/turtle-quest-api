@@ -4,7 +4,7 @@ config({ path: ".env.test" });
 
 const { default: prisma } = await import("./prismaInstance.js");
 
-const playerId = 100000;
+const playerId = 1;
 
 const testPlayer = await prisma.players.findUnique({ where: { id: playerId } });
 if (!testPlayer) {

@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.2b -
+## 0.4.2b - 22/02/2026 21:00 UTC+1
 
 - Fix outdated `sso_platform` references
 - `POST /points`:
@@ -8,7 +8,10 @@
   - Require `interactions` string in payload expected to match the following regex: `/[a-zA-Z]+,[0-9]+(|[a-zA-Z]+,[0-9]+)*/`
   - Save payload directly to Redis (no saving to Postgres from REST API)
 - New `GET /scores` endpoint accepting query string with `page`, `items` and `outcome` params
-- Internal: Refactor profile pic mapping
+- Internal:
+  - Refactor profile pic mapping in `GET /high-scores` and `GET /scores`
+  - `scores` table: `outcome_id` converted to `outcome` enum
+  - Test player ID updated to 1
 
 ## 0.4.1b - 18/02/2026 0:50 UTC+1
 

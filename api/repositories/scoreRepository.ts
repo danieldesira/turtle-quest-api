@@ -1,4 +1,4 @@
-import { DbClient, Outcomes, ScoresQueryOptions } from "../types";
+import { DbClient, ScoresQueryOptions } from "../types";
 
 export const fetchTop10Scores = async (dbClient: DbClient) =>
   await dbClient.scores.findMany({
@@ -19,11 +19,7 @@ export const fetchTop10Scores = async (dbClient: DbClient) =>
           sso_provider: true,
         },
       },
-      outcomes: {
-        select: {
-          desc: true,
-        },
-      },
+      outcome: true,
     },
   });
 
@@ -36,18 +32,14 @@ export const fetchBestScoreByPlayerId = async (
     orderBy: [
       { points: "desc" },
       { level: "desc" },
-      { outcome_id: "desc" },
+      { outcome: "desc" },
       { duration: "desc" },
     ],
     select: {
       points: true,
       level: true,
       duration: true,
-      outcomes: {
-        select: {
-          desc: true,
-        },
-      },
+      outcome: true,
     },
   });
 
@@ -72,15 +64,9 @@ export const fetchScores = async (
           profile_pic_r2_key: true,
         },
       },
-      outcomes: {
-        select: {
-          desc: true,
-        },
-      },
+      outcome: true,
     },
     where: {
-      outcomes: {
-        id: outcome ? Outcomes[outcome] : undefined,
-      },
+      outcome,
     },
   });

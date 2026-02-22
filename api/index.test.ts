@@ -5,7 +5,7 @@ import { getScores } from "./services/scoreService";
 
 describe("Game API - Authenticated Endpoints", () => {
   let authToken: string;
-  const testPlayerId = 100_000;
+  const testPlayerId = 1;
   const testPlayerEmail = "test@example.com";
 
   beforeEach(async () => {

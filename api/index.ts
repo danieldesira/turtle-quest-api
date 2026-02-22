@@ -182,9 +182,9 @@ app.get("scores", async (c) => {
   const options = {
     page: parseInt(c.req.query("page") ?? "1"),
     items: parseInt(c.req.query("items") ?? "20"),
-    outcome: c.req.query("outcome")?.toLowerCase() as
-      | "win"
-      | "loss"
+    outcome: c.req.query("outcome")?.toUpperCase() as
+      | "WIN"
+      | "LOSS"
       | undefined,
   } satisfies ScoresQueryOptions;
   const scores = await getScores(options);

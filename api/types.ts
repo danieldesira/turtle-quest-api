@@ -20,10 +20,5 @@ export type DbClient = PrismaClient | Prisma.TransactionClient;
 export type ScoresQueryOptions = {
   page: number;
   items: number;
-  outcome?: "win" | "loss";
-};
-
-export const Outcomes = {
-  loss: 1,
-  win: 2,
+  outcome?: "WIN" | "LOSS";
 };

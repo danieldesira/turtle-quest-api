@@ -1,2 +1,1 @@
-delete from scores
-where player_id = 100000;
+delete from scores where player_id = 1;
