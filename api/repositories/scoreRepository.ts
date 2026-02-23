@@ -1,3 +1,4 @@
+import { OutcomeType } from "@prisma/client";
 import { DbClient, ScoresQueryOptions } from "../types";
 
 export const fetchTop10Scores = async (dbClient: DbClient) =>
@@ -71,5 +72,9 @@ export const fetchScores = async (
     },
   });
 
-export const countScores = async (dbClient: DbClient) =>
-  await dbClient.scores.count();
+export const countScores = async (dbClient: DbClient, outcome?: OutcomeType) =>
+  await dbClient.scores.count({
+    where: {
+      outcome,
+    },
+  });
