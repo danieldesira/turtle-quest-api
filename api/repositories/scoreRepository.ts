@@ -70,3 +70,6 @@ export const fetchScores = async (
       outcome,
     },
   });
+
+export const countScores = async (dbClient: DbClient) =>
+  await dbClient.scores.count();

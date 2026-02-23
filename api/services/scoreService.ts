@@ -2,6 +2,7 @@ import prisma from "../prismaInstance.js";
 import { SaveScorePayload, ScoresQueryOptions } from "../types.js";
 import { getR2Url } from "./r2.js";
 import {
+  countScores,
   fetchBestScoreByPlayerId,
   fetchScores,
   fetchTop10Scores,
@@ -66,12 +67,18 @@ export const getScores = async (options: ScoresQueryOptions) => {
     .map((s) => s.players?.profile_pic_r2_key)
     .filter((key) => typeof key === "string");
   const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
-  return res.map(({ players, points, level, outcome, duration }) => ({
-    playerName: players?.name,
-    playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
-    points,
-    level,
-    outcome,
-    duration,
-  }));
+  const count = await countScores(prisma);
+
+  return {
+    scores: res.map(({ players, points, level, outcome, duration }) => ({
+      playerName: players?.name,
+      playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
+      points,
+      level,
+      outcome,
+      duration,
+    })),
+    totalPages: Math.ceil(count / options.items),
+    currentPage: options.page,
+  };
 };

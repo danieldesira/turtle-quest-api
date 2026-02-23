@@ -1256,16 +1256,18 @@ describe("Game API - Public Endpoints", () => {
       new Request("http://localhost:3000/api/scores"),
     );
     expect(res.status).toBe(200);
-    const data = await res.json();
-    expect(Array.isArray(data)).toBe(true);
-    expect(data.length).toBeGreaterThan(0);
-    expect(data.length).toBeLessThanOrEqual(20);
-    data.forEach((entry: unknown) => {
+    const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
+    expect(Array.isArray(data.scores)).toBe(true);
+    expect(data.scores.length).toBeGreaterThan(0);
+    expect(data.scores.length).toBeLessThanOrEqual(20);
+    data.scores.forEach((entry: unknown) => {
       expect(entry).toHaveProperty("playerName");
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
     });
+    expect(data).toHaveProperty("totalPages");
+    expect(data).toHaveProperty("currentPage");
   });
 
   test("GET /scores with page filter", async () => {
@@ -1273,15 +1275,17 @@ describe("Game API - Public Endpoints", () => {
       new Request("http://localhost:3000/api/scores?page=2"),
     );
     expect(res.status).toBe(200);
-    const data = await res.json();
-    expect(Array.isArray(data)).toBe(true);
-    expect(data.length).toBeLessThanOrEqual(20);
-    data.forEach((entry: unknown) => {
+    const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
+    expect(Array.isArray(data.scores)).toBe(true);
+    expect(data.scores.length).toBeLessThanOrEqual(20);
+    data.scores.forEach((entry: unknown) => {
       expect(entry).toHaveProperty("playerName");
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
     });
+    expect(data).toHaveProperty("totalPages");
+    expect(data).toHaveProperty("currentPage");
   });
 
   test("GET /scores with items filter", async () => {
@@ -1289,15 +1293,17 @@ describe("Game API - Public Endpoints", () => {
       new Request("http://localhost:3000/api/scores?items=10"),
     );
     expect(res.status).toBe(200);
-    const data = await res.json();
-    expect(Array.isArray(data)).toBe(true);
-    expect(data.length).toBeLessThanOrEqual(10);
-    data.forEach((entry: unknown) => {
+    const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
+    expect(Array.isArray(data.scores)).toBe(true);
+    expect(data.scores.length).toBeLessThanOrEqual(10);
+    data.scores.forEach((entry: unknown) => {
       expect(entry).toHaveProperty("playerName");
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
     });
+    expect(data).toHaveProperty("totalPages");
+    expect(data).toHaveProperty("currentPage");
   });
 
   test("GET /scores with win outcome filter", async () => {
@@ -1306,14 +1312,16 @@ describe("Game API - Public Endpoints", () => {
     );
     expect(res.status).toBe(200);
     const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
-    expect(Array.isArray(data)).toBe(true);
-    data.forEach((entry) => {
+    expect(Array.isArray(data.scores)).toBe(true);
+    data.scores.forEach((entry) => {
       expect(entry).toHaveProperty("playerName");
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
       expect(entry.outcome.toLowerCase()).toBe("win");
     });
+    expect(data).toHaveProperty("totalPages");
+    expect(data).toHaveProperty("currentPage");
   });
 
   test("GET /scores with loss outcome filter", async () => {
@@ -1322,13 +1330,15 @@ describe("Game API - Public Endpoints", () => {
     );
     expect(res.status).toBe(200);
     const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
-    expect(Array.isArray(data)).toBe(true);
-    data.forEach((entry) => {
+    expect(Array.isArray(data.scores)).toBe(true);
+    data.scores.forEach((entry) => {
       expect(entry).toHaveProperty("playerName");
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
       expect(entry.outcome.toLowerCase()).toBe("loss");
     });
+    expect(data).toHaveProperty("totalPages");
+    expect(data).toHaveProperty("currentPage");
   });
 });
