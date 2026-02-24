@@ -1341,4 +1341,24 @@ describe("Game API - Public Endpoints", () => {
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
   });
+
+  test("GET /scores with junior-only filter", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/scores?juniors=1"),
+    );
+    expect(res.status).toBe(200);
+    const data = (await res.json()) as Awaited<ReturnType<typeof getScores>>;
+    expect(Array.isArray(data.scores)).toBe(true);
+    data.scores.forEach((entry) => {
+      expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("playerAge");
+      expect(entry.playerAge).toBeLessThan(16);
+      expect(entry).toHaveProperty("points");
+      expect(entry).toHaveProperty("level");
+      expect(entry).toHaveProperty("outcome");
+      expect(entry.outcome.toLowerCase()).toBe("loss");
+    });
+    expect(data).toHaveProperty("totalPages");
+    expect(data).toHaveProperty("currentPage");
+  });
 });
