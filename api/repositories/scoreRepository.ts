@@ -63,6 +63,7 @@ export const fetchScores = async (
         select: {
           name: true,
           profile_pic_r2_key: true,
+          date_of_birth: true,
         },
       },
       outcome: true,
