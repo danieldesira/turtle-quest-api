@@ -64,35 +64,32 @@ const createProfilePicUrlMap = async (r2Keys: string[]) => {
 export const getScores = async (options: ScoresQueryOptions) => {
   const res = await fetchScores(prisma, options);
   const r2Keys = res
-    .map((s) => s.players?.profile_pic_r2_key)
+    .map((s) => s.profile_pic_r2_key)
     .filter((key) => typeof key === "string");
   const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
   const count = await countScores(prisma, options.outcome);
 
   return {
-    scores: res.map(({ players, points, level, outcome, duration }) => ({
-      playerName: players?.name,
-      playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
-      playerAge: players?.date_of_birth
-        ? getPlayerAge(players?.date_of_birth)
-        : undefined,
-      level,
-      outcome,
-      duration,
-      points,
-    })),
+    scores: res.map(
+      ({
+        player_name,
+        profile_pic_r2_key,
+        player_age,
+        points,
+        level,
+        outcome,
+        duration,
+      }) => ({
+        playerName: player_name,
+        playerProfilePicUrl: profilePicUrlMap[profile_pic_r2_key ?? ""],
+        playerAge: player_age,
+        level,
+        outcome,
+        duration,
+        points,
+      }),
+    ),
     totalPages: Math.ceil(count / options.items),
     currentPage: options.page,
   };
-};
-
-const getPlayerAge = (dateOfBirth: Date) => {
-  const currentDate = new Date();
-  const birthYear = dateOfBirth.getFullYear();
-  const birthMonth = dateOfBirth.getMonth();
-  return (
-    currentDate.getFullYear() -
-    birthYear -
-    (currentDate.getMonth() - birthMonth < 0 ? 1 : 0)
-  );
 };

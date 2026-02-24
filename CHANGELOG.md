@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.3b -
+
+- `GET /scores` improvements:
+  - Add pagination details to response
+  - Add `playerAge` to individual scores
+  - Add junior-only filter
+  - Internal: Move query to Postgres function
+
 ## 0.4.2b - 22/02/2026 21:00 UTC+1
 
 - Fix outdated `sso_platform` references

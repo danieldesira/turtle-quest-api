@@ -190,6 +190,7 @@ app.get("scores", async (c) => {
       | "WIN"
       | "LOSS"
       | undefined,
+    juniorsOnly: c.req.query("juniors") === "1",
   } satisfies ScoresQueryOptions;
   const scores = await getScores(options);
   return c.json(scores);

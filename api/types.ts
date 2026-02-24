@@ -21,4 +21,5 @@ export type ScoresQueryOptions = {
   page: number;
   items: number;
   outcome?: "WIN" | "LOSS";
+  juniorsOnly?: boolean;
 };

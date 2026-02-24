@@ -46,32 +46,19 @@ export const fetchBestScoreByPlayerId = async (
 
 export const fetchScores = async (
   dbClient: DbClient,
-  { page, items, outcome }: ScoresQueryOptions,
+  { page, items, outcome, juniorsOnly }: ScoresQueryOptions,
 ) =>
-  await dbClient.scores.findMany({
-    take: items,
-    skip: (page - 1) * items,
-    orderBy: {
-      points: "desc",
-    },
-    select: {
-      points: true,
-      level: true,
-      duration: true,
-      created_at: true,
-      players: {
-        select: {
-          name: true,
-          profile_pic_r2_key: true,
-          date_of_birth: true,
-        },
-      },
-      outcome: true,
-    },
-    where: {
-      outcome,
-    },
-  });
+  (await dbClient.$queryRaw`select *
+    from fetch_scores(${outcome}, ${juniorsOnly}, ${items}, ${page})`) as Array<{
+    player_name: string;
+    profile_pic_r2_key?: string;
+    player_age?: number;
+    level: number;
+    duration: number;
+    points: number;
+    outcome: OutcomeType;
+    created_at: Date;
+  }>;
 
 export const countScores = async (dbClient: DbClient, outcome?: OutcomeType) =>
   await dbClient.scores.count({
