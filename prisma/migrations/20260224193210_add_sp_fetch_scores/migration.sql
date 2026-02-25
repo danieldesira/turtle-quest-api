@@ -41,7 +41,7 @@ BEGIN
   WHERE
     (outcome_param IS NULL OR s.outcome::text = outcome_param)
     AND (juniors_only = false OR EXTRACT(YEAR FROM age(p.date_of_birth)) < 16)
-  ORDER BY s.outcome::text, s.level DESC, s.points DESC, s.created_at DESC
+  ORDER BY s.outcome::text DESC, s.level DESC, s.points DESC
   LIMIT items
   OFFSET (page - 1) * items;
 END;

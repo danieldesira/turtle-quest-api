@@ -1,12 +1,13 @@
 # Changelog
 
-## 0.4.5b -
+## 0.4.5b - 25/02/2026 20:10 UTC+1
 
 - Package updates:
   - Vercel CLI 50.23.2
   - AWS SDK S3 Client 3.997.0
   - Hono 4.12.2
   - Prisma 7.4.1
+- `GET /scores`: Fix outcome order to show wins before losses
 
 ## 0.4.4b - 25/02/2026 13:15 UTC+1
 
