@@ -67,7 +67,7 @@ export const getScores = async (options: ScoresQueryOptions) => {
     .map((s) => s.profile_pic_r2_key)
     .filter((key) => typeof key === "string");
   const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
-  const count = await countScores(prisma, options.outcome);
+  const count = await countScores(prisma, options.outcome, options.juniorsOnly);
 
   return {
     scores: res.map(

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.4b -
+
+- `GET /scores`: Fix page count when using junior-only filter
+
 ## 0.4.3b - 24/02/2026 22:00 UTC+1
 
 - `GET /scores` improvements:

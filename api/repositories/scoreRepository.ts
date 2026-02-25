@@ -1,4 +1,4 @@
-import { OutcomeType } from "@prisma/client";
+import { OutcomeType, Prisma } from "@prisma/client";
 import { DbClient, ScoresQueryOptions } from "../types";
 
 export const fetchTop10Scores = async (dbClient: DbClient) =>
@@ -60,9 +60,15 @@ export const fetchScores = async (
     created_at: Date;
   }>;
 
-export const countScores = async (dbClient: DbClient, outcome?: OutcomeType) =>
-  await dbClient.scores.count({
-    where: {
-      outcome,
-    },
-  });
+export const countScores = async (
+  dbClient: DbClient,
+  outcome?: OutcomeType,
+  juniorsOnly?: boolean,
+) => {
+  // Use raw SQL to filter by age < 16
+  const result =
+    (await dbClient.$queryRaw`SELECT COUNT(*)::int as count FROM scores s INNER JOIN players p ON s.player_id = p.id WHERE (${outcome ? Prisma.sql`outcome = ${outcome}` : Prisma.sql`true`}) AND (${juniorsOnly ? Prisma.sql`EXTRACT(YEAR FROM AGE(p.date_of_birth)) < 16` : `true`})`) as Array<{
+      count: number;
+    }>;
+  return result[0].count || 0;
+};
