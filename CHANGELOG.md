@@ -1,8 +1,9 @@
 # Changelog
 
-## 0.4.4b -
+## 0.4.4b - 25/02/2026 13:15 UTC+1
 
 - `GET /scores`: Fix page count when using junior-only filter
+- Fix CORS issue for https://turtle-react-app.vercel.app
 
 ## 0.4.3b - 24/02/2026 22:00 UTC+1
 
