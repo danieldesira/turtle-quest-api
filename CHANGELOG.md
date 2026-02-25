@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.5b -
+
+- Package updates:
+  - Vercel CLI 50.23.2
+  - AWS SDK S3 Client 3.997.0
+  - Hono 4.12.2
+  - Prisma 7.4.1
+
 ## 0.4.4b - 25/02/2026 13:15 UTC+1
 
 - `GET /scores`: Fix page count when using junior-only filter
