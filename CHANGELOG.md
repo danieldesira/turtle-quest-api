@@ -2,7 +2,7 @@
 
 ## 0.4.5.1b - 26/02/2026 10:45 UTC+1
 
-- Update CORS URL to https://turtle-site.vercel.app
+- Update CORS URL to https://turtle-site-five.vercel.app
 
 ## 0.4.5b - 25/02/2026 20:10 UTC+1
 
