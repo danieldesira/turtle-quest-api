@@ -47,7 +47,7 @@ app.use(
     origin: [
       "https://localhost:5173",
       "https://turtle-quest.vercel.app",
-      "https://turtle-react-app.vercel.app",
+      "https://turtle-site.vercel.app",
     ],
     credentials: true,
   }),
