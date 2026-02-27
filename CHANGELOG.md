@@ -2,7 +2,9 @@
 
 ## 0.4.6b -
 
-- `PUT /game`: Require `remainingResets` which may be a number between 0 to 3
+- `PUT /game` and `POST /points`:
+  - Require `remainingResets` which may be a number between 0 to 3
+  - Update integration tests
 
 ## 0.4.5.1b - 26/02/2026 10:45 UTC+1
 

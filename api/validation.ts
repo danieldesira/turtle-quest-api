@@ -13,6 +13,7 @@ export const pointInsertSchema = z.object({
   interactions: interactionsSchema,
   level: z.number().positive().max(9),
   duration: z.number().positive(),
+  remainingResets: z.number().max(3).min(0),
 });
 
 export const playerUpdateSchema = z.object({

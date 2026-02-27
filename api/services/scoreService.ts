@@ -11,7 +11,7 @@ import redis from "../redisClient.js";
 
 export const saveScore = async (
   playerId: number,
-  { interactions, level, duration }: SaveScorePayload,
+  { interactions, level, duration, remainingResets }: SaveScorePayload,
 ) =>
   await redis.rPush(
     "scoreQueue",
@@ -20,6 +20,7 @@ export const saveScore = async (
       interactions,
       level,
       duration,
+      remainingResets,
       timestamp: new Date().toISOString(),
     }),
   );

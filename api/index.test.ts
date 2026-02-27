@@ -202,6 +202,7 @@ describe("Game API - Authenticated Endpoints", () => {
             "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: 9,
           duration: 400,
+          remainingResets: 3,
         }),
       }),
     );
@@ -222,6 +223,7 @@ describe("Game API - Authenticated Endpoints", () => {
           interactions: "Shrimp,265",
           level: 9,
           duration: 400,
+          remainingResets: 3,
         }),
       }),
     );
@@ -242,6 +244,7 @@ describe("Game API - Authenticated Endpoints", () => {
           interactions:
             "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: 9,
+          remainingResets: 3,
         }),
       }),
     );
@@ -261,6 +264,7 @@ describe("Game API - Authenticated Endpoints", () => {
             "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: 9,
           duration: -200,
+          remainingResets: 3,
         }),
       }),
     );
@@ -279,6 +283,7 @@ describe("Game API - Authenticated Endpoints", () => {
           interactions: "Sabfsdfg",
           level: 9,
           duration: 200,
+          remainingResets: 3,
         }),
       }),
     );
@@ -297,6 +302,7 @@ describe("Game API - Authenticated Endpoints", () => {
           interactions: "Shrimp,15|Crab,2|NeptuneGrass,2",
           level: 2,
           duration: 400,
+          remainingResets: 3,
         }),
       }),
     );
@@ -318,6 +324,7 @@ describe("Game API - Authenticated Endpoints", () => {
             "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
           level: -2,
           duration: 400,
+          remainingResets: 3,
         }),
       }),
     );
@@ -335,6 +342,63 @@ describe("Game API - Authenticated Endpoints", () => {
         body: JSON.stringify({
           level: 9,
           duration: 300,
+          remainingResets: 3,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("POST /points Win missing resets", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          level: 9,
+          duration: 300,
+          interactions: "Shrimp,9",
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("POST /points Win Above max resets", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          level: 9,
+          duration: 300,
+          interactions: "Shrimp,9",
+          remainingResets: 4,
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("POST /points Win Below min resets", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/points", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          level: 9,
+          duration: 300,
+          interactions: "Shrimp,9",
+          remainingResets: -1,
         }),
       }),
     );
