@@ -47,6 +47,7 @@ export const gameUpdateSchema = z.object({
     xp: z.number(),
     duration: z.number(),
     interactions: interactionsSchema,
+    remainingResets: z.number().max(3).min(0),
   }),
   timestamp: z.number(),
 });

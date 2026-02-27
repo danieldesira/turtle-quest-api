@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.6b -
+
+- `PUT /game`: Require `remainingResets` which may be a number between 0 to 3
+
 ## 0.4.5.1b - 26/02/2026 10:45 UTC+1
 
 - Update CORS URL to https://turtle-site-five.vercel.app

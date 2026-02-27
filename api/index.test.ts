@@ -380,6 +380,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -428,6 +429,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -470,6 +472,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -517,6 +520,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime() - 2_000_000,
         }),
@@ -564,6 +568,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -610,6 +615,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -656,6 +662,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -693,6 +700,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -739,6 +747,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -785,6 +794,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -831,6 +841,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -877,6 +888,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -923,6 +935,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -969,6 +982,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -1015,6 +1029,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -1054,6 +1069,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -1093,6 +1109,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -1132,6 +1149,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -1171,6 +1189,7 @@ describe("Game API - Authenticated Endpoints", () => {
               },
             ],
             duration: 200,
+            remainingResets: 3,
           },
           timestamp: new Date().getTime(),
         }),
@@ -1211,6 +1230,132 @@ describe("Game API - Authenticated Endpoints", () => {
                 direction: "Left",
               },
             ],
+            remainingResets: 3,
+          },
+          timestamp: new Date().getTime(),
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /game Missing resets", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/game", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          lastGame: {
+            turtle: {
+              x: 400,
+              y: 300,
+              direction: "Left",
+              oxygen: 73,
+              food: 30,
+              health: 90,
+              stomachCapacity: 55,
+              isMama: false,
+            },
+            levelNo: 5,
+            xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
+            characters: [
+              {
+                type: "Shrimp",
+                x: 150,
+                y: 200,
+                direction: "Right",
+              },
+            ],
+            duration: 200,
+          },
+          timestamp: new Date().getTime(),
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /game Above max resets", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/game", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          lastGame: {
+            turtle: {
+              x: 400,
+              y: 300,
+              direction: "Left",
+              oxygen: 73,
+              food: 30,
+              health: 90,
+              stomachCapacity: 55,
+              isMama: false,
+            },
+            levelNo: 5,
+            xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
+            characters: [
+              {
+                type: "Shrimp",
+                x: 150,
+                y: 200,
+                direction: "Right",
+              },
+            ],
+            duration: 200,
+            remainingResets: 4,
+          },
+          timestamp: new Date().getTime(),
+        }),
+      }),
+    );
+    expect(res.status).toBe(400);
+  });
+
+  test("PUT /game Below min resets", async () => {
+    const res = await app.request(
+      new Request("http://localhost:3000/api/game", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Cookie: `Authorization=${authToken}`,
+        },
+        body: JSON.stringify({
+          lastGame: {
+            turtle: {
+              x: 400,
+              y: 300,
+              direction: "Left",
+              oxygen: 73,
+              food: 30,
+              health: 90,
+              stomachCapacity: 55,
+              isMama: false,
+            },
+            levelNo: 5,
+            xp: 1050,
+            interactions:
+              "Shrimp,265|Crab,5|NeptuneGrass,2|Nurdle,34|MaleTurtle,1|JaggedPlastic,1",
+            characters: [
+              {
+                type: "Shrimp",
+                x: 150,
+                y: 200,
+                direction: "Right",
+              },
+            ],
+            duration: 200,
+            remainingResets: -1,
           },
           timestamp: new Date().getTime(),
         }),
