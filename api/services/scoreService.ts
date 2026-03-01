@@ -31,14 +31,12 @@ export const getHighScores = async () => {
     .map((s) => s.players?.profile_pic_r2_key)
     .filter((key) => typeof key === "string");
   const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
-  return res.map(({ players, points, level, outcome, duration }) => ({
-    playerIdentifier: `${players?.external_id}-${players?.sso_provider}`,
-    playerName: players?.name,
-    playerProfilePicUrl: profilePicUrlMap[players?.profile_pic_r2_key ?? ""],
-    points,
-    level,
-    outcome,
-    duration,
+  return res.map((score) => ({
+    ...score,
+    playerName: score.players?.name,
+    playerProfilePicUrl:
+      profilePicUrlMap[score.players?.profile_pic_r2_key ?? ""],
+    players: undefined,
   }));
 };
 
@@ -71,25 +69,10 @@ export const getScores = async (options: ScoresQueryOptions) => {
   const count = await countScores(prisma, options.outcome, options.juniorsOnly);
 
   return {
-    scores: res.map(
-      ({
-        player_name,
-        profile_pic_r2_key,
-        player_age,
-        points,
-        level,
-        outcome,
-        duration,
-      }) => ({
-        playerName: player_name,
-        playerProfilePicUrl: profilePicUrlMap[profile_pic_r2_key ?? ""],
-        playerAge: player_age,
-        level,
-        outcome,
-        duration,
-        points,
-      }),
-    ),
+    scores: res.map((score) => ({
+      ...score,
+      playerProfilePicUrl: profilePicUrlMap[score.profile_pic_r2_key ?? ""],
+    })),
     totalPages: Math.ceil(count / options.items),
     currentPage: options.page,
   };

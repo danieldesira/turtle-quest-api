@@ -29,12 +29,13 @@ model players {
 }
 
 model scores {
-  id         Int      @id(map: "score_pk") @default(autoincrement())
-  points     Int
-  level      Int      @db.SmallInt
-  created_at DateTime @db.Timestamp(6)
-  player_id  Int
-  outcome    OutcomeType
-  duration   Int
-  players    players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
+  id          Int      @id(map: "score_pk") @default(autoincrement())
+  points      Int
+  level       Int      @db.SmallInt
+  created_at  DateTime @db.Timestamp(6)
+  player_id   Int
+  outcome     OutcomeType
+  duration    Int
+  resets_used Int
+  players     players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "score_player_fk")
 }

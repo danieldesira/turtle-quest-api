@@ -21,6 +21,7 @@ export const fetchTop10Scores = async (dbClient: DbClient) =>
         },
       },
       outcome: true,
+      resets_used: true,
     },
   });
 
@@ -41,6 +42,7 @@ export const fetchBestScoreByPlayerId = async (
       level: true,
       duration: true,
       outcome: true,
+      resets_used: true,
     },
   });
 
@@ -58,6 +60,7 @@ export const fetchScores = async (
     points: number;
     outcome: OutcomeType;
     created_at: Date;
+    resets_used: number;
   }>;
 
 export const countScores = async (

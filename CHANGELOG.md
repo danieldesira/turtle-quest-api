@@ -5,6 +5,7 @@
 - `PUT /game` and `POST /points`:
   - Require `remainingResets` which may be a number between 0 to 3
   - Update integration tests
+- Add `resets_used` to `scores` table and output in get endpoints
 
 ## 0.4.5.1b - 26/02/2026 10:45 UTC+1
 

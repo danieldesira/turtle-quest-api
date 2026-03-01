@@ -1457,6 +1457,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
+      expect(entry).toHaveProperty("resetsUsed");
     });
   });
 
@@ -1474,6 +1475,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
+      expect(entry).toHaveProperty("resetsUsed");
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
@@ -1492,6 +1494,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
+      expect(entry).toHaveProperty("resetsUsed");
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
@@ -1510,6 +1513,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
+      expect(entry).toHaveProperty("resetsUsed");
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
@@ -1528,6 +1532,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
       expect(entry.outcome.toLowerCase()).toBe("win");
+      expect(entry).toHaveProperty("resetsUsed");
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
@@ -1546,6 +1551,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
       expect(entry.outcome.toLowerCase()).toBe("loss");
+      expect(entry).toHaveProperty("resetsUsed");
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
@@ -1566,6 +1572,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
       expect(entry.outcome.toLowerCase()).toBe("loss");
+      expect(entry).toHaveProperty("resetsUsed");
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");
