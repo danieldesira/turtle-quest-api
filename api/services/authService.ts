@@ -7,8 +7,9 @@ import {
   fetchPlayer,
   updateLastLogin,
 } from "../repositories/playerRepository.js";
-import jwksClient from "jwks-rsa";
 import jwtLib from "jsonwebtoken";
+
+const { default: jwksClient } = await import("jwks-rsa");
 
 export interface GoogleUserPayload {
   iss?: string;

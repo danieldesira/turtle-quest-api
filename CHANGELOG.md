@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.4.6b - 02/03/2026 10:30 UTC+1
+## 0.4.6.1b - 03/03/2026 14:00 UTC +1
+
+- Fix issue with JWKS-RSA 4 import and invocation
+- Update Vercel CLI to 50.25.6
+
+## 0.4.6b - 03/03/2026 10:30 UTC+1
 
 - `PUT /game` and `POST /points`:
   - Require `remainingResets` which may be a number between 0 to 3
