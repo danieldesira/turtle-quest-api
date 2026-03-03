@@ -1,6 +1,6 @@
 {
   "name": "turtle-quest-api",
-  "version": "0.4.6.1",
+  "version": "0.4.6.2",
   "type": "module",
   "author": {
     "name": "Daniel Desira",
@@ -23,7 +23,7 @@
     "hono": "^4.12.3",
     "hono-camelcase": "^0.2.5",
     "jsonwebtoken": "^9.0.3",
-    "jwks-rsa": "^4.0.1",
+    "jwks-rsa": "^3.2.2",
     "redis": "^5.11.0",
     "vitest": "^4.0.18",
     "zod": "^4.3.6"

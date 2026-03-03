@@ -1,6 +1,11 @@
 # Changelog
 
-## 0.4.6.1b - 03/03/2026 14:00 UTC +1
+## 0.4.6.2b - 03/03/2026 15:00 UTC+1
+
+- Downgrade JWKS-RSA to 3.2.2
+- Add Microsoft login to `api.http`
+
+## 0.4.6.1b - 03/03/2026 14:00 UTC+1
 
 - Fix issue with JWKS-RSA 4 import and invocation
 - Update Vercel CLI to 50.25.6
