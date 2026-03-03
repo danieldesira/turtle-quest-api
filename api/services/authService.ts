@@ -7,8 +7,7 @@ import {
   fetchPlayer,
   updateLastLogin,
 } from "../repositories/playerRepository.js";
-import jwtLib from "jsonwebtoken";
-import jwksClient from "jwks-rsa";
+import * as jose from "jose";
 
 export interface GoogleUserPayload {
   iss?: string;
@@ -30,6 +29,7 @@ export interface MicrosoftUserPayload {
   family_name?: string;
   email?: string;
   preferred_username?: string;
+  tid?: string;
 }
 
 interface CheckAndRegisterPlayerGoogleResult {
@@ -129,66 +129,18 @@ const validateMicrosoftEntraSSOToken = async (
       );
     }
 
-    const decoded = jwtLib.decode(cleanToken, { complete: true });
+    const decoded = jose.decodeJwt(cleanToken);
     if (!decoded) {
       throw new Error("Failed to decode token");
     }
 
-    const decodedHeader = decoded.header;
-    const decodedPayload = decoded.payload as MicrosoftUserPayload;
-    console.log(
-      `Token header kid: ${decodedHeader?.kid}, alg: ${decodedHeader?.alg}`,
-    );
-    console.log(`Token issuer: ${decodedPayload?.iss}`);
-    console.log(`Token audience: ${decodedPayload?.aud}`);
+    const jwksUri = `https://login.microsoftonline.com/${(decoded as MicrosoftUserPayload).tid}/discovery/v2.0/keys`;
 
-    if (!decodedHeader?.kid) {
-      console.warn("Token header missing kid:", JSON.stringify(decodedHeader));
-      throw new Error(
-        "Invalid token: missing kid in header. Token may not be signed properly.",
-      );
-    }
-
-    // Extract tenant ID from token issuer instead of using configured tenant
-    // This allows the code to work with tokens from any tenant
-    const tokenIssuer = decodedPayload?.iss;
-    if (!tokenIssuer) {
-      throw new Error("Token missing issuer claim");
-    }
-
-    // Extract tenant ID from issuer URL (format: https://login.microsoftonline.com/{tenantId}/v2.0)
-    const issuerMatch = tokenIssuer.match(
-      /https:\/\/login\.microsoftonline\.com\/([^/]+)\/v2\.0/,
-    );
-    const tokenTenantId = issuerMatch?.[1];
-
-    if (!tokenTenantId) {
-      throw new Error(
-        `Could not extract tenant ID from issuer: ${tokenIssuer}`,
-      );
-    }
-
-    if (tokenTenantId !== tenantId) {
-      console.warn(
-        `Token is from a different tenant (${tokenTenantId}) than configured (${tenantId}). ` +
-          `This is normal for multi-tenant apps or if using Microsoft accounts.`,
-      );
-    }
-
-    const jwksUri = `https://login.microsoftonline.com/${tokenTenantId}/discovery/v2.0/keys`;
-
-    const client = jwksClient({
+    const payload = (await verifyJwtToken(
+      cleanToken,
+      decoded,
       jwksUri,
-      cache: true,
-      rateLimit: true,
-    });
-
-    const key = await client.getSigningKey(decodedHeader.kid);
-    const publicKey = key.getPublicKey();
-
-    const payload = jwtLib.verify(cleanToken, publicKey, {
-      algorithms: ["RS256"],
-    }) as MicrosoftUserPayload;
+    )) as MicrosoftUserPayload;
 
     return validateMicrosoftPayload(payload);
   } catch (error) {
@@ -201,6 +153,19 @@ const validateMicrosoftEntraSSOToken = async (
       ? error
       : new Error("Failed to verify Microsoft Entra ID token");
   }
+};
+
+const verifyJwtToken = async (
+  token: string,
+  decodedPayload: jose.JWTPayload,
+  jwksUri: string,
+) => {
+  const JWKS = jose.createRemoteJWKSet(new URL(jwksUri));
+  const { payload } = await jose.jwtVerify(token, JWKS, {
+    issuer: decodedPayload.iss,
+    audience: decodedPayload.aud,
+  });
+  return payload;
 };
 
 const validateMicrosoftPayload = (

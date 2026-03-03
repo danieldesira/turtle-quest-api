@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.4.7b - 03/03/2026 17:00 UTC+1
+
+- Refactor: Use Jose for Microsoft Entra authentication verification and uninstall jsonwebtoken and jwks-rsa
+
 ## 0.4.6.2b - 03/03/2026 15:10 UTC+1
 
 - Downgrade JWKS-RSA to 3.2.2
