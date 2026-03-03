@@ -1,11 +1,17 @@
 # Changelog
 
-## 0.4.6b -
+## 0.4.6b - 02/03/2026 10:30 UTC+1
 
 - `PUT /game` and `POST /points`:
   - Require `remainingResets` which may be a number between 0 to 3
   - Update integration tests
 - Add `resets_used` to `scores` table and output in get endpoints
+- Package updates:
+  - Prisma 7.4.2
+  - Vercel CLI 50.25.4
+  - Hono 4.12.3
+  - jwks-rsa 4.0.1
+  - AWS SDK 3.1000.0
 
 ## 0.4.5.1b - 26/02/2026 10:45 UTC+1
 
