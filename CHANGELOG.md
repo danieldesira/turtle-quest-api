@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.4.8b -
+
+- 3rd Party Package Updates:
+  - Hono 4.12.8
+  - Jose 6.2.1
+  - Prisma 7.5.0
+  - AWS SDK 3.1009.0
+  - Vercel CLI 50.32.5
+  - Vitest 4.1.0
+
 ## 0.4.7.1b - 04/03/2026 17:15 UTC+1
 
 - Uninstall jsonwebtoken
