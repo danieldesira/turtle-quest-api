@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.4.8b -
+## 0.4.8b - 15/03/2026 15:45 UTC+1
 
 - 3rd Party Package Updates:
   - Hono 4.12.8
@@ -9,6 +9,9 @@
   - AWS SDK 3.1009.0
   - Vercel CLI 50.32.5
   - Vitest 4.1.0
+- `GET /api/scores`:
+  - `juniors` being assigned to any value now means true
+  - Remove `profilePicR2Key` from response
 
 ## 0.4.7.1b - 04/03/2026 17:15 UTC+1
 

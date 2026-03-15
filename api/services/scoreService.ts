@@ -73,6 +73,7 @@ export const getScores = async (options: ScoresQueryOptions) => {
     scores: res.map((score) => ({
       ...score,
       playerProfilePicUrl: profilePicUrlMap[score.profile_pic_r2_key ?? ""],
+      profile_pic_r2_key: undefined,
     })),
     totalPages: Math.ceil(count / options.items),
     currentPage: options.page,
