@@ -12,6 +12,7 @@
 - `GET /api/scores`:
   - `juniors` being assigned to any value now means true
   - Remove `profilePicR2Key` from response
+- Drop CORS support from community site (new one will serve scores through a "by-pass" API)
 
 ## 0.4.7.1b - 04/03/2026 17:15 UTC+1
 

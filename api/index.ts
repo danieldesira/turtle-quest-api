@@ -44,11 +44,7 @@ const app = new Hono().basePath("/api");
 
 app.use(
   cors({
-    origin: [
-      "https://localhost:5173",
-      "https://turtle-quest.vercel.app",
-      "https://turtle-site-five.vercel.app",
-    ],
+    origin: ["https://localhost:5173", "https://turtle-quest.vercel.app"],
     credentials: true,
   }),
 );
