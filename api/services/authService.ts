@@ -265,9 +265,7 @@ const fetchFacebookUser = async (
     const response = await fetch(
       `https://graph.facebook.com/v25.0/me?access_token=${token}&fields=id%2Cname%2Cbirthday%2Cemail%2Cpicture`,
     );
-    const payload = await response.json();
-    //return validateGooglePayload(payload);
-    return payload;
+    return await response.json();
   } catch (error) {
     console.error("Error verifying Facebook token:", error);
     throw new Error("Failed to verify Facebook token");
