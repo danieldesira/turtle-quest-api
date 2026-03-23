@@ -15,6 +15,7 @@ import {
 } from "./services/playerService.js";
 import {
   getJWTExpectedExpiry,
+  handleFacebookSSOLogin,
   handleGoogleSSOLogin,
   handleMicrosoftEntraSSOLogin,
 } from "./services/authService.js";
@@ -62,6 +63,9 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
       break;
     case "microsoft":
       res = await handleMicrosoftEntraSSOLogin(body.credential);
+      break;
+    case "facebook":
+      res = await handleFacebookSSOLogin(body.credential);
       break;
   }
 

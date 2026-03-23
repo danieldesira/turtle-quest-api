@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const loginSchema = z.object({
   credential: z.string(),
-  provider: z.enum(["google", "microsoft"]),
+  provider: z.enum(["google", "microsoft", "facebook"]),
 });
 
 const interactionsFormat = z

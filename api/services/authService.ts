@@ -32,6 +32,25 @@ export interface MicrosoftUserPayload {
   tid?: string;
 }
 
+export interface FacebookUserPayload {
+  id: string;
+  first_name?: string;
+  last_name?: string;
+  middle_name?: string;
+  name_format?: string;
+  short_name?: string;
+  name?: string;
+  picture?: {
+    data: {
+      height: number;
+      width: number;
+      is_silhouette: boolean;
+      url: string;
+    };
+  };
+  email?: string;
+}
+
 interface CheckAndRegisterPlayerGoogleResult {
   player: players;
   isNewPlayer: boolean;
@@ -44,7 +63,12 @@ const checkAndRegisterPlayerGoogle = async (
 
   if (!player) {
     const newPlayer = await prisma.$transaction(async (tx) => {
-      const newPlayer = await createNewPlayer(tx, user, "google");
+      const newPlayer = await createNewPlayer(tx, {
+        externalId: user.sub,
+        ssoProvider: "google",
+        name: user.name!,
+        email: user.email,
+      });
 
       const r2Key = await uploadSSOProfileImageToR2(
         user.picture!,
@@ -108,6 +132,24 @@ const validateGooglePayload = (
   };
 };
 
+const validateAndDecodeJwtBearer = (token: string) => {
+  const cleanToken = token.startsWith("Bearer ") ? token.slice(7) : token;
+
+  const parts = cleanToken.split(".");
+  if (parts.length !== 3) {
+    throw new Error(
+      `Invalid token format: expected 3 parts, got ${parts.length}`,
+    );
+  }
+
+  const decoded = jose.decodeJwt(cleanToken);
+  if (!decoded) {
+    throw new Error("Failed to decode token");
+  }
+
+  return { cleanToken, decoded };
+};
+
 const validateMicrosoftEntraSSOToken = async (
   token: string,
 ): Promise<MicrosoftUserPayload> => {
@@ -120,19 +162,7 @@ const validateMicrosoftEntraSSOToken = async (
   }
 
   try {
-    const cleanToken = token.startsWith("Bearer ") ? token.slice(7) : token;
-
-    const parts = cleanToken.split(".");
-    if (parts.length !== 3) {
-      throw new Error(
-        `Invalid token format: expected 3 parts, got ${parts.length}`,
-      );
-    }
-
-    const decoded = jose.decodeJwt(cleanToken);
-    if (!decoded) {
-      throw new Error("Failed to decode token");
-    }
+    const { cleanToken, decoded } = validateAndDecodeJwtBearer(token);
 
     const jwksUri = `https://login.microsoftonline.com/${(decoded as MicrosoftUserPayload).tid}/discovery/v2.0/keys`;
 
@@ -144,14 +174,8 @@ const validateMicrosoftEntraSSOToken = async (
 
     return validateMicrosoftPayload(payload);
   } catch (error) {
-    if (error instanceof Error) {
-      console.error("Error verifying Microsoft token:", error.message);
-    } else {
-      console.error("Error verifying Microsoft token:", error);
-    }
-    throw error instanceof Error
-      ? error
-      : new Error("Failed to verify Microsoft Entra ID token");
+    console.error("Error verifying Microsoft token:", { error });
+    throw new Error("Failed to verify Microsoft Entra ID token");
   }
 };
 
@@ -206,7 +230,12 @@ const checkAndRegisterPlayerMicrosoft = async (
 
   if (!player) {
     const newPlayer = await prisma.$transaction(async (tx) => {
-      const newPlayer = await createNewPlayer(tx, user, "microsoft");
+      const newPlayer = await createNewPlayer(tx, {
+        name: user.name!,
+        email: user.email!,
+        externalId: user.sub,
+        ssoProvider: "microsoft",
+      });
       return newPlayer;
     });
 
@@ -217,22 +246,69 @@ const checkAndRegisterPlayerMicrosoft = async (
   }
 };
 
-const fetchMicrosoftUser = async (
-  token: string,
-): Promise<MicrosoftUserPayload> => {
-  return await validateMicrosoftEntraSSOToken(token);
-};
-
 export const handleMicrosoftEntraSSOLogin = async (
   token: string,
 ): Promise<CheckAndRegisterPlayerGoogleResult> => {
-  const user = await fetchMicrosoftUser(token);
+  const user = await validateMicrosoftEntraSSOToken(token);
   return await checkAndRegisterPlayerMicrosoft(user);
 };
 
 export const handleGoogleSSOLogin = async (token: string) => {
   const user = await fetchGoogleUser(token);
   return await checkAndRegisterPlayerGoogle(user);
+};
+
+const fetchFacebookUser = async (
+  token: string,
+): Promise<FacebookUserPayload> => {
+  try {
+    const response = await fetch(
+      `https://graph.facebook.com/v25.0/me?access_token=${token}&fields=id%2Cname%2Cbirthday%2Cemail%2Cpicture`,
+    );
+    const payload = await response.json();
+    //return validateGooglePayload(payload);
+    return payload;
+  } catch (error) {
+    console.error("Error verifying Facebook token:", error);
+    throw new Error("Failed to verify Facebook token");
+  }
+};
+
+const checkAndRegisterPlayerFacebook = async (
+  user: FacebookUserPayload,
+): Promise<CheckAndRegisterPlayerGoogleResult> => {
+  const player = await fetchPlayer(prisma, user.id, "facebook");
+
+  if (!player) {
+    const newPlayer = await prisma.$transaction(async (tx) => {
+      const newPlayer = await createNewPlayer(tx, {
+        externalId: user.id,
+        ssoProvider: "facebook",
+        email: user.email!,
+        name: user.name!,
+      });
+
+      if (user.picture) {
+        const r2Key = await uploadSSOProfileImageToR2(
+          user.picture.data.url,
+          newPlayer.id,
+        );
+        await updatePlayerProfilePic(newPlayer.id, r2Key, tx);
+      }
+
+      return newPlayer;
+    });
+
+    return { player: newPlayer, isNewPlayer: true };
+  } else {
+    await updateLastLogin(prisma, player.id);
+    return { player, isNewPlayer: false };
+  }
+};
+
+export const handleFacebookSSOLogin = async (token: string) => {
+  const user = await fetchFacebookUser(token);
+  return await checkAndRegisterPlayerFacebook(user);
 };
 
 export const getJWTExpectedExpiry = () => Date.now() + 60 * 60 * 1000;

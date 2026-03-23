@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.0b -
+
+- Authentication:
+  - Support for Facebook SSO
+
 ## 0.4.8b - 15/03/2026 15:45 UTC+1
 
 - 3rd Party Package Updates:
