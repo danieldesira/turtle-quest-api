@@ -96,6 +96,7 @@ app.post("login", zValidator("json", loginSchema), async (c) => {
       profile_pic_url: player?.profile_pic_r2_key
         ? await getR2Url(player.profile_pic_r2_key)
         : null,
+      profile_pic_r2_key: undefined,
     },
     isNewPlayer,
     personalBest,

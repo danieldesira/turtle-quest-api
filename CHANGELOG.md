@@ -4,6 +4,7 @@
 
 - Authentication:
   - Support for Facebook SSO
+  - Fix: Assign profile pic url on Google/FB signup
 
 ## 0.4.8b - 15/03/2026 15:45 UTC+1
 

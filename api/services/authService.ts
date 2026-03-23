@@ -75,6 +75,7 @@ const checkAndRegisterPlayerGoogle = async (
         newPlayer.id,
       );
       await updatePlayerProfilePic(newPlayer.id, r2Key, tx);
+      newPlayer.profile_pic_r2_key = r2Key;
 
       return newPlayer;
     });
@@ -292,6 +293,7 @@ const checkAndRegisterPlayerFacebook = async (
           newPlayer.id,
         );
         await updatePlayerProfilePic(newPlayer.id, r2Key, tx);
+        newPlayer.profile_pic_r2_key = r2Key;
       }
 
       return newPlayer;
