@@ -69,10 +69,18 @@ export const fetchPlayer = async (
   dbClient: DbClient,
   externalId: string,
   ssoService: string,
-) =>
-  await dbClient.players.findFirst({
-    where: { external_id: externalId, sso_provider: ssoService },
+) => {
+  const res = await dbClient.players_sso_providers.findFirst({
+    where: {
+      external_id: externalId,
+      sso_provider: ssoService,
+    },
+    select: {
+      players: true,
+    },
   });
+  return res?.players;
+};
 
 type NewPlayerOptions = {
   externalId: string;
@@ -84,11 +92,9 @@ type NewPlayerOptions = {
 export const createNewPlayer = async (
   dbClient: DbClient,
   { externalId, ssoProvider, email, name }: NewPlayerOptions,
-) =>
-  await dbClient.players.create({
+) => {
+  const player = await dbClient.players.create({
     data: {
-      external_id: externalId,
-      sso_provider: ssoProvider,
       email,
       name,
       last_login_at: new Date(),
@@ -97,6 +103,15 @@ export const createNewPlayer = async (
       settings: { controlPosition: "Right", audioVolume: 0.5 },
     },
   });
+  await dbClient.players_sso_providers.create({
+    data: {
+      player_id: player.id,
+      external_id: externalId,
+      sso_provider: ssoProvider,
+    },
+  });
+  return player;
+};
 
 export const updateLastLogin = async (dbClient: DbClient, playerId: number) =>
   await dbClient.players.update({

@@ -25,8 +25,6 @@ model players {
   last_game_saved_on    DateTime? @db.Timestamp(6)
   scores                scores[]
   players_sso_providers players_sso_providers[]
-  external_id        String    @db.VarChar
-  sso_provider       String    @db.VarChar
 }
 
 model players_sso_providers {

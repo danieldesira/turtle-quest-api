@@ -11,8 +11,6 @@ if (!testPlayer) {
   await prisma.players.create({
     data: {
       id: playerId,
-      external_id: "test-user-abc",
-      sso_provider: "google",
       email: "test@example.com",
       name: "Test Player",
       created_at: new Date(),
