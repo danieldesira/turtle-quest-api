@@ -1454,6 +1454,7 @@ describe("Game API - Public Endpoints", () => {
     expect(data.length).toBeLessThanOrEqual(10);
     data.forEach((entry: unknown) => {
       expect(entry).toHaveProperty("playerName");
+      expect(entry).toHaveProperty("playerGuid");
       expect(entry).toHaveProperty("points");
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
@@ -1572,7 +1573,7 @@ describe("Game API - Public Endpoints", () => {
       expect(entry).toHaveProperty("level");
       expect(entry).toHaveProperty("outcome");
       expect(entry.outcome.toLowerCase()).toBe("loss");
-      expect(entry).toHaveProperty("resetsUsed");
+      expect(entry).toHaveProperty("resetsUsed");   
     });
     expect(data).toHaveProperty("totalPages");
     expect(data).toHaveProperty("currentPage");

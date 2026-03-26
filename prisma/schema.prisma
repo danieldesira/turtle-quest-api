@@ -14,6 +14,7 @@ enum OutcomeType {
 
 model players {
   id                    Int       @id(map: "player_pkey") @default(autoincrement())
+  guid                  String    @default(uuid()) @db.Uuid
   name                  String?   @db.VarChar(128)
   date_of_birth         DateTime? @db.Date
   profile_pic_r2_key    String?   @db.VarChar

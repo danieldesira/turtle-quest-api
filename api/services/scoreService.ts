@@ -33,7 +33,7 @@ export const getHighScores = async () => {
   const profilePicUrlMap = await createProfilePicUrlMap(r2Keys);
   return res.map((score) => ({
     ...score,
-    playerIdentifier: `${score.players?.external_id}-${score.players?.sso_provider}`,
+    playerGuid: score.players?.guid,
     playerName: score.players?.name,
     playerProfilePicUrl:
       profilePicUrlMap[score.players?.profile_pic_r2_key ?? ""],

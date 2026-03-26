@@ -1,4 +1,5 @@
 import { config } from "dotenv";
+import crypto from "crypto"
 
 config({ path: ".env.test" });
 
@@ -10,7 +11,7 @@ const testPlayer = await prisma.players.findUnique({ where: { id: playerId } });
 if (!testPlayer) {
   await prisma.players.create({
     data: {
-      id: playerId,
+      id: playerId,guid:crypto.randomUUID().toString(),
       email: "test@example.com",
       name: "Test Player",
       created_at: new Date(),
