@@ -13,19 +13,28 @@ enum OutcomeType {
 }
 
 model players {
-  id                 Int       @id(map: "player_pkey") @default(autoincrement())
-  name               String?   @db.VarChar(128)
-  date_of_birth      DateTime? @db.Date
+  id                    Int       @id(map: "player_pkey") @default(autoincrement())
+  name                  String?   @db.VarChar(128)
+  date_of_birth         DateTime? @db.Date
+  profile_pic_r2_key    String?   @db.VarChar
+  last_game             Json?
+  created_at            DateTime  @db.Timestamp(6)
+  last_login_at         DateTime? @db.Timestamp(6)
+  email                 String    @unique(map: "player_unique") @db.VarChar
+  settings              Json?     @db.Json
+  last_game_saved_on    DateTime? @db.Timestamp(6)
+  scores                scores[]
+  players_sso_providers players_sso_providers[]
   external_id        String    @db.VarChar
   sso_provider       String    @db.VarChar
-  profile_pic_r2_key String?   @db.VarChar
-  last_game          Json?
-  created_at         DateTime  @db.Timestamp(6)
-  last_login_at      DateTime? @db.Timestamp(6)
-  email              String    @unique(map: "player_unique") @db.VarChar
-  settings           Json?     @db.Json
-  last_game_saved_on DateTime? @db.Timestamp(6)
-  scores             scores[]
+}
+
+model players_sso_providers {
+  id              Int    @id(map: "players_sso_provider_pkey") @default(autoincrement())
+  player_id       Int
+  sso_provider    String @db.VarChar
+  external_id     String @db.VarChar
+  players         players? @relation(fields: [player_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "players_sso_providers_fk")
 }
 
 model scores {
