@@ -2,6 +2,13 @@
 
 ## 0.5.0b -
 
+- Internal changes:
+  - Update Prisma to 7.6.0
+  - Update Vercel CLI to 50.37.3
+  - Update Jose to 6.2.2
+  - Update Hono to 4.12.9
+  - Update aws-sdk to 3.1019.0
+  - Update Vitest to 4.1.2
 - Authentication:
   - Support for Facebook SSO
   - Fix: Assign profile pic url on Google/FB signup
