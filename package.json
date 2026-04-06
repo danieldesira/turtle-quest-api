@@ -20,7 +20,7 @@
     "@hono/zod-validator": "^0.7.6",
     "@prisma/adapter-pg": "^7.6.0",
     "@prisma/client": "^7.6.0",
-    "hono": "^4.12.9",
+    "hono": "^4.12.11",
     "hono-camelcase": "^0.2.5",
     "jose": "^6.2.2",
     "redis": "^5.11.0",
@@ -31,7 +31,7 @@
     "prettier": "^3.8.1",
     "prisma": "^7.6.0",
     "typescript-eslint": "^8.50.1",
-    "vercel": "^50.37.3",
+    "vercel": "^50.40.0",
     "vitest": "^4.1.2"
   }
 }

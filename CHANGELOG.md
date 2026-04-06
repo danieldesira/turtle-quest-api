@@ -4,9 +4,9 @@
 
 - Internal changes:
   - Update Prisma to 7.6.0
-  - Update Vercel CLI to 50.37.3
+  - Update Vercel CLI to 50.40.0
   - Update Jose to 6.2.2
-  - Update Hono to 4.12.9
+  - Update Hono to 4.12.11
   - Update aws-sdk to 3.1019.0
   - Update Vitest to 4.1.2
 - Authentication:
