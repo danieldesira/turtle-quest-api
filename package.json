@@ -31,7 +31,7 @@
     "prettier": "^3.8.1",
     "prisma": "^7.6.0",
     "typescript-eslint": "^8.50.1",
-    "vercel": "^50.40.0",
+    "vercel": "^59.23.2",
     "vitest": "^4.1.2"
   }
 }

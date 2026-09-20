@@ -9,6 +9,7 @@
   - Update Hono to 4.12.11
   - Update aws-sdk to 3.1019.0
   - Update Vitest to 4.1.2
+  - Update Vercel CLI to 59.23.2
 - Authentication:
   - Support for Facebook SSO
   - Fix: Assign profile pic url on Google/FB signup
