@@ -157,28 +157,32 @@ app.post("logout", authMiddleware, async (c) => {
   return c.json(undefined);
 });
 
-app.put("profile-pic", authMiddleware, async (c) => {
+app.put("avatar", authMiddleware, async (c) => {
   const playerId = c.get("playerId");
   const blob = await c.req.blob();
+
+  if (blob.size > 1024 * 1024) {
+    return c.json({ message: "File too big" }, 400);
+  }
 
   if (!blob.type.startsWith("image/")) {
     return c.json({ message: "Invalid file type" }, 400);
   }
 
-  const oldKey = await getProfilePicKey(playerId);
+  const oldKey = (await getProfilePicKey(playerId)) ?? "";
 
   const fileExtension = blob.type.split("/")[1];
   const newKey = `/profile-pics/${playerId}.${fileExtension}`;
   const buffer = Buffer.from(await blob.arrayBuffer());
-  const bucket = process.env.R2_BUCKET_NAME!;
+  const bucket = process.env.R2_BUCKET_NAME ?? "";
 
   await uploadToR2(bucket, newKey, buffer, blob.type);
   await updatePlayerProfilePic(playerId, newKey);
 
-  await deleteR2Object(bucket, oldKey!);
+  await deleteR2Object(bucket, oldKey);
 
   return c.json({
-    message: "Profile picture updated successfully",
+    message: "Avatar updated successfully",
     profilePicUrl: await getR2Url(newKey),
   });
 });

@@ -325,8 +325,8 @@ Cookie: {{authToken}}
 
 
 ###
-# @name uploadProfilePicture
-PUT {{baseUrl}}/api/profile-pic
+# @name uploadAvatar
+PUT {{baseUrl}}/api/avatar
 Accept: multipart/form-data
 Content-Type: image/png; boundary=boundary
 Cookie: {{authToken}}
